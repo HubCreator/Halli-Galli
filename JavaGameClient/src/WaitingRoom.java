@@ -40,7 +40,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-public class ClientView_1 extends JFrame {
+public class WaitingRoom extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -82,7 +82,7 @@ public class ClientView_1 extends JFrame {
 	 * 
 	 * @throws BadLocationException
 	 */
-	public ClientView_1(String username, String ip_addr, String port_no) {
+	public WaitingRoom(String username, String ip_addr, String port_no) {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1193, 772);
@@ -140,12 +140,13 @@ public class ClientView_1 extends JFrame {
 		btnNewButton.setBounds(1096, 683, 69, 40);
 		contentPane.add(btnNewButton);
 		
-		JButton makeNewRoom = new JButton("\uBC29 \uB9CC\uB4E4\uAE30");
+		JButton makeNewRoom = new JButton("\uBC29 \uB9CC\uB4E4\uAE30"); // 방 만들기 버튼
 		makeNewRoom.setFont(new Font("양재블럭체", Font.PLAIN, 15));
 		makeNewRoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// JOptionPane.showInternalMessageDialog(null, "hi");
 				CreateNewRoom createNewRoom = new CreateNewRoom(username);
+				System.out.println(createNewRoom.room);
 			}
 		});
 		makeNewRoom.setBounds(1018, 61, 147, 90);
@@ -211,7 +212,6 @@ public class ClientView_1 extends JFrame {
 			oos.flush();
 			ois = new ObjectInputStream(socket.getInputStream());
 
-			// SendMessage("/login " + UserName);
 			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
 			SendObject(obcm);
 

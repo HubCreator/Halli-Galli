@@ -31,7 +31,7 @@ class ImagePanel extends JPanel {
 	}
 }
 
-public class ClientMain extends JFrame {
+public class Welcome extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private ImagePanel contentPane;
@@ -46,7 +46,8 @@ public class ClientMain extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ClientMain frame = new ClientMain();
+					Welcome frame = new Welcome();
+					frame.setTitle("Welcome to Halli Galli  !!");
 					frame.setVisible(true);
 					frame.pack();
 					frame.setResizable(false);		// 사이즈 조정 불가
@@ -64,10 +65,10 @@ public class ClientMain extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ClientMain() {
+	public Welcome() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1013, 740);
-		contentPane = new ImagePanel(new ImageIcon("C:\\network_programming\\final-termProject\\JavaGameClient\\images\\welcome.jpg").getImage());
+		contentPane = new ImagePanel(new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\welcome.jpg").getImage());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -105,10 +106,10 @@ public class ClientMain extends JFrame {
 		contentPane.add(txtPortNumber);
 		
 		JButton btnConnect = new JButton(new ImageIcon(((new ImageIcon(
-	            "C:\\network_programming\\final-termProject\\JavaGameClient\\images\\Enter_btnUp.jpg").getImage()
+	            "C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\Enter_btnUp.jpg").getImage()
 	            .getScaledInstance(90, 45,
 	                    java.awt.Image.SCALE_SMOOTH)))));
-		btnConnect .setPressedIcon(new ImageIcon("C:\\network_programming\\final-termProject\\JavaGameClient\\images\\Enter_btnDown.jpg"));  // 눌린 버튼의 이미지
+		btnConnect .setPressedIcon(new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\Enter_btnDown.jpg"));  // 눌린 버튼의 이미지
 		
 		btnConnect.setBounds(440, 535, 88, 38);
 		contentPane.add(btnConnect);
@@ -125,8 +126,8 @@ public class ClientMain extends JFrame {
 			String username = txtUserName.getText().trim();
 			String ip_addr = txtIpAddress.getText().trim();
 			String port_no = txtPortNumber.getText().trim();
-			ClientView_1 view = new ClientView_1(username, ip_addr, port_no);
 			setVisible(false);
+			WaitingRoom view = new WaitingRoom(username, ip_addr, port_no);
 		}
 	}
 }

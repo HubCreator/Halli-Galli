@@ -24,7 +24,10 @@ public class CreateNewRoom extends JFrame {
 	private JTextField textField;
 	private JPasswordField passwordField;
 	public String masterUser;
-	// 그려진 Image를 보관하는 용도, paint() 함수에서 이용한다.
+	public Room room;
+	public String getRoom() {
+		return room.toString();
+	}
 
 	/**
 	 * Create the frame.
@@ -72,7 +75,7 @@ public class CreateNewRoom extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				System.out.print(textField.getText());
 				System.out.print(passwordField.getPassword());
-				Room room = new Room(masterUser,"123", textField.getText(), passwordField.getPassword().toString());
+				room = new Room(masterUser,"600", textField.getText(), passwordField.getPassword().toString());
 				setVisible(false);
 				// TODO : 새로운 채팅방 객체 생성
 			}
