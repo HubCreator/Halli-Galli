@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,11 +22,13 @@ public class CreateNewRoom extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 
+	public WaitingRoom mainview;
+	
 	JPanel panel;
 	private JTextField textField;
 	private JPasswordField passwordField;
 	public String masterUser;
-	public Room room;
+	public Room room = null;
 	public String getRoom() {
 		return room.toString();
 	}
@@ -34,7 +38,8 @@ public class CreateNewRoom extends JFrame {
 	 * 
 	 * @throws BadLocationException
 	 */
-	public CreateNewRoom(String username) {
+	public CreateNewRoom(String username, WaitingRoom view) {
+		mainview = view;
 		this.masterUser = username;
 		setVisible(true);
 //		setResizable(false);
@@ -73,11 +78,13 @@ public class CreateNewRoom extends JFrame {
 		JButton createBtn = new JButton("\uC0DD\uC131");
 		createBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.print(textField.getText());
-				System.out.print(passwordField.getPassword());
-				room = new Room(masterUser,"600", textField.getText(), passwordField.getPassword().toString());
-				setVisible(false);
+				//System.out.print(textField.getText());
+				//System.out.print(passwordField.getPassword());
 				// TODO : 货肺款 盲泼规 按眉 积己
+				room = new Room(masterUser,"600", textField.getText(), passwordField.getPassword().toString());
+				mainview.sendObject(room);
+				//System.out.println(room.toString());
+				setVisible(false);
 			}
 		});
 		createBtn.setBounds(221, 204, 60, 39);

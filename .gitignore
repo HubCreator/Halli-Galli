@@ -1,2 +1,4 @@
 .metadata
-*.class
+**/*.class
+JavaGameClient/bin/*
+JavaGameServer/bin/*

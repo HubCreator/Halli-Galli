@@ -1,7 +1,6 @@
 
 // JavaObjClientView.java ObjecStram 기반 Client
 //실질적인 채팅 창
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Font;
@@ -11,15 +10,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
 
 import javax.swing.ImageIcon;
@@ -27,7 +20,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -52,6 +44,9 @@ public class WaitingRoom extends JFrame {
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
+	
+	public WaitingRoom view = null; 
+	public CreateNewRoom createNewRoom = null;
 
 	private JLabel lblUserName;
 	// private JTextArea textArea;
@@ -133,20 +128,21 @@ public class WaitingRoom extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChatMsg msg = new ChatMsg(UserName, "400", "Bye");
-				SendObject(msg);
+				sendObject(msg);
 				System.exit(0);
 			}
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
 		contentPane.add(btnNewButton);
 		
+		view = this;
+		
 		JButton makeNewRoom = new JButton("\uBC29 \uB9CC\uB4E4\uAE30"); // 방 만들기 버튼
 		makeNewRoom.setFont(new Font("양재블럭체", Font.PLAIN, 15));
 		makeNewRoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// JOptionPane.showInternalMessageDialog(null, "hi");
-				CreateNewRoom createNewRoom = new CreateNewRoom(username);
-				System.out.println(createNewRoom.room);
+				createNewRoom = new CreateNewRoom(username, view);
 			}
 		});
 		makeNewRoom.setBounds(1018, 61, 147, 90);
@@ -213,7 +209,7 @@ public class WaitingRoom extends JFrame {
 			ois = new ObjectInputStream(socket.getInputStream());
 
 			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
-			SendObject(obcm);
+			sendObject(obcm);
 
 			ListenNetwork net = new ListenNetwork();
 			net.start();
@@ -223,11 +219,6 @@ public class WaitingRoom extends JFrame {
 			txtInput.requestFocus();
 			ImageSendAction action2 = new ImageSendAction();
 			imgBtn.addActionListener(action2);
-			MyMouseEvent mouse = new MyMouseEvent();
-			panel.addMouseMotionListener(mouse);
-			panel.addMouseListener(mouse);
-			MyMouseWheelEvent wheel = new MyMouseWheelEvent();
-			panel.addMouseWheelListener(wheel);
 
 		} catch (NumberFormatException | IOException e) {
 			// TODO Auto-generated catch block
@@ -235,23 +226,6 @@ public class WaitingRoom extends JFrame {
 			AppendText("connect error");
 		}
 
-	}
-
-	public void paint(Graphics g) {
-		super.paint(g);
-		// Image 영역이 가려졌다 다시 나타날 때 그려준다.
-		gc.drawImage(panelImage, 0, 0, this);
-	}
-
-	public void ScreenClear() {
-		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel.setBackground(Color.WHITE);
-
-		gc2.setColor(panel.getBackground());
-		gc2.fillRect(0, 0, panel.getWidth(), panel.getHeight());
-		gc2.setColor(Color.BLACK);
-		gc2.drawRect(0, 0, panel.getWidth(), panel.getHeight());
-		gc2.setColor(Color.WHITE);
 	}
 
 	// Server Message를 수신해서 화면에 표시
@@ -262,6 +236,9 @@ public class WaitingRoom extends JFrame {
 					Object obcm = null;
 					String msg = null;
 					ChatMsg cm;
+					if(createNewRoom.room != null) {
+						System.out.println("hello");
+					}
 					try {
 						obcm = ois.readObject();
 					} catch (ClassNotFoundException e) {
@@ -288,16 +265,16 @@ public class WaitingRoom extends JFrame {
 							AppendTextR("[" + cm.UserName + "]");
 						else
 							AppendText("[" + cm.UserName + "]");
-						AppendImage(cm.img);
+						//AppendImage(cm.img);
 						break;
 					case "500": // Mouse Event 수신
-						DoMouseEvent(cm);
+						//DoMouseEvent(cm);
 						break;
 					case "501": // Mouse Event End 수신
-						DoMouseEvent(cm);
+						//DoMouseEvent(cm);
 						break;
 					case "502": // Screen Clear
-						ScreenClear();
+						//ScreenClear();
 						break;
 					}
 				} catch (IOException e) {
@@ -316,153 +293,7 @@ public class WaitingRoom extends JFrame {
 		}
 	}
 
-	// Mouse Event 수신 처리
-	public void DoMouseEvent(ChatMsg cm) {
-		Color c = null;
-		if (cm.UserName.matches(UserName)) // 본인 것은 이미 Local 로 그렸다.
-			return;
-		if (cm.eraser) {
-			c = new Color(255, 255, 255);
-		} else {
-			c = new Color(255, 0, 0); // 다른 사람 것은 Red
-		}
-		gc2.setColor(c);
-		// gc2.fillOval(cm.mouse_e.getX() - pen_size / 2, cm.mouse_e.getY() -
-		// cm.pen_size / 2, cm.pen_size, cm.pen_size);
-		if (old_x_guest == -1 || old_y_guest == -1) {
-			old_x_guest = cm.mouse_e.getX();
-			old_y_guest = cm.mouse_e.getY();
-		}
-		gc2.setStroke(new BasicStroke(cm.pen_size));
-		gc2.drawLine(old_x_guest, old_y_guest, cm.mouse_e.getX(), cm.mouse_e.getY());
-		old_x_guest = cm.mouse_e.getX();
-		old_y_guest = cm.mouse_e.getY();
-		if (cm.code.matches("501")) {
-			old_x_guest = -1;
-			old_y_guest = -1;
-		}
-		gc.drawImage(panelImage, 0, 0, panel);
-	}
-
-	public void SendMouseEvent(MouseEvent e) {
-		ChatMsg cm = new ChatMsg(UserName, "500", "MOUSE");
-		cm.mouse_e = e;
-		cm.pen_size = pen_size;
-		if (currentMode.matches("Erase") || currentMode.matches("Clear"))
-			cm.eraser = true;
-		else
-			cm.eraser = false;
-		SendObject(cm);
-	}
-
-	public void SendMouseEventEnd(MouseEvent e) {
-		ChatMsg cm = new ChatMsg(UserName, "501", "MOUSE_END");
-		cm.mouse_e = e;
-		cm.pen_size = pen_size;
-		if (currentMode.matches("Erase") || currentMode.matches("Clear"))
-			cm.eraser = true;
-		else
-			cm.eraser = false;
-		SendObject(cm);
-	}
-
-	class MyMouseWheelEvent implements MouseWheelListener {
-		@Override
-		public void mouseWheelMoved(MouseWheelEvent e) {
-			// TODO Auto-generated method stub
-			if (e.getWheelRotation() < 0) { // 위로 올리는 경우 pen_size 증가
-				if (pen_size < 20)
-					pen_size++;
-			} else {
-				if (pen_size > 2)
-					pen_size--;
-			}
-			lblMouseEvent.setText("mouseWheelMoved Rotation=" + e.getWheelRotation() + " pen_size = " + pen_size + " "
-					+ e.getX() + "," + e.getY());
-
-		}
-
-	}
-
-	// Mouse Event Handler
-	class MyMouseEvent implements MouseListener, MouseMotionListener {
-		@Override
-		public void mouseDragged(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseDragged " + e.getX() + "," + e.getY());// 좌표출력가능
-			Color c = null;
-			if (currentMode.matches("Paint")) {
-				c = new Color(0, 0, 255);
-			} else if (currentMode.matches("Erase") || currentMode.matches("Clear")) {
-				c = new Color(255, 255, 255);
-			}
-			gc2.setColor(c);
-			gc2.fillOval(e.getX() - pen_size / 2, e.getY() - pen_size / 2, pen_size, pen_size);
-			if (old_x == -1 || old_y == -1) {
-				old_x = e.getX();
-				old_y = e.getY();
-			}
-			gc2.setStroke(new BasicStroke(pen_size));
-			gc2.drawLine(old_x, old_y, e.getX(), e.getY());
-			old_x = e.getX();
-			old_y = e.getY();
-			// panelImnage는 paint()에서 이용한다.
-			gc.drawImage(panelImage, 0, 0, panel);
-			SendMouseEvent(e);
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseMoved " + e.getX() + "," + e.getY());
-		}
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseClicked " + e.getX() + "," + e.getY());
-			Color c = null;
-			if (currentMode.matches("Paint")) {
-				c = new Color(0, 0, 255);
-			} else if (currentMode.matches("Erase") || currentMode.matches("Clear")) {
-				c = new Color(255, 255, 255);
-			}
-			gc2.setColor(c);
-			gc2.fillOval(e.getX() - pen_size / 2, e.getY() - pen_size / 2, pen_size, pen_size);
-			old_x = e.getX();
-			old_y = e.getY();
-			gc.drawImage(panelImage, 0, 0, panel);
-			SendMouseEvent(e);
-			SendMouseEventEnd(e);
-			old_x = -1;
-			old_y = -1;
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseEntered " + e.getX() + "," + e.getY());
-			// panel.setBackground(Color.YELLOW);
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseExited " + e.getX() + "," + e.getY());
-			// panel.setBackground(Color.CYAN);
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mousePressed " + e.getX() + "," + e.getY());
-			old_x = e.getX();
-			old_y = e.getY();
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			lblMouseEvent.setText(e.getButton() + " mouseReleased " + e.getX() + "," + e.getY());
-			// 드래그중 멈출시 보임
-			SendMouseEventEnd(e);
-		}
-	}
+	
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -497,7 +328,7 @@ public class WaitingRoom extends JFrame {
 					ChatMsg obcm = new ChatMsg(UserName, "300", "IMG");
 					ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile());
 					obcm.img = img;
-					SendObject(obcm);
+					sendObject(obcm);
 				}
 			}
 		}
@@ -553,65 +384,6 @@ public class WaitingRoom extends JFrame {
 		}
 	}
 
-	public void AppendImage(ImageIcon ori_icon) {
-		int len = textArea.getDocument().getLength();
-		textArea.setCaretPosition(len); // place caret at the end (with no selection)
-		Image ori_img = ori_icon.getImage();
-		Image new_img;
-		ImageIcon new_icon;
-		int width, height;
-		double ratio;
-		width = ori_icon.getIconWidth();
-		height = ori_icon.getIconHeight();
-		// Image가 너무 크면 최대 가로 또는 세로 200 기준으로 축소시킨다.
-		if (width > 200 || height > 200) {
-			if (width > height) { // 가로 사진
-				ratio = (double) height / width;
-				width = 200;
-				height = (int) (width * ratio);
-			} else { // 세로 사진
-				ratio = (double) width / height;
-				height = 200;
-				width = (int) (height * ratio);
-			}
-			new_img = ori_img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-			new_icon = new ImageIcon(new_img);
-			textArea.insertIcon(new_icon);
-		} else {
-			textArea.insertIcon(ori_icon);
-			new_img = ori_img;
-		}
-		len = textArea.getDocument().getLength();
-		textArea.setCaretPosition(len);
-		textArea.replaceSelection("\n");
-		// ImageViewAction viewaction = new ImageViewAction();
-		// new_icon.addActionListener(viewaction); // 내부클래스로 액션 리스너를 상속받은 클래스로
-		// panelImage = ori_img.getScaledInstance(panel.getWidth(), panel.getHeight(),
-		// Image.SCALE_DEFAULT);
-
-		gc2.drawImage(ori_img, 0, 0, panel.getWidth(), panel.getHeight(), panel);
-		gc.drawImage(panelImage, 0, 0, panel.getWidth(), panel.getHeight(), panel);
-	}
-
-	// Windows 처럼 message 제외한 나머지 부분은 NULL 로 만들기 위한 함수
-	public byte[] MakePacket(String msg) {
-		byte[] packet = new byte[BUF_LEN];
-		byte[] bb = null;
-		int i;
-		for (i = 0; i < BUF_LEN; i++)
-			packet[i] = 0;
-		try {
-			bb = msg.getBytes("euc-kr");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.exit(0);
-		}
-		for (i = 0; i < bb.length; i++)
-			packet[i] = bb[i];
-		return packet;
-	}
-
 	// Server에게 network으로 전송
 	public void SendMessage(String msg) {
 		try {
@@ -632,12 +404,12 @@ public class WaitingRoom extends JFrame {
 		}
 	}
 
-	public void SendObject(Object ob) { // 서버로 메세지를 보내는 메소드
+	public void sendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		try {
 			oos.writeObject(ob);
 		} catch (IOException e) {
 			// textArea.append("메세지 송신 에러!!\n");
-			AppendText("SendObject Error");
+			AppendText("sendObject Error");
 		}
 	}
 }
