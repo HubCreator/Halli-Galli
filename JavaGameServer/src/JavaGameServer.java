@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -278,8 +279,27 @@ public class JavaGameServer extends JFrame {
 
 		public void writeRoomListToAll(Room room) {
 			try {
-				oos.writeObject(room);
-			} catch (IOException e) {
+				for (int i = 0; i < user_vc.size(); i++) {
+					UserService user = (UserService) user_vc.elementAt(i);
+					try {
+						oos.writeObject(room);
+					} catch (IOException e) {
+						appendText("oos.writeObject(room) error");
+						try {
+							ois.close();
+							oos.close();
+							client_socket.close();
+							client_socket = null;
+							ois = null;
+							oos = null;
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						logout();
+					}
+				}
+			} catch (Error e2) {
 				appendText("dos.writeObject() error");
 				try {
 					oos.close();
@@ -381,14 +401,13 @@ public class JavaGameServer extends JFrame {
 					}
 					if (room != null) {
 						if (room.code.matches("600")) { // create new room
-							System.out.println("hello there");
-
+							ArrayList<String> players = new ArrayList<String>();
+							players.add(room.masterUser);
+							room.players = players;
+							System.out.println(room.players.get(0));
 							roomList.add(room);
-							for (int i = 0; i < user_vc.size(); i++) {
-								UserService user = (UserService) user_vc.elementAt(i);
-								// writeOne(user.UserName + "\t" + user.UserStatus + "\n");
-								writeRoomListToAll(room);
-							}
+							writeAllObject(room);
+							//writeRoomListToAll(room);
 							break;
 						}
 					}

@@ -12,7 +12,7 @@ class Room implements Serializable {
 	public String password;
 	public ArrayList<String> players;
 	public ArrayList<String> observers;
-	public String status;
+	public String status = "¥Î±‚¡ﬂ";
 	
 
 	public Room(String masterUser, String code, String room_name, String password) {

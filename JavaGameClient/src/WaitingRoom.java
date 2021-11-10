@@ -73,6 +73,8 @@ public class WaitingRoom extends JFrame {
 	private Graphics2D gc2 = null;
 	public String currentMode = "Paint";
 	public boolean eraser = false;
+	JPanel roomListJPanel;
+	Vector roomList = new Vector();
 
 	public int old_x = -1;
 	public int old_y = -1;
@@ -161,86 +163,16 @@ public class WaitingRoom extends JFrame {
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane_1.setBounds(12, 10, 826, 578);
-		panel_1.add(scrollPane_1);
+		JScrollPane roomList_scroller = new JScrollPane();
+		roomList_scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		roomList_scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		roomList_scroller.setBounds(12, 10, 826, 578);
+		panel_1.add(roomList_scroller);
 		
-		JPanel panel_2 = new JPanel();
-		scrollPane_1.setViewportView(panel_2);
-		panel_2.setLayout(null);
+		roomListJPanel = new JPanel();
+		roomList_scroller.setViewportView(roomListJPanel);
+		roomListJPanel.setLayout(null);
 		
-		JPanel panel_3 = new JPanel();
-		panel_3.setBounds(12, 21, 783, 151);
-		panel_2.add(panel_3);
-		panel_3.setLayout(null);
-		
-		JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
-		label_room_no.setBounds(12, 10, 57, 34);
-		panel_3.add(label_room_no);
-		
-		JLabel label_room_name = new JLabel("\uBC29 \uC774\uB984");
-		label_room_name.setBounds(12, 107, 49, 34);
-		panel_3.add(label_room_name);
-		
-		JLabel label_room_master = new JLabel("\uBC29\uC7A5");
-		label_room_master.setBounds(12, 54, 37, 34);
-		panel_3.add(label_room_master);
-		
-		JLabel label_room_player = new JLabel("\uCC38\uC5EC \uC778\uC6D0");
-		label_room_player.setBounds(445, 10, 57, 34);
-		panel_3.add(label_room_player);
-		
-		JLabel label_room_observer = new JLabel("\uAD00\uC804 \uC778\uC6D0");
-		label_room_observer.setBounds(445, 54, 57, 34);
-		panel_3.add(label_room_observer);
-		
-		JLabel label_room_status = new JLabel("\uC0C1\uD0DC");
-		label_room_status.setBounds(445, 107, 57, 34);
-		panel_3.add(label_room_status);
-		
-		room_no = new JTextField();
-		room_no.setBackground(Color.WHITE);
-		room_no.setBounds(73, 10, 320, 32);
-		panel_3.add(room_no);
-		room_no.setColumns(10);
-		
-		JButton playBtn = new JButton("\uD50C\uB808\uC774");
-		playBtn.setBounds(697, 16, 74, 28);
-		panel_3.add(playBtn);
-		
-		JButton observeBtn = new JButton("\uAD00\uC804");
-		observeBtn.setBounds(697, 60, 74, 28);
-		panel_3.add(observeBtn);
-		
-		room_master = new JTextField();
-		room_master.setColumns(10);
-		room_master.setBounds(73, 54, 320, 32);
-		panel_3.add(room_master);
-		
-		room_name = new JTextField();
-		room_name.setColumns(10);
-		room_name.setBounds(73, 107, 320, 32);
-		panel_3.add(room_name);
-		
-		room_player = new JTextField();
-		room_player.setColumns(10);
-		room_player.setBackground(Color.WHITE);
-		room_player.setBounds(514, 12, 116, 32);
-		panel_3.add(room_player);
-		
-		room_observer = new JTextField();
-		room_observer.setColumns(10);
-		room_observer.setBackground(Color.WHITE);
-		room_observer.setBounds(514, 56, 116, 32);
-		panel_3.add(room_observer);
-		
-		room_status = new JTextField();
-		room_status.setColumns(10);
-		room_status.setBackground(Color.WHITE);
-		room_status.setBounds(514, 109, 116, 32);
-		panel_3.add(room_status);
 		
 
 		try {
@@ -325,7 +257,91 @@ public class WaitingRoom extends JFrame {
 					} else if (room != null) {
 						switch (room.code) {
 						case "600":
+							// TODO: makeNewEntry();
+							System.out.println("fuck");
+							roomList.add(room);
+							JPanel roomEntry = new JPanel();
+							roomEntry.setBackground(Color.LIGHT_GRAY);
+							roomEntry.setBounds(12, 21 + ((roomList.size()-1) * 151 + 2), 783, 151);
+							roomListJPanel.add(roomEntry);
+							roomEntry.setLayout(null);
 							
+							//JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
+							JLabel label_room_no = new JLabel("¾È³ç");
+							label_room_no.setBounds(12, 10, 57, 34);
+							roomEntry.add(label_room_no);
+							
+							JLabel label_room_name = new JLabel("\uBC29 \uC774\uB984");
+							label_room_name.setBounds(12, 107, 49, 34);
+							roomEntry.add(label_room_name);
+							
+							JLabel label_room_master = new JLabel("\uBC29\uC7A5");
+							label_room_master.setBounds(12, 54, 37, 34);
+							roomEntry.add(label_room_master);
+							
+							JLabel label_room_player = new JLabel("\uCC38\uC5EC \uC778\uC6D0");
+							label_room_player.setBounds(445, 10, 57, 34);
+							roomEntry.add(label_room_player);
+							
+							JLabel label_room_observer = new JLabel("\uAD00\uC804 \uC778\uC6D0");
+							label_room_observer.setBounds(445, 54, 57, 34);
+							roomEntry.add(label_room_observer);
+							
+							JLabel label_room_status = new JLabel("\uC0C1\uD0DC");
+							label_room_status.setBounds(445, 107, 57, 34);
+							roomEntry.add(label_room_status);
+							
+							room_no = new JTextField();
+							room_no.setBackground(Color.WHITE);
+							room_no.setBounds(73, 10, 320, 32);
+							room_no.setColumns(10);
+							room_no.setText(Integer.toString(roomList.size()));
+							roomEntry.add(room_no);
+							
+							JButton playBtn = new JButton("\uD50C\uB808\uC774");
+							playBtn.setBounds(697, 16, 74, 28);
+							roomEntry.add(playBtn);
+							
+							JButton observeBtn = new JButton("\uAD00\uC804");
+							observeBtn.setBounds(697, 60, 74, 28);
+							roomEntry.add(observeBtn);
+							
+							room_master = new JTextField();
+							room_master.setColumns(10);
+							room_master.setBounds(73, 54, 320, 32);
+							room_master.setText(room.masterUser);
+							roomEntry.add(room_master);
+							
+							
+							room_name = new JTextField();
+							room_name.setColumns(10);
+							room_name.setBounds(73, 107, 320, 32);
+							room_name.setText(room.room_name);
+							roomEntry.add(room_name);
+							
+							room_player = new JTextField();
+							room_player.setColumns(10);
+							room_player.setBackground(Color.WHITE);
+							room_player.setBounds(514, 12, 116, 32);
+							room_name.setText(String.valueOf(room.players.size()));
+							roomEntry.add(room_player);
+							
+							room_observer = new JTextField();
+							room_observer.setColumns(10);
+							room_observer.setBackground(Color.WHITE);
+							room_observer.setBounds(514, 56, 116, 32);
+							if(room.observers != null) {
+								room_observer.setText(String.valueOf(room.observers.size()));
+							}
+							else room_observer.setText("0");
+							roomEntry.add(room_observer);
+							
+							room_status = new JTextField();
+							room_status.setColumns(10);
+							room_status.setBackground(Color.WHITE);
+							room_status.setBounds(514, 109, 116, 32);
+							room_status.setText(room.status);
+							roomEntry.add(room_status);
 						}
 					}
 

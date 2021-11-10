@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -76,15 +78,40 @@ public class CreateNewRoom extends JFrame {
 		textField.setColumns(30);
 		
 		JButton createBtn = new JButton("\uC0DD\uC131");
-		createBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// TODO : 货肺款 盲泼规 按眉 积己
+		createBtn.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
 				room = new Room(masterUser,"600", textField.getText(), passwordField.getPassword().toString());
 				mainview.sendObject(room);
-				//System.out.println(room.toString());
 				setVisible(false);
 			}
 		});
+		
 		createBtn.setBounds(221, 204, 60, 39);
 		contentPane.add(createBtn);
 		
