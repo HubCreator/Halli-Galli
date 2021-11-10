@@ -78,8 +78,6 @@ public class CreateNewRoom extends JFrame {
 		JButton createBtn = new JButton("\uC0DD\uC131");
 		createBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//System.out.print(textField.getText());
-				//System.out.print(passwordField.getPassword());
 				// TODO : 货肺款 盲泼规 按眉 积己
 				room = new Room(masterUser,"600", textField.getText(), passwordField.getPassword().toString());
 				mainview.sendObject(room);

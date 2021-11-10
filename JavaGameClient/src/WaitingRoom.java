@@ -1,7 +1,9 @@
 
 // JavaObjClientView.java ObjecStram 기반 Client
 //실질적인 채팅 창
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Frame;
@@ -14,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,6 +34,11 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import javax.swing.ScrollPaneConstants;
 
 public class WaitingRoom extends JFrame {
 
@@ -44,8 +52,8 @@ public class WaitingRoom extends JFrame {
 
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
-	
-	public WaitingRoom view = null; 
+
+	public WaitingRoom view = null;
 	public CreateNewRoom createNewRoom = null;
 
 	private JLabel lblUserName;
@@ -89,11 +97,11 @@ public class WaitingRoom extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(902, 178, 263, 433);
 		contentPane.add(scrollPane);
-		
-				textArea = new JTextPane();
-				scrollPane.setViewportView(textArea);
-				textArea.setEditable(true);
-				textArea.setFont(new Font("굴림체", Font.PLAIN, 14));
+
+		textArea = new JTextPane();
+		scrollPane.setViewportView(textArea);
+		textArea.setEditable(true);
+		textArea.setFont(new Font("굴림체", Font.PLAIN, 14));
 
 		txtInput = new JTextField();
 		txtInput.setBounds(902, 633, 182, 40);
@@ -134,9 +142,9 @@ public class WaitingRoom extends JFrame {
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
 		contentPane.add(btnNewButton);
-		
+
 		view = this;
-		
+
 		JButton makeNewRoom = new JButton("\uBC29 \uB9CC\uB4E4\uAE30"); // 방 만들기 버튼
 		makeNewRoom.setFont(new Font("양재블럭체", Font.PLAIN, 15));
 		makeNewRoom.addActionListener(new ActionListener() {
@@ -147,59 +155,93 @@ public class WaitingRoom extends JFrame {
 		});
 		makeNewRoom.setBounds(1018, 61, 147, 90);
 		contentPane.add(makeNewRoom);
-		
+
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(12, 61, 850, 662);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBounds(12, 10, 809, 57);
-		panel_1.add(panel_2);
-		panel_2.setLayout(null);
-		
-		lblNewLabel_1 = new JLabel("\uBC88\uD638");
-		lblNewLabel_1.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setBounds(0, 10, 78, 37);
-		panel_2.add(lblNewLabel_1);
-		
-		JLabel lblNewLabel_2 = new JLabel("\uBC29 \uC774\uB984");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel_2.setBounds(170, 10, 78, 37);
-		panel_2.add(lblNewLabel_2);
-		
-		JLabel lblNewLabel_3 = new JLabel("\uBC29\uC7A5");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel_3.setBounds(354, 10, 78, 37);
-		panel_2.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("\uCC38\uC5EC \uC778\uC6D0");
-		lblNewLabel_4.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_4.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel_4.setBounds(481, 10, 78, 37);
-		panel_2.add(lblNewLabel_4);
-		
-		JLabel lblNewLabel_5 = new JLabel("\uAD00\uC804 \uC778\uC6D0");
-		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel_5.setBounds(588, 10, 78, 37);
-		panel_2.add(lblNewLabel_5);
-		
-		JLabel lblNewLabel_5_1 = new JLabel("\uC0C1\uD0DC");
-		lblNewLabel_5_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_5_1.setFont(new Font("굴림", Font.BOLD, 15));
-		lblNewLabel_5_1.setBounds(696, 10, 78, 37);
-		panel_2.add(lblNewLabel_5_1);
-		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(12, 77, 809, 575);
+		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane_1.setBounds(12, 10, 826, 578);
 		panel_1.add(scrollPane_1);
 		
-		JList list = new JList();
-		scrollPane_1.setViewportView(list);
+		JPanel panel_2 = new JPanel();
+		scrollPane_1.setViewportView(panel_2);
+		panel_2.setLayout(null);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBounds(12, 21, 783, 151);
+		panel_2.add(panel_3);
+		panel_3.setLayout(null);
+		
+		JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
+		label_room_no.setBounds(12, 10, 57, 34);
+		panel_3.add(label_room_no);
+		
+		JLabel label_room_name = new JLabel("\uBC29 \uC774\uB984");
+		label_room_name.setBounds(12, 107, 49, 34);
+		panel_3.add(label_room_name);
+		
+		JLabel label_room_master = new JLabel("\uBC29\uC7A5");
+		label_room_master.setBounds(12, 54, 37, 34);
+		panel_3.add(label_room_master);
+		
+		JLabel label_room_player = new JLabel("\uCC38\uC5EC \uC778\uC6D0");
+		label_room_player.setBounds(445, 10, 57, 34);
+		panel_3.add(label_room_player);
+		
+		JLabel label_room_observer = new JLabel("\uAD00\uC804 \uC778\uC6D0");
+		label_room_observer.setBounds(445, 54, 57, 34);
+		panel_3.add(label_room_observer);
+		
+		JLabel label_room_status = new JLabel("\uC0C1\uD0DC");
+		label_room_status.setBounds(445, 107, 57, 34);
+		panel_3.add(label_room_status);
+		
+		room_no = new JTextField();
+		room_no.setBackground(Color.WHITE);
+		room_no.setBounds(73, 10, 320, 32);
+		panel_3.add(room_no);
+		room_no.setColumns(10);
+		
+		JButton playBtn = new JButton("\uD50C\uB808\uC774");
+		playBtn.setBounds(697, 16, 74, 28);
+		panel_3.add(playBtn);
+		
+		JButton observeBtn = new JButton("\uAD00\uC804");
+		observeBtn.setBounds(697, 60, 74, 28);
+		panel_3.add(observeBtn);
+		
+		room_master = new JTextField();
+		room_master.setColumns(10);
+		room_master.setBounds(73, 54, 320, 32);
+		panel_3.add(room_master);
+		
+		room_name = new JTextField();
+		room_name.setColumns(10);
+		room_name.setBounds(73, 107, 320, 32);
+		panel_3.add(room_name);
+		
+		room_player = new JTextField();
+		room_player.setColumns(10);
+		room_player.setBackground(Color.WHITE);
+		room_player.setBounds(514, 12, 116, 32);
+		panel_3.add(room_player);
+		
+		room_observer = new JTextField();
+		room_observer.setColumns(10);
+		room_observer.setBackground(Color.WHITE);
+		room_observer.setBounds(514, 56, 116, 32);
+		panel_3.add(room_observer);
+		
+		room_status = new JTextField();
+		room_status.setColumns(10);
+		room_status.setBackground(Color.WHITE);
+		room_status.setBounds(514, 109, 116, 32);
+		panel_3.add(room_status);
+		
 
 		try {
 			socket = new Socket(ip_addr, Integer.parseInt(port_no));
@@ -235,10 +277,9 @@ public class WaitingRoom extends JFrame {
 				try {
 					Object obcm = null;
 					String msg = null;
-					ChatMsg cm;
-					if(createNewRoom.room != null) {
-						System.out.println("hello");
-					}
+					ChatMsg cm = null;
+					Room room = null;
+
 					try {
 						obcm = ois.readObject();
 					} catch (ClassNotFoundException e) {
@@ -251,32 +292,46 @@ public class WaitingRoom extends JFrame {
 					if (obcm instanceof ChatMsg) {
 						cm = (ChatMsg) obcm;
 						msg = String.format("[%s]\n%s", cm.UserName, cm.data);
+					} else if (obcm instanceof Room) {
+						room = (Room) obcm;
 					} else
 						continue;
-					switch (cm.code) {
-					case "200": // chat message
-						if (cm.UserName.equals(UserName))
-							AppendTextR(msg); // 내 메세지는 우측에
-						else
-							AppendText(msg);
-						break;
-					case "300": // Image 첨부
-						if (cm.UserName.equals(UserName))
-							AppendTextR("[" + cm.UserName + "]");
-						else
-							AppendText("[" + cm.UserName + "]");
-						//AppendImage(cm.img);
-						break;
-					case "500": // Mouse Event 수신
-						//DoMouseEvent(cm);
-						break;
-					case "501": // Mouse Event End 수신
-						//DoMouseEvent(cm);
-						break;
-					case "502": // Screen Clear
-						//ScreenClear();
-						break;
+
+					if (cm != null) {
+						switch (cm.code) {
+						case "200": // chat message
+							if (cm.UserName.equals(UserName))
+								AppendTextR(msg); // 내 메세지는 우측에
+							else
+								AppendText(msg);
+							break;
+						case "300": // Image 첨부
+							if (cm.UserName.equals(UserName))
+								AppendTextR("[" + cm.UserName + "]");
+							else
+								AppendText("[" + cm.UserName + "]");
+							// AppendImage(cm.img);
+							break;
+						case "500": // Mouse Event 수신
+							// DoMouseEvent(cm);
+							break;
+						case "501": // Mouse Event End 수신
+							// DoMouseEvent(cm);
+							break;
+						case "502": // Screen Clear
+							// ScreenClear();
+							break;
+						}
+					} else if (room != null) {
+						switch (room.code) {
+						case "600":
+							
+						}
 					}
+
+					/*
+					 * if(room.code != null) { System.out.println("hello"); }
+					 */
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");
 					try {
@@ -292,8 +347,6 @@ public class WaitingRoom extends JFrame {
 			}
 		}
 	}
-
-	
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -335,7 +388,12 @@ public class WaitingRoom extends JFrame {
 	}
 
 	ImageIcon icon1 = new ImageIcon("src/icon1.jpg");
-	private JLabel lblNewLabel_1;
+	private JTextField room_no;
+	private JTextField room_master;
+	private JTextField room_name;
+	private JTextField room_player;
+	private JTextField room_observer;
+	private JTextField room_status;
 
 	public void AppendIcon(ImageIcon icon) {
 		int len = textArea.getDocument().getLength();
