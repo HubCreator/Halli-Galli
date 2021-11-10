@@ -262,12 +262,12 @@ public class WaitingRoom extends JFrame {
 							roomList.add(room);
 							JPanel roomEntry = new JPanel();
 							roomEntry.setBackground(Color.LIGHT_GRAY);
-							roomEntry.setBounds(12, 21 + ((roomList.size()-1) * 151 + 2), 783, 151);
+							roomEntry.setBounds(12, 21 + ((roomList.size()-1) * 151 + 5), 783, 151);
 							roomListJPanel.add(roomEntry);
 							roomEntry.setLayout(null);
 							
 							//JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
-							JLabel label_room_no = new JLabel("¾È³ç");
+							JLabel label_room_no = new JLabel("¹æ ¹øÈ£");
 							label_room_no.setBounds(12, 10, 57, 34);
 							roomEntry.add(label_room_no);
 							
@@ -292,9 +292,8 @@ public class WaitingRoom extends JFrame {
 							roomEntry.add(label_room_status);
 							
 							JLabel room_no = new JLabel();
-							room_no.setBackground(Color.WHITE);
 							room_no.setBounds(73, 10, 320, 32);
-							room_no.setText(Integer.toString(roomList.size()));
+							room_no.setText(String.valueOf(roomList.size()));
 							roomEntry.add(room_no);
 							
 							JButton playBtn = new JButton("\uD50C\uB808\uC774");
@@ -319,7 +318,7 @@ public class WaitingRoom extends JFrame {
 							JLabel room_player = new JLabel();
 							room_player.setBackground(Color.WHITE);
 							room_player.setBounds(514, 12, 116, 32);
-							room_name.setText(String.valueOf(room.players.size()));
+							room_player.setText(String.valueOf(room.players.size()));
 							roomEntry.add(room_player);
 							
 							JLabel room_observer = new JLabel();

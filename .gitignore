@@ -2,5 +2,10 @@
 *.class
 JavaGameClient\bin\**.class
 JavaGameClient/bin/**.class
+JavaGameClient/.settings/
+JavaGameClient/bin/
+
 JavaGameServer\bin\**.class
 JavaGameServer/bin/**.class
+JavaGameServer/.settings/
+JavaGameServer/bin/

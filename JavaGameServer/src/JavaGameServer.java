@@ -370,7 +370,6 @@ public class JavaGameServer extends JFrame {
 							System.out.println(room.players.get(0));
 							roomList.add(room);
 							writeAllObject(room);
-							break;
 						}
 					}
 
