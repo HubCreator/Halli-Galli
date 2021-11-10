@@ -28,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.text.BadLocationException;
@@ -258,10 +259,11 @@ public class WaitingRoom extends JFrame {
 						switch (room.code) {
 						case "600":
 							// TODO: makeNewEntry();
-							System.out.println("fuck");
 							roomList.add(room);
 							JPanel roomEntry = new JPanel();
+							Border blackline = BorderFactory.createLineBorder(Color.black);
 							roomEntry.setBackground(Color.LIGHT_GRAY);
+							roomEntry.setBorder(blackline);
 							roomEntry.setBounds(12, 21 + ((roomList.size()-1) * 151 + 5), 783, 151);
 							roomListJPanel.add(roomEntry);
 							roomEntry.setLayout(null);
