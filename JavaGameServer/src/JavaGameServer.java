@@ -352,7 +352,11 @@ public class JavaGameServer extends JFrame {
 										break;
 									}
 								}
-							} else { // 일반 채팅 메시지
+							}
+							else if (chatmsg.code.matches("602")) {
+								System.out.println("@@@");
+							}
+							else { // 일반 채팅 메시지
 								UserStatus = "O";
 								// writeAll(msg + "\n"); // Write All
 								writeAllObject(chatmsg);
@@ -367,7 +371,6 @@ public class JavaGameServer extends JFrame {
 							ArrayList<String> players = new ArrayList<String>();
 							players.add(room.masterUser);
 							room.players = players;
-							System.out.println(room.players.get(0));
 							roomList.add(room);
 							writeAllObject(room);
 						}

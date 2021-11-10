@@ -1,9 +1,7 @@
 
 // JavaObjClientView.java ObjecStram 기반 Client
 //실질적인 채팅 창
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Frame;
@@ -18,15 +16,16 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -35,18 +34,13 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.FlowLayout;
-import javax.swing.ScrollPaneConstants;
 
 public class WaitingRoom extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtInput;
-	private String UserName;
+	public String UserName;
 	private JButton btnSend;
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	private Socket socket; // 연결소켓
@@ -56,10 +50,11 @@ public class WaitingRoom extends JFrame {
 
 	public WaitingRoom view = null;
 	public CreateNewRoom createNewRoom = null;
+	public PlayRoom playRoom = null;
 
 	private JLabel lblUserName;
-	// private JTextArea textArea;
 	private JTextPane textArea;
+	// private JTextArea textArea;
 
 	private Frame frame;
 	private FileDialog fd;
@@ -152,7 +147,6 @@ public class WaitingRoom extends JFrame {
 		makeNewRoom.setFont(new Font("양재블럭체", Font.PLAIN, 15));
 		makeNewRoom.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// JOptionPane.showInternalMessageDialog(null, "hi");
 				createNewRoom = new CreateNewRoom(username, view);
 			}
 		});
@@ -260,12 +254,18 @@ public class WaitingRoom extends JFrame {
 						case "600":
 							// TODO: makeNewEntry();
 							roomList.add(room);
+							// 내가 만들었으면, 방에 바로 입장
+							if(room.masterUser.equals(UserName)) {
+								setVisible(false);
+								playRoom = new PlayRoom(createNewRoom, view);
+								break;
+							}
+							
 							JPanel roomEntry = new JPanel();
 							Border blackline = BorderFactory.createLineBorder(Color.black);
 							roomEntry.setBackground(Color.LIGHT_GRAY);
 							roomEntry.setBorder(blackline);
 							roomEntry.setBounds(12, 21 + ((roomList.size()-1) * 151 + 5), 783, 151);
-							roomListJPanel.add(roomEntry);
 							roomEntry.setLayout(null);
 							
 							//JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
@@ -300,17 +300,28 @@ public class WaitingRoom extends JFrame {
 							
 							JButton playBtn = new JButton("\uD50C\uB808\uC774");
 							playBtn.setBounds(697, 16, 74, 28);
+							playBtn.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									ChatMsg msg = new ChatMsg(UserName, "602", "EnterRoom");
+									sendObject(msg);
+								}
+							});
 							roomEntry.add(playBtn);
 							
 							JButton observeBtn = new JButton("\uAD00\uC804");
 							observeBtn.setBounds(697, 60, 74, 28);
+							observeBtn.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent e) {
+									ChatMsg msg = new ChatMsg(UserName, "603", "Observe");
+									sendObject(msg);
+								}
+							});
 							roomEntry.add(observeBtn);
 							
 							JLabel room_master = new JLabel();
 							room_master.setBounds(73, 54, 320, 32);
 							room_master.setText(room.masterUser);
 							roomEntry.add(room_master);
-							
 							
 							JLabel room_name = new JLabel();
 							room_name.setBounds(73, 107, 320, 32);
@@ -337,12 +348,11 @@ public class WaitingRoom extends JFrame {
 							room_status.setBounds(514, 109, 116, 32);
 							room_status.setText(room.status);
 							roomEntry.add(room_status);
+							
+							JPanel roomEntry2 = roomEntry;
+							roomListJPanel.add(roomEntry2);
 						}
 					}
-
-					/*
-					 * if(room.code != null) { System.out.println("hello"); }
-					 */
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");
 					try {
