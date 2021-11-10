@@ -291,10 +291,9 @@ public class WaitingRoom extends JFrame {
 							label_room_status.setBounds(445, 107, 57, 34);
 							roomEntry.add(label_room_status);
 							
-							room_no = new JTextField();
+							JLabel room_no = new JLabel();
 							room_no.setBackground(Color.WHITE);
 							room_no.setBounds(73, 10, 320, 32);
-							room_no.setColumns(10);
 							room_no.setText(Integer.toString(roomList.size()));
 							roomEntry.add(room_no);
 							
@@ -306,28 +305,24 @@ public class WaitingRoom extends JFrame {
 							observeBtn.setBounds(697, 60, 74, 28);
 							roomEntry.add(observeBtn);
 							
-							room_master = new JTextField();
-							room_master.setColumns(10);
+							JLabel room_master = new JLabel();
 							room_master.setBounds(73, 54, 320, 32);
 							room_master.setText(room.masterUser);
 							roomEntry.add(room_master);
 							
 							
-							room_name = new JTextField();
-							room_name.setColumns(10);
+							JLabel room_name = new JLabel();
 							room_name.setBounds(73, 107, 320, 32);
 							room_name.setText(room.room_name);
 							roomEntry.add(room_name);
 							
-							room_player = new JTextField();
-							room_player.setColumns(10);
+							JLabel room_player = new JLabel();
 							room_player.setBackground(Color.WHITE);
 							room_player.setBounds(514, 12, 116, 32);
 							room_name.setText(String.valueOf(room.players.size()));
 							roomEntry.add(room_player);
 							
-							room_observer = new JTextField();
-							room_observer.setColumns(10);
+							JLabel room_observer = new JLabel();
 							room_observer.setBackground(Color.WHITE);
 							room_observer.setBounds(514, 56, 116, 32);
 							if(room.observers != null) {
@@ -336,8 +331,7 @@ public class WaitingRoom extends JFrame {
 							else room_observer.setText("0");
 							roomEntry.add(room_observer);
 							
-							room_status = new JTextField();
-							room_status.setColumns(10);
+							JLabel room_status = new JLabel();
 							room_status.setBackground(Color.WHITE);
 							room_status.setBounds(514, 109, 116, 32);
 							room_status.setText(room.status);
@@ -404,12 +398,7 @@ public class WaitingRoom extends JFrame {
 	}
 
 	ImageIcon icon1 = new ImageIcon("src/icon1.jpg");
-	private JTextField room_no;
-	private JTextField room_master;
-	private JTextField room_name;
-	private JTextField room_player;
-	private JTextField room_observer;
-	private JTextField room_status;
+	
 
 	public void AppendIcon(ImageIcon icon) {
 		int len = textArea.getDocument().getLength();

@@ -277,43 +277,6 @@ public class JavaGameServer extends JFrame {
 			}
 		}
 
-		public void writeRoomListToAll(Room room) {
-			try {
-				for (int i = 0; i < user_vc.size(); i++) {
-					UserService user = (UserService) user_vc.elementAt(i);
-					try {
-						oos.writeObject(room);
-					} catch (IOException e) {
-						appendText("oos.writeObject(room) error");
-						try {
-							ois.close();
-							oos.close();
-							client_socket.close();
-							client_socket = null;
-							ois = null;
-							oos = null;
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						logout();
-					}
-				}
-			} catch (Error e2) {
-				appendText("dos.writeObject() error");
-				try {
-					oos.close();
-					client_socket.close();
-					client_socket = null;
-					ois = null;
-					oos = null;
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -407,7 +370,6 @@ public class JavaGameServer extends JFrame {
 							System.out.println(room.players.get(0));
 							roomList.add(room);
 							writeAllObject(room);
-							//writeRoomListToAll(room);
 							break;
 						}
 					}
