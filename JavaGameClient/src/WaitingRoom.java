@@ -349,8 +349,8 @@ public class WaitingRoom extends JFrame {
 							room_status.setText(room.status);
 							roomEntry.add(room_status);
 							
-							JPanel roomEntry2 = roomEntry;
-							roomListJPanel.add(roomEntry2);
+							roomListJPanel.add(roomEntry);
+							repaint();
 						}
 					}
 				} catch (IOException e) {
