@@ -87,5 +87,6 @@ public class PlayRoom extends JFrame {
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
 		contentPane.add(btnNewButton);
+		repaint();
 	}
 }

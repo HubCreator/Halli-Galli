@@ -32,7 +32,7 @@ public class JavaGameServer extends JFrame {
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
-	private Vector roomList = new Vector(); // 전체 룸의 리스트
+	private ArrayList<Room> roomList = new ArrayList<Room>(); // 전체 룸의 리스트
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
@@ -159,7 +159,6 @@ public class JavaGameServer extends JFrame {
 		public String UserStatus;
 
 		public UserService(Socket client_socket) {
-			// TODO Auto-generated constructor stub
 			// 매개변수로 넘어온 자료 저장
 			this.client_socket = client_socket;
 			this.user_vc = UserVec;
@@ -368,12 +367,9 @@ public class JavaGameServer extends JFrame {
 					}
 					if (room != null) {
 						if (room.code.matches("600")) { // create new room
-							ArrayList<String> players = new ArrayList<String>();
-							players.add(room.masterUser);
-							room.players = players;
 							roomList.add(room);
-							writeAllObject(room);
-						}
+							writeAllObject(roomList);
+						} 
 					}
 
 				} catch (IOException e) {

@@ -10,8 +10,8 @@ class Room implements Serializable {
 	public int room_index;
 	public String room_name;
 	public String password;
-	public ArrayList<String> players;
-	public ArrayList<String> observers;
+	public ArrayList<String> players = new ArrayList<String>();
+	public ArrayList<String> observers = new ArrayList<String>();
 	public String status = "¥Î±‚¡ﬂ";
 	
 

@@ -47,12 +47,10 @@ public class CreateNewRoom extends JFrame {
 		mainview = view;
 		this.masterUser = username;
 		setVisible(true);
-//		setResizable(false);
+		setResizable(false);
 		setPreferredSize(new Dimension(400, 400 / 12 * 9));
 		setSize(400, 400 / 12 * 9);
 		setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 시 프로세스 종료
-		// setBounds(100, 100, 1193, 772);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -85,7 +83,6 @@ public class CreateNewRoom extends JFrame {
 					// System.out.println(mainview.roomList.get(i));
 					if (room.masterUser.equals(masterUser)) {
 						JOptionPane.showMessageDialog(null, "이미 방을 만드셨습니다!"); // 다이얼로그 띄우기
-						System.out.println("!!!!!");
 						setVisible(false);
 						return;
 					}

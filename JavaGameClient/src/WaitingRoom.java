@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -70,7 +72,7 @@ public class WaitingRoom extends JFrame {
 	public String currentMode = "Paint";
 	public boolean eraser = false;
 	JPanel roomListJPanel;
-	Vector roomList = new Vector();
+	ArrayList<Room> roomList = new ArrayList<Room>();
 
 	public int old_x = -1;
 	public int old_y = -1;
@@ -157,18 +159,16 @@ public class WaitingRoom extends JFrame {
 		panel_1.setBounds(12, 61, 850, 662);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
-		
+
 		JScrollPane roomList_scroller = new JScrollPane();
 		roomList_scroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		roomList_scroller.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		roomList_scroller.setBounds(12, 10, 826, 578);
 		panel_1.add(roomList_scroller);
-		
+
 		roomListJPanel = new JPanel();
 		roomList_scroller.setViewportView(roomListJPanel);
 		roomListJPanel.setLayout(null);
-		
-		
 
 		try {
 			socket = new Socket(ip_addr, Integer.parseInt(port_no));
@@ -197,6 +197,99 @@ public class WaitingRoom extends JFrame {
 
 	}
 
+	public void addRoomEntry(Room room) {
+		JPanel roomEntry = new JPanel();
+		Border blackline = BorderFactory.createLineBorder(Color.black);
+		roomEntry.setBackground(Color.LIGHT_GRAY);
+		roomEntry.setBorder(blackline);
+		roomEntry.setBounds(12, 21 + ((roomList.size() - 1) * 151 + 5), 783, 151);
+		roomEntry.setLayout(null);
+
+		// JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
+		JLabel label_room_no = new JLabel("방 번호");
+		label_room_no.setBounds(12, 10, 57, 34);
+		roomEntry.add(label_room_no);
+
+		JLabel label_room_name = new JLabel("\uBC29 \uC774\uB984");
+		label_room_name.setBounds(12, 107, 49, 34);
+		roomEntry.add(label_room_name);
+
+		JLabel label_room_master = new JLabel("\uBC29\uC7A5");
+		label_room_master.setBounds(12, 54, 37, 34);
+		roomEntry.add(label_room_master);
+
+		JLabel label_room_player = new JLabel("\uCC38\uC5EC \uC778\uC6D0");
+		label_room_player.setBounds(445, 10, 57, 34);
+		roomEntry.add(label_room_player);
+
+		JLabel label_room_observer = new JLabel("\uAD00\uC804 \uC778\uC6D0");
+		label_room_observer.setBounds(445, 54, 57, 34);
+		roomEntry.add(label_room_observer);
+
+		JLabel label_room_status = new JLabel("\uC0C1\uD0DC");
+		label_room_status.setBounds(445, 107, 57, 34);
+		roomEntry.add(label_room_status);
+
+		JLabel room_no = new JLabel();
+		room_no.setBounds(73, 10, 320, 32);
+		room_no.setText(String.valueOf(roomList.size()));
+		roomEntry.add(room_no);
+
+		JButton playBtn = new JButton("\uD50C\uB808\uC774");
+		playBtn.setBounds(697, 16, 74, 28);
+		playBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChatMsg msg = new ChatMsg(UserName, "602", "EnterRoom");
+				sendObject(msg);
+			}
+		});
+		roomEntry.add(playBtn);
+
+		JButton observeBtn = new JButton("\uAD00\uC804");
+		observeBtn.setBounds(697, 60, 74, 28);
+		observeBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ChatMsg msg = new ChatMsg(UserName, "603", "Observe");
+				sendObject(msg);
+			}
+		});
+		roomEntry.add(observeBtn);
+
+		JLabel room_master = new JLabel();
+		room_master.setBounds(73, 54, 320, 32);
+		room_master.setText(room.masterUser);
+		roomEntry.add(room_master);
+
+		JLabel room_name = new JLabel();
+		room_name.setBounds(73, 107, 320, 32);
+		room_name.setText(room.room_name);
+		roomEntry.add(room_name);
+
+		JLabel room_player = new JLabel();
+		room_player.setBackground(Color.WHITE);
+		room_player.setBounds(514, 12, 116, 32);
+		room_player.setText(String.valueOf(room.players.size()));
+		roomEntry.add(room_player);
+
+		JLabel room_observer = new JLabel();
+		room_observer.setBackground(Color.WHITE);
+		room_observer.setBounds(514, 56, 116, 32);
+		if (room.observers != null) {
+			room_observer.setText(String.valueOf(room.observers.size()));
+		} else
+			room_observer.setText("0");
+		roomEntry.add(room_observer);
+
+		JLabel room_status = new JLabel();
+		room_status.setBackground(Color.WHITE);
+		room_status.setBounds(514, 109, 116, 32);
+		room_status.setText(room.status);
+		roomEntry.add(room_status);
+
+		roomListJPanel.add(roomEntry);
+		repaint();
+	}
+
 	// Server Message를 수신해서 화면에 표시
 	class ListenNetwork extends Thread {
 		public void run() {
@@ -221,6 +314,8 @@ public class WaitingRoom extends JFrame {
 						msg = String.format("[%s]\n%s", cm.UserName, cm.data);
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
+					} else if (obcm instanceof ArrayList<?>) {
+						roomList = (ArrayList<Room>) obcm;
 					} else
 						continue;
 
@@ -239,119 +334,20 @@ public class WaitingRoom extends JFrame {
 								AppendText("[" + cm.UserName + "]");
 							// AppendImage(cm.img);
 							break;
-						case "500": // Mouse Event 수신
-							// DoMouseEvent(cm);
-							break;
-						case "501": // Mouse Event End 수신
-							// DoMouseEvent(cm);
-							break;
-						case "502": // Screen Clear
-							// ScreenClear();
-							break;
 						}
-					} else if (room != null) {
-						switch (room.code) {
-						case "600":
-							// TODO: makeNewEntry();
-							roomList.add(room);
-							// 내가 만들었으면, 방에 바로 입장
-							if(room.masterUser.equals(UserName)) {
-								setVisible(false);
-								playRoom = new PlayRoom(createNewRoom, view);
-								break;
-							}
-							
-							JPanel roomEntry = new JPanel();
-							Border blackline = BorderFactory.createLineBorder(Color.black);
-							roomEntry.setBackground(Color.LIGHT_GRAY);
-							roomEntry.setBorder(blackline);
-							roomEntry.setBounds(12, 21 + ((roomList.size()-1) * 151 + 5), 783, 151);
-							roomEntry.setLayout(null);
-							
-							//JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
-							JLabel label_room_no = new JLabel("방 번호");
-							label_room_no.setBounds(12, 10, 57, 34);
-							roomEntry.add(label_room_no);
-							
-							JLabel label_room_name = new JLabel("\uBC29 \uC774\uB984");
-							label_room_name.setBounds(12, 107, 49, 34);
-							roomEntry.add(label_room_name);
-							
-							JLabel label_room_master = new JLabel("\uBC29\uC7A5");
-							label_room_master.setBounds(12, 54, 37, 34);
-							roomEntry.add(label_room_master);
-							
-							JLabel label_room_player = new JLabel("\uCC38\uC5EC \uC778\uC6D0");
-							label_room_player.setBounds(445, 10, 57, 34);
-							roomEntry.add(label_room_player);
-							
-							JLabel label_room_observer = new JLabel("\uAD00\uC804 \uC778\uC6D0");
-							label_room_observer.setBounds(445, 54, 57, 34);
-							roomEntry.add(label_room_observer);
-							
-							JLabel label_room_status = new JLabel("\uC0C1\uD0DC");
-							label_room_status.setBounds(445, 107, 57, 34);
-							roomEntry.add(label_room_status);
-							
-							JLabel room_no = new JLabel();
-							room_no.setBounds(73, 10, 320, 32);
-							room_no.setText(String.valueOf(roomList.size()));
-							roomEntry.add(room_no);
-							
-							JButton playBtn = new JButton("\uD50C\uB808\uC774");
-							playBtn.setBounds(697, 16, 74, 28);
-							playBtn.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									ChatMsg msg = new ChatMsg(UserName, "602", "EnterRoom");
-									sendObject(msg);
-								}
-							});
-							roomEntry.add(playBtn);
-							
-							JButton observeBtn = new JButton("\uAD00\uC804");
-							observeBtn.setBounds(697, 60, 74, 28);
-							observeBtn.addActionListener(new ActionListener() {
-								public void actionPerformed(ActionEvent e) {
-									ChatMsg msg = new ChatMsg(UserName, "603", "Observe");
-									sendObject(msg);
-								}
-							});
-							roomEntry.add(observeBtn);
-							
-							JLabel room_master = new JLabel();
-							room_master.setBounds(73, 54, 320, 32);
-							room_master.setText(room.masterUser);
-							roomEntry.add(room_master);
-							
-							JLabel room_name = new JLabel();
-							room_name.setBounds(73, 107, 320, 32);
-							room_name.setText(room.room_name);
-							roomEntry.add(room_name);
-							
-							JLabel room_player = new JLabel();
-							room_player.setBackground(Color.WHITE);
-							room_player.setBounds(514, 12, 116, 32);
-							room_player.setText(String.valueOf(room.players.size()));
-							roomEntry.add(room_player);
-							
-							JLabel room_observer = new JLabel();
-							room_observer.setBackground(Color.WHITE);
-							room_observer.setBounds(514, 56, 116, 32);
-							if(room.observers != null) {
-								room_observer.setText(String.valueOf(room.observers.size()));
-							}
-							else room_observer.setText("0");
-							roomEntry.add(room_observer);
-							
-							JLabel room_status = new JLabel();
-							room_status.setBackground(Color.WHITE);
-							room_status.setBounds(514, 109, 116, 32);
-							room_status.setText(room.status);
-							roomEntry.add(room_status);
-							
-							roomListJPanel.add(roomEntry);
-							repaint();
+					} else if (roomList != null) {
+						// 내가 만들었으면, 방에 바로 입장
+						// showRoomEntries(roomList);
+
+						for (Room entry : roomList) {
+							System.out.println("!!" + entry.room_name + "!!");
+							addRoomEntry(entry);
+							/*
+							 * if (entry.masterUser.equals(UserName)) { setVisible(false); playRoom = new
+							 * PlayRoom(createNewRoom, view); continue; } addRoomEntry(entry);
+							 */
 						}
+
 					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");
@@ -409,7 +405,6 @@ public class WaitingRoom extends JFrame {
 	}
 
 	ImageIcon icon1 = new ImageIcon("src/icon1.jpg");
-	
 
 	public void AppendIcon(ImageIcon icon) {
 		int len = textArea.getDocument().getLength();
