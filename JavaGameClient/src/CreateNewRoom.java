@@ -19,6 +19,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
+import javax.swing.JCheckBox;
 
 public class CreateNewRoom extends JFrame {
 
@@ -68,11 +69,6 @@ public class CreateNewRoom extends JFrame {
 		lblNewLabel_1.setBounds(12, 59, 85, 24);
 		contentPane.add(lblNewLabel_1);
 
-		JLabel lblNewLabel_1_1 = new JLabel("\uBE44\uBC00\uBC88\uD638 \uC124\uC815");
-		lblNewLabel_1_1.setFont(new Font("±¼¸²", Font.PLAIN, 15));
-		lblNewLabel_1_1.setBounds(12, 133, 99, 24);
-		contentPane.add(lblNewLabel_1_1);
-
 		textField = new JTextField();
 		textField.setToolTipText("\uBC29 \uC774\uB984\uC744 \uC785\uB825\uD558\uC138\uC694.");
 		textField.setBounds(12, 83, 341, 29);
@@ -115,7 +111,20 @@ public class CreateNewRoom extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setToolTipText("Optional..");
 		passwordField.setBounds(12, 162, 341, 29);
+		passwordField.setVisible(false);
 		contentPane.add(passwordField);
 
+		JCheckBox chckbxNewCheckBox = new JCheckBox("\uBE44\uBC00\uBC88\uD638 \uC124\uC815");
+		chckbxNewCheckBox.setBounds(12, 132, 146, 24);
+		chckbxNewCheckBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (chckbxNewCheckBox.isSelected()) {
+					passwordField.setVisible(true);
+				} else
+					passwordField.setVisible(false);
+			}
+		});
+		contentPane.add(chckbxNewCheckBox);
 	}
 }
