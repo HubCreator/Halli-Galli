@@ -72,7 +72,7 @@ public class WaitingRoom extends JFrame {
 	public String currentMode = "Paint";
 	public boolean eraser = false;
 	JPanel roomListJPanel;
-	ArrayList<Room> roomList = new ArrayList<Room>();
+	ArrayList<Room> roomList_client = new ArrayList<Room>();
 
 	public int old_x = -1;
 	public int old_y = -1;
@@ -202,7 +202,8 @@ public class WaitingRoom extends JFrame {
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 		roomEntry.setBackground(Color.LIGHT_GRAY);
 		roomEntry.setBorder(blackline);
-		roomEntry.setBounds(12, 21 + ((roomList.size() - 1) * 151 + 5), 783, 151);
+		//roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783, 151);
+		roomEntry.setBounds(12, 21, 783, 151);
 		roomEntry.setLayout(null);
 
 		// JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
@@ -232,7 +233,7 @@ public class WaitingRoom extends JFrame {
 
 		JLabel room_no = new JLabel();
 		room_no.setBounds(73, 10, 320, 32);
-		room_no.setText(String.valueOf(roomList.size()));
+		room_no.setText(String.valueOf(roomList_client.size()));
 		roomEntry.add(room_no);
 
 		JButton playBtn = new JButton("\uD50C\uB808\uC774");
@@ -314,9 +315,11 @@ public class WaitingRoom extends JFrame {
 						msg = String.format("[%s]\n%s", cm.UserName, cm.data);
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
-					} else if (obcm instanceof ArrayList<?>) {
-						roomList = (ArrayList<Room>) obcm;
-					} else
+					}
+//					else if (obcm instanceof ArrayList<?>) {
+//						roomList = (ArrayList<Room>) obcm;
+//					}
+					else
 						continue;
 
 					if (cm != null) {
@@ -335,19 +338,22 @@ public class WaitingRoom extends JFrame {
 							// AppendImage(cm.img);
 							break;
 						}
-					} else if (roomList != null) {
-						// 내가 만들었으면, 방에 바로 입장
-						// showRoomEntries(roomList);
-
-						for (Room entry : roomList) {
-							System.out.println("!!" + entry.room_name + "!!");
-							addRoomEntry(entry);
-							/*
-							 * if (entry.masterUser.equals(UserName)) { setVisible(false); playRoom = new
-							 * PlayRoom(createNewRoom, view); continue; } addRoomEntry(entry);
-							 */
+					} else if (room != null) {
+						switch (room.code) {
+						case "601":
+							System.out.println("received##");
+							System.out.println(room.room_name);
+							System.out.println(room.roomList.size());
+							for (Room entry : (ArrayList<Room>) room.roomList) {
+								System.out.println("!!" + entry.room_name + "!!");
+								addRoomEntry(entry);
+								/*
+								 * if (entry.masterUser.equals(UserName)) { setVisible(false); playRoom = new
+								 * PlayRoom(createNewRoom, view); continue; } addRoomEntry(entry);
+								 */
+							}
+							break;
 						}
-
 					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");

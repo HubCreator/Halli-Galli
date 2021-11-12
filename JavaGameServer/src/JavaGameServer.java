@@ -32,7 +32,7 @@ public class JavaGameServer extends JFrame {
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
-	private ArrayList<Room> roomList = new ArrayList<Room>(); // 전체 룸의 리스트
+	private ArrayList<Room> roomList_server = new ArrayList<Room>(); // 전체 룸의 리스트
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
@@ -254,6 +254,14 @@ public class JavaGameServer extends JFrame {
 				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
+		
+		// UserService Thread가 담당하는 Client 에게 1:1 전송
+		public void sendRoomListToAll() {
+			Room obcm = new Room("Server", "601", "RoomList", "");
+			obcm.roomList = roomList_server;
+			
+			writeAllObject(obcm);
+		}
 
 		// 귓속말 전송
 		public void WritePrivate(String msg) {
@@ -312,6 +320,7 @@ public class JavaGameServer extends JFrame {
 						if (chatmsg.code.matches("100")) {
 							UserName = chatmsg.UserName;
 							UserStatus = "O"; // Online 상태
+							if(roomList_server != null) sendRoomListToAll();
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.UserName, chatmsg.data);
@@ -351,11 +360,9 @@ public class JavaGameServer extends JFrame {
 										break;
 									}
 								}
-							}
-							else if (chatmsg.code.matches("602")) {
+							} else if (chatmsg.code.matches("602")) {
 								System.out.println("@@@");
-							}
-							else { // 일반 채팅 메시지
+							} else { // 일반 채팅 메시지
 								UserStatus = "O";
 								// writeAll(msg + "\n"); // Write All
 								writeAllObject(chatmsg);
@@ -367,9 +374,12 @@ public class JavaGameServer extends JFrame {
 					}
 					if (room != null) {
 						if (room.code.matches("600")) { // create new room
-							roomList.add(room);
-							writeAllObject(roomList);
-						} 
+							roomList_server.add(room);
+							for (Room entry : (ArrayList<Room>) roomList_server) {
+								System.out.println(entry.room_name + " -> " + entry.masterUser);
+							}
+							sendRoomListToAll();
+						}
 					}
 
 				} catch (IOException e) {

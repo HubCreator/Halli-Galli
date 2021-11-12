@@ -78,8 +78,8 @@ public class CreateNewRoom extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				for (int i = 0; i < mainview.roomList.size(); i++) {
-					Room room = (Room) mainview.roomList.get(i);
+				for (int i = 0; i < mainview.roomList_client.size(); i++) {
+					Room room = (Room) mainview.roomList_client.get(i);
 					// System.out.println(mainview.roomList.get(i));
 					if (room.masterUser.equals(masterUser)) {
 						JOptionPane.showMessageDialog(null, "이미 방을 만드셨습니다!"); // 다이얼로그 띄우기

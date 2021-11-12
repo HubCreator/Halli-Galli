@@ -2,6 +2,8 @@
 // ChatMsg.java 채팅 메시지 ObjectStream 용.
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 class Room implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,8 +12,9 @@ class Room implements Serializable {
 	public int room_index;
 	public String room_name;
 	public String password;
-	public ArrayList<String> players = new ArrayList<String>();
-	public ArrayList<String> observers = new ArrayList<String>();
+	public List<String> players = new ArrayList<String>();
+	public List<String> observers = new ArrayList<String>();
+	public List<Room> roomList =  Collections.synchronizedList(new ArrayList<Room>());
 	public String status = "대기중";
 	
 
