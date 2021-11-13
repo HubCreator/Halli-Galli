@@ -341,11 +341,12 @@ public class WaitingRoom extends JFrame {
 					} else if (room != null) {
 						switch (room.code) {
 						case "601":
-							System.out.println("received##");
-							System.out.println(room.room_name);
-							System.out.println(room.roomList.size());
-							for (Room entry : (ArrayList<Room>) room.roomList) {
-								System.out.println("!!" + entry.room_name + "!!");
+							// roomList_client.clear();
+							roomList_client = (ArrayList<Room>) room.roomList;
+							System.out.println("##received##");
+							System.out.println("room size : " + roomList_client.size());
+							for (Room entry : (ArrayList<Room>) roomList_client) {
+								System.out.println("room name: " + entry.room_name);
 								addRoomEntry(entry);
 								/*
 								 * if (entry.masterUser.equals(UserName)) { setVisible(false); playRoom = new

@@ -1,8 +1,6 @@
 
-// ChatMsg.java 채팅 메시지 ObjectStream 용.
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 class Room implements Serializable {
@@ -14,8 +12,8 @@ class Room implements Serializable {
 	public String password;
 	public List<String> players = new ArrayList<String>();
 	public List<String> observers = new ArrayList<String>();
-	public List<Room> roomList =  Collections.synchronizedList(new ArrayList<Room>());
-	public String status = "대기중";
+	public List<Room> roomList =  new ArrayList<Room>();
+	public String status;
 	
 	public static class RoomBuilder {
 		private static final long serialVersionUID = 1L;
@@ -26,11 +24,12 @@ class Room implements Serializable {
 		public String password;
 		public List<String> players = new ArrayList<String>();
 		public List<String> observers = new ArrayList<String>();
-		public List<Room> roomList =  Collections.synchronizedList(new ArrayList<Room>());
-		public String status = "대기중";
+		public List<Room> roomList = new ArrayList<Room>();
+		public String status;
 		
 		public RoomBuilder(String code) {
 			this.code = code;
+			this.status = "대기중";
 		}
 		public RoomBuilder masterUser(String masterUser) {this.masterUser = masterUser; return this;}
 		public RoomBuilder room_index(int room_index) {this.room_index = room_index; return this;}
@@ -49,6 +48,7 @@ class Room implements Serializable {
 			room.players = this.players;
 			room.observers = this.observers;
 			room.roomList = this.roomList;
+			room.status = this.status;
 			return room;
 		}
 		

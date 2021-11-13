@@ -256,9 +256,15 @@ public class JavaGameServer extends JFrame {
 		}
 		
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
-		public void sendRoomListToAll() {
-			Room obcm = new Room("Server", "601", "RoomList", "");
-			obcm.roomList = roomList_server;
+		public void sendRoomListToAll(ArrayList<?> list) {
+			// Room obcm = new Room("Server", "601", "RoomList", "");
+			System.out.println("######");
+			Room obcm = new Room.RoomBuilder("601").roomList((ArrayList<Room>)list).build();
+			for (Room entry : obcm.roomList) {
+				System.out.println(entry.masterUser + " -> " + entry.room_name);
+			}
+			
+			// obcm.roomList = roomList_server;
 			
 			writeAllObject(obcm);
 		}
@@ -320,7 +326,7 @@ public class JavaGameServer extends JFrame {
 						if (chatmsg.code.matches("100")) {
 							UserName = chatmsg.UserName;
 							UserStatus = "O"; // Online 상태
-							if(roomList_server != null) sendRoomListToAll();
+							if(roomList_server.size() > 0) sendRoomListToAll(roomList_server);
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.UserName, chatmsg.data);
@@ -375,10 +381,7 @@ public class JavaGameServer extends JFrame {
 					if (room != null) {
 						if (room.code.matches("600")) { // create new room
 							roomList_server.add(room);
-							for (Room entry : (ArrayList<Room>) roomList_server) {
-								System.out.println(entry.room_name + " -> " + entry.masterUser);
-							}
-							sendRoomListToAll();
+							sendRoomListToAll(roomList_server);
 						}
 					}
 

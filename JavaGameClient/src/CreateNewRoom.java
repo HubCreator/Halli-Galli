@@ -87,7 +87,13 @@ public class CreateNewRoom extends JFrame {
 						return;
 					}
 				}
-				room = new Room(masterUser, "600", textField.getText(), passwordField.getPassword().toString());
+				
+				// room = new Room(masterUser, "600", textField.getText(), passwordField.getPassword().toString());
+				room = new Room.RoomBuilder("600")
+						.masterUser(masterUser)
+						.room_name(textField.getText())
+						.password(passwordField.getPassword().toString())
+						.build();
 				mainview.sendObject(room);
 				setVisible(false);
 			}
