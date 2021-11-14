@@ -72,7 +72,7 @@ public class WaitingRoom extends JFrame {
 	public String currentMode = "Paint";
 	public boolean eraser = false;
 	JPanel roomListJPanel;
-	ArrayList<Room> roomList_client = new ArrayList<Room>();
+	ArrayList<Room> roomList_client = (new ArrayList<Room>());
 
 	public int old_x = -1;
 	public int old_y = -1;
@@ -202,8 +202,8 @@ public class WaitingRoom extends JFrame {
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 		roomEntry.setBackground(Color.LIGHT_GRAY);
 		roomEntry.setBorder(blackline);
-		//roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783, 151);
-		roomEntry.setBounds(12, 21, 783, 151);
+		roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783, 151);
+		// roomEntry.setBounds(12, 21, 783, 151);
 		roomEntry.setLayout(null);
 
 		// JLabel label_room_no = new JLabel("\uBC29 \uBC88\uD638");
@@ -341,20 +341,25 @@ public class WaitingRoom extends JFrame {
 					} else if (room != null) {
 						switch (room.code) {
 						case "601":
-							// roomList_client.clear();
-							roomList_client = (ArrayList<Room>) room.roomList;
+							System.out.println("601 here");
+							roomList_client.clear();
+							roomList_client.add(room);
+							addRoomEntry(room);
+							
 							System.out.println("##received##");
-							System.out.println("room size : " + roomList_client.size());
-							for (Room entry : (ArrayList<Room>) roomList_client) {
-								System.out.println("room name: " + entry.room_name);
-								addRoomEntry(entry);
-								/*
-								 * if (entry.masterUser.equals(UserName)) { setVisible(false); playRoom = new
-								 * PlayRoom(createNewRoom, view); continue; } addRoomEntry(entry);
-								 */
-							}
+							break;
+						case "602":
+							System.out.println("602 here");
+							roomList_client.add(room);
+							addRoomEntry(room);
+							break;
+						case "603":
+							System.out.println("603 here");
+							roomList_client.add(room);
+							addRoomEntry(room);
 							break;
 						}
+						
 					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");

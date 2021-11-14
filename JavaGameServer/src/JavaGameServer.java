@@ -6,10 +6,10 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -32,7 +32,7 @@ public class JavaGameServer extends JFrame {
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
-	private ArrayList<Room> roomList_server = new ArrayList<Room>(); // 전체 룸의 리스트
+	private ArrayList<Room> roomList_server = (new ArrayList<Room>()); // 전체 룸의 리스트
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
@@ -256,17 +256,29 @@ public class JavaGameServer extends JFrame {
 		}
 		
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
-		public void sendRoomListToAll(ArrayList<?> list) {
+		public void sendRoomListToAll() {
 			// Room obcm = new Room("Server", "601", "RoomList", "");
-			System.out.println("######");
-			Room obcm = new Room.RoomBuilder("601").roomList((ArrayList<Room>)list).build();
-			for (Room entry : obcm.roomList) {
-				System.out.println(entry.masterUser + " -> " + entry.room_name);
+			// Room obcm = new Room.RoomBuilder("601").roomList((ArrayList<Room>)list).build();
+			
+			if(roomList_server.size() == 1) {
+				Room room = roomList_server.get(0);
+				room.code = "601";
+				writeAllObject(room);
+			}
+			else {
+				for(int i = 0; i < roomList_server.size(); i++) {
+					Room room = roomList_server.get(i);
+					if(i == 0) {
+						room.code = "601";
+					} else if(i == roomList_server.size()){
+						room.code = "602";
+					} else {
+						room.code = "602";
+					}
+					writeAllObject(room);		
+				}
 			}
 			
-			// obcm.roomList = roomList_server;
-			
-			writeAllObject(obcm);
 		}
 
 		// 귓속말 전송
@@ -326,7 +338,7 @@ public class JavaGameServer extends JFrame {
 						if (chatmsg.code.matches("100")) {
 							UserName = chatmsg.UserName;
 							UserStatus = "O"; // Online 상태
-							if(roomList_server.size() > 0) sendRoomListToAll(roomList_server);
+							// if(roomList_server.size() > 0) sendRoomListToAll(roomList_server);
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.UserName, chatmsg.data);
@@ -381,7 +393,7 @@ public class JavaGameServer extends JFrame {
 					if (room != null) {
 						if (room.code.matches("600")) { // create new room
 							roomList_server.add(room);
-							sendRoomListToAll(roomList_server);
+							sendRoomListToAll();
 						}
 					}
 
