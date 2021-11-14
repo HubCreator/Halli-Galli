@@ -67,8 +67,9 @@ public class WaitingRoom extends JFrame {
 	// 그려진 Image를 보관하는 용도, paint() 함수에서 이용한다.
 	public String currentMode = "Paint";
 	public boolean eraser = false;
-	JPanel roomListJPanel;
-	ArrayList<Room> roomList_client = (new ArrayList<Room>());
+	public JPanel roomListJPanel;
+	public JPanel roomEntry;
+	public ArrayList<Room> roomList_client = (new ArrayList<Room>());
 
 	/**
 	 * Create the frame.
@@ -76,6 +77,7 @@ public class WaitingRoom extends JFrame {
 	 * @throws BadLocationException
 	 */
 	public WaitingRoom(String username, String ip_addr, String port_no) {
+		System.out.println("WaitingRoom : " + username);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1193, 772);
@@ -121,13 +123,11 @@ public class WaitingRoom extends JFrame {
 		imgBtn.setBounds(902, 683, 50, 40);
 		contentPane.add(imgBtn);
 
-		JButton btnNewButton = new JButton("종 료");
-		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 14));
+		JButton btnNewButton = new JButton("\uC885\uB8CC");
+		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("400", userName)
-						.data("Bye")
-						.build();
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("604", userName).build();
 				sendObject(msg);
 				System.exit(0);
 			}
@@ -192,7 +192,7 @@ public class WaitingRoom extends JFrame {
 	}
 
 	public void addRoomEntry(Room room) {
-		JPanel roomEntry = new JPanel();
+		roomEntry = new JPanel();
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 		roomEntry.setBackground(Color.LIGHT_GRAY);
 		roomEntry.setBorder(blackline);
@@ -229,6 +229,36 @@ public class WaitingRoom extends JFrame {
 		room_no.setBounds(73, 10, 320, 32);
 		room_no.setText(String.valueOf(roomList_client.size()));
 		roomEntry.add(room_no);
+		JLabel room_master = new JLabel();
+		room_master.setBounds(73, 54, 320, 32);
+		room_master.setText(room.masterUser);
+		roomEntry.add(room_master);
+
+		JLabel room_name = new JLabel();
+		room_name.setBounds(73, 107, 320, 32);
+		room_name.setText(room.room_name);
+		roomEntry.add(room_name);
+
+		JLabel room_player = new JLabel();
+		room_player.setBackground(Color.WHITE);
+		room_player.setBounds(514, 12, 116, 32);
+		room_player.setText(String.valueOf(room.players_cnt));
+		roomEntry.add(room_player);
+
+		JLabel room_observer = new JLabel();
+		room_observer.setBackground(Color.WHITE);
+		room_observer.setBounds(514, 56, 116, 32);
+		if (room.observers != null) {
+			room_observer.setText(String.valueOf(room.observers_cnt));
+		} else
+			room_observer.setText("0");
+		roomEntry.add(room_observer);
+
+		JLabel room_status = new JLabel();
+		room_status.setBackground(Color.WHITE);
+		room_status.setBounds(514, 109, 116, 32);
+		room_status.setText(room.status);
+		roomEntry.add(room_status);
 
 		// join btn
 		JButton playBtn = new JButton("\uD50C\uB808\uC774");
@@ -236,8 +266,8 @@ public class WaitingRoom extends JFrame {
 		playBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ChatMsg msg= new ChatMsg.ChatMsgBuilder("605", userName)
-						.data("EnterRoom")
-						.build();
+										.data(room_name.getText())
+										.build();
 				sendObject(msg);
 			}
 		});
@@ -255,37 +285,6 @@ public class WaitingRoom extends JFrame {
 			}
 		});
 		roomEntry.add(observeBtn);
-
-		JLabel room_master = new JLabel();
-		room_master.setBounds(73, 54, 320, 32);
-		room_master.setText(room.masterUser);
-		roomEntry.add(room_master);
-
-		JLabel room_name = new JLabel();
-		room_name.setBounds(73, 107, 320, 32);
-		room_name.setText(room.room_name);
-		roomEntry.add(room_name);
-
-		JLabel room_player = new JLabel();
-		room_player.setBackground(Color.WHITE);
-		room_player.setBounds(514, 12, 116, 32);
-		room_player.setText(String.valueOf(room.players.size()));
-		roomEntry.add(room_player);
-
-		JLabel room_observer = new JLabel();
-		room_observer.setBackground(Color.WHITE);
-		room_observer.setBounds(514, 56, 116, 32);
-		if (room.observers != null) {
-			room_observer.setText(String.valueOf(room.observers.size()));
-		} else
-			room_observer.setText("0");
-		roomEntry.add(room_observer);
-
-		JLabel room_status = new JLabel();
-		room_status.setBackground(Color.WHITE);
-		room_status.setBounds(514, 109, 116, 32);
-		room_status.setText(room.status);
-		roomEntry.add(room_status);
 
 		roomListJPanel.add(roomEntry);
 		repaint();
@@ -335,16 +334,26 @@ public class WaitingRoom extends JFrame {
 							break;
 						}
 					} else if (room != null) {
-						switch (room.code) {
-						case "601":
+						if(room.code.matches("601")) {
+							System.out.println("All Room Entry Cleared");
+							roomListJPanel.removeAll();
 							roomList_client.clear();
 							roomList_client.add(room);
 							addRoomEntry(room);
-							break;
-						case "602":
+							if(room.masterUser.equals(userName)) { // 방을 만든 사람은 바로 입장
+								System.out.println("1####");
+								setVisible(false);
+								playRoom = new PlayRoom(view, room.room_name);
+							}
+						} else if(room.code.matches("602")) {
+							System.out.println("Players "+room.players_cnt);
 							roomList_client.add(room);
 							addRoomEntry(room);
-							break;
+							if(room.masterUser.equals(userName)) { // 방을 만든 사람은 바로 입장
+								System.out.println("2####");
+								setVisible(false);
+								playRoom = new PlayRoom(view, room.room_name);
+							}
 						}
 						
 					}

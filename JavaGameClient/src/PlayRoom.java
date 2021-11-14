@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +25,7 @@ public class PlayRoom extends JFrame {
 	private JLabel lblUserName;
 	private JButton imgBtn;
 
-	public PlayRoom(CreateNewRoom createNewRoom, WaitingRoom view) {
+	public PlayRoom(WaitingRoom view, String room_name) {
 		mainview = view;
 		setVisible(true);
 		setResizable(false);
@@ -32,7 +33,7 @@ public class PlayRoom extends JFrame {
 		setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
 		
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1193, 772);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -76,19 +77,41 @@ public class PlayRoom extends JFrame {
 		imgBtn.setBounds(902, 683, 50, 40);
 		contentPane.add(imgBtn);
 
-		JButton btnNewButton = new JButton("종 료");
-		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 14));
+		JButton btnNewButton = new JButton("\uB098\uAC00\uAE30");
+		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 11));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("400", userName)
-										.data("Bye")
+				// exit room
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("604", userName)
+										.data(room_name)
 										.build();
+										
 				view.sendObject(msg);
 				System.exit(0);
 			}
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
 		contentPane.add(btnNewButton);
+		
+		JLabel lblUserName_1 = new JLabel((String) null);
+		lblUserName_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblUserName_1.setFont(new Font("굴림", Font.BOLD, 14));
+		lblUserName_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblUserName_1.setBackground(Color.WHITE);
+		lblUserName_1.setBounds(35, 87, 84, 40);
+		lblUserName_1.setText(room_name);
+		contentPane.add(lblUserName_1);
 		repaint();
 	}
+	
+	/*
+	 * public static void main(String[] args) { EventQueue.invokeLater(new
+	 * Runnable() { public void run() { try { Welcome frame = new Welcome();
+	 * frame.setTitle("Play !!"); frame.setVisible(true); frame.pack();
+	 * frame.setResizable(false); // 사이즈 조정 불가 //frame.setPreferredSize(new
+	 * Dimension(840, 840/12*9)); //frame.setSize(840, 840/12*9);
+	 * frame.setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open //
+	 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 시 프로세스 종료 } catch
+	 * (Exception e) { e.printStackTrace(); } } }); }
+	 */
 }

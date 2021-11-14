@@ -13,6 +13,8 @@ class Room implements Serializable {
 	public List<String> players = new ArrayList<String>();
 	public List<String> observers = new ArrayList<String>();
 	public List<Room> roomList =  new ArrayList<Room>();
+	public int players_cnt;
+	public int observers_cnt;
 	public String status;
 	
 	public static class RoomBuilder {
@@ -25,6 +27,8 @@ class Room implements Serializable {
 		public List<String> players = new ArrayList<String>();
 		public List<String> observers = new ArrayList<String>();
 		public List<Room> roomList = new ArrayList<Room>();
+		public int players_cnt = 1;
+		public int observers_cnt;
 		public String status;
 		
 		public RoomBuilder(String code) {
@@ -48,6 +52,8 @@ class Room implements Serializable {
 			room.players = this.players;
 			room.observers = this.observers;
 			room.roomList = this.roomList;
+			room.players_cnt = this.players_cnt;
+			room.observers_cnt = this.observers_cnt;
 			room.status = this.status;
 			return room;
 		}
