@@ -80,8 +80,7 @@ public class PlayRoom extends JFrame {
 		btnNewButton.setFont(new Font("±¼¸²", Font.PLAIN, 14));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("400")
-										.userName(userName)
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("400", userName)
 										.data("Bye")
 										.build();
 				view.sendObject(msg);

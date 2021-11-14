@@ -125,8 +125,7 @@ public class WaitingRoom extends JFrame {
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 14));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("400")
-						.userName(userName)
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("400", userName)
 						.data("Bye")
 						.build();
 				sendObject(msg);
@@ -170,8 +169,7 @@ public class WaitingRoom extends JFrame {
 			oos.flush();
 			ois = new ObjectInputStream(socket.getInputStream());
 
-			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("100")
-					.userName(userName)
+			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("100", userName)
 					.data("Hello")
 					.build();
 			sendObject(obcm);
@@ -237,8 +235,7 @@ public class WaitingRoom extends JFrame {
 		playBtn.setBounds(697, 16, 74, 28);
 		playBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("602")
-						.userName(userName)
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("605", userName)
 						.data("EnterRoom")
 						.build();
 				sendObject(msg);
@@ -251,8 +248,7 @@ public class WaitingRoom extends JFrame {
 		observeBtn.setBounds(697, 60, 74, 28);
 		observeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("603")
-						.userName(userName)
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("603", userName)
 						.data("Observe")
 						.build();
 				sendObject(msg);
@@ -315,7 +311,7 @@ public class WaitingRoom extends JFrame {
 						break;
 					if (obcm instanceof ChatMsg) {
 						cm = (ChatMsg) obcm;
-						msg = String.format("[%s]\n%s", cm.UserName, cm.data);
+						msg = String.format("[%s]\n%s", cm.userName, cm.data);
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
 					}
@@ -325,16 +321,16 @@ public class WaitingRoom extends JFrame {
 					if (cm != null) {
 						switch (cm.code) {
 						case "200": // chat message
-							if (cm.UserName.equals(userName))
+							if (cm.userName.equals(userName))
 								AppendTextR(msg); // 내 메세지는 우측에
 							else
 								AppendText(msg);
 							break;
 						case "300": // Image 첨부
-							if (cm.UserName.equals(userName))
-								AppendTextR("[" + cm.UserName + "]");
+							if (cm.userName.equals(userName))
+								AppendTextR("[" + cm.userName + "]");
 							else
-								AppendText("[" + cm.UserName + "]");
+								AppendText("[" + cm.userName + "]");
 							// AppendImage(cm.img);
 							break;
 						}
@@ -398,8 +394,7 @@ public class WaitingRoom extends JFrame {
 				fd.setVisible(true);
 				// System.out.println(fd.getDirectory() + fd.getFile());
 				if (fd.getDirectory().length() > 0 && fd.getFile().length() > 0) {
-					ChatMsg obcm= new ChatMsg.ChatMsgBuilder("300")
-							.userName(userName)
+					ChatMsg obcm= new ChatMsg.ChatMsgBuilder("300", userName)
 							.data("IMG")
 							.build();
 					ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile());
@@ -462,8 +457,7 @@ public class WaitingRoom extends JFrame {
 	// Server에게 network으로 전송
 	public void SendMessage(String msg) {
 		try {
-			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("200")
-					.userName(userName)
+			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("200", userName)
 					.data(msg)
 					.build();
 			oos.writeObject(obcm);

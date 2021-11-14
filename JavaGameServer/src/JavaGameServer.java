@@ -133,7 +133,7 @@ public class JavaGameServer extends JFrame {
 	public void appendMsg(ChatMsg msg) {
 		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
 		textArea.append("code = " + msg.code + "\n");
-		textArea.append("id = " + msg.UserName + "\n");
+		textArea.append("id = " + msg.userName + "\n");
 		textArea.append("data = " + msg.data + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
@@ -237,8 +237,7 @@ public class JavaGameServer extends JFrame {
 		public void writeOne(String msg) {
 			try {
 				// ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
-				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200")
-										.userName("SERVER")
+				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", "SERVER")
 										.data(msg)
 										.build();
 				oos.writeObject(obcm);
@@ -288,8 +287,7 @@ public class JavaGameServer extends JFrame {
 		// 귓속말 전송
 		public void WritePrivate(String msg) {
 			try {
-				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200")
-						.userName("귓속말")
+				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", "귓속말")
 						.data(msg)
 						.build();
 				oos.writeObject(obcm);
@@ -343,13 +341,13 @@ public class JavaGameServer extends JFrame {
 					// 프로토콜 체크
 					if (chatmsg != null) {
 						if (chatmsg.code.matches("100")) {
-							UserName = chatmsg.UserName;
+							UserName = chatmsg.userName;
 							UserStatus = "O"; // Online 상태
 							if (roomList_server.size() > 0)
 								sendRoomListToAll();
 							login();
 						} else if (chatmsg.code.matches("200")) {
-							msg = String.format("[%s] %s", chatmsg.UserName, chatmsg.data);
+							msg = String.format("[%s] %s", chatmsg.userName, chatmsg.data);
 							appendText(msg); // server 화면에 출력
 							String[] args = msg.split(" "); // 단어들을 분리한다.
 							if (args.length == 1) { // Enter key 만 들어온 경우 Wakeup 처리만 한다.
