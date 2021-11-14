@@ -19,7 +19,7 @@ public class PlayRoom extends JFrame {
 	private JTextPane textArea;
 	private JPanel contentPane;
 	private JTextField txtInput;
-	private String UserName;
+	private String userName;
 	private JButton btnSend;
 	private JLabel lblUserName;
 	private JButton imgBtn;
@@ -68,8 +68,8 @@ public class PlayRoom extends JFrame {
 		setVisible(true);
 
 		//view.AppendText("User " + view.UserName + " connecting " + ip_addr + " " + port_no);
-		UserName = view.UserName;
-		lblUserName.setText(view.UserName);
+		userName = view.userName;
+		lblUserName.setText(view.userName);
 
 		imgBtn = new JButton("+");
 		imgBtn.setFont(new Font("±¼¸²", Font.PLAIN, 16));
@@ -80,7 +80,10 @@ public class PlayRoom extends JFrame {
 		btnNewButton.setFont(new Font("±¼¸²", Font.PLAIN, 14));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg(UserName, "400", "Bye");
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("400")
+										.userName(userName)
+										.data("Bye")
+										.build();
 				view.sendObject(msg);
 				System.exit(0);
 			}

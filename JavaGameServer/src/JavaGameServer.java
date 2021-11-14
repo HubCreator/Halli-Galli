@@ -236,7 +236,11 @@ public class JavaGameServer extends JFrame {
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void writeOne(String msg) {
 			try {
-				ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
+				// ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
+				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200")
+										.userName("SERVER")
+										.data(msg)
+										.build();
 				oos.writeObject(obcm);
 			} catch (IOException e) {
 				appendText("dos.writeObject() error");
@@ -254,37 +258,40 @@ public class JavaGameServer extends JFrame {
 				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
-		
+
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void sendRoomListToAll() {
 			// Room obcm = new Room("Server", "601", "RoomList", "");
-			// Room obcm = new Room.RoomBuilder("601").roomList((ArrayList<Room>)list).build();
-			
-			if(roomList_server.size() == 1) {
+			// Room obcm = new
+			// Room.RoomBuilder("601").roomList((ArrayList<Room>)list).build();
+
+			if (roomList_server.size() == 1) {
 				Room room = roomList_server.get(0);
 				room.code = "601";
 				writeAllObject(room);
-			}
-			else {
-				for(int i = 0; i < roomList_server.size(); i++) {
+			} else {
+				for (int i = 0; i < roomList_server.size(); i++) {
 					Room room = roomList_server.get(i);
-					if(i == 0) {
+					if (i == 0) {
 						room.code = "601";
-					} else if(i == roomList_server.size()){
+					} else if (i == roomList_server.size()) {
 						room.code = "602";
 					} else {
 						room.code = "602";
 					}
-					writeAllObject(room);		
+					writeAllObject(room);
 				}
 			}
-			
+
 		}
 
 		// 귓속말 전송
 		public void WritePrivate(String msg) {
 			try {
-				ChatMsg obcm = new ChatMsg("귓속말", "200", msg);
+				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200")
+						.userName("귓속말")
+						.data(msg)
+						.build();
 				oos.writeObject(obcm);
 			} catch (IOException e) {
 				appendText("dos.writeObject() error");
@@ -338,7 +345,8 @@ public class JavaGameServer extends JFrame {
 						if (chatmsg.code.matches("100")) {
 							UserName = chatmsg.UserName;
 							UserStatus = "O"; // Online 상태
-							// if(roomList_server.size() > 0) sendRoomListToAll(roomList_server);
+							if (roomList_server.size() > 0)
+								sendRoomListToAll();
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.UserName, chatmsg.data);
@@ -378,8 +386,6 @@ public class JavaGameServer extends JFrame {
 										break;
 									}
 								}
-							} else if (chatmsg.code.matches("602")) {
-								System.out.println("@@@");
 							} else { // 일반 채팅 메시지
 								UserStatus = "O";
 								// writeAll(msg + "\n"); // Write All

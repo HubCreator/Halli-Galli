@@ -42,7 +42,7 @@ public class WaitingRoom extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtInput;
-	public String UserName;
+	public String userName;
 	private JButton btnSend;
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	private Socket socket; // 연결소켓
@@ -64,21 +64,11 @@ public class WaitingRoom extends JFrame {
 
 	JPanel panel;
 	private JLabel lblMouseEvent;
-	private Graphics gc;
-	private int pen_size = 2; // minimum 2
 	// 그려진 Image를 보관하는 용도, paint() 함수에서 이용한다.
-	private Image panelImage = null;
-	private Graphics2D gc2 = null;
 	public String currentMode = "Paint";
 	public boolean eraser = false;
 	JPanel roomListJPanel;
 	ArrayList<Room> roomList_client = (new ArrayList<Room>());
-
-	public int old_x = -1;
-	public int old_y = -1;
-
-	public int old_x_guest = -1;
-	public int old_y_guest = -1;
 
 	/**
 	 * Create the frame.
@@ -123,7 +113,7 @@ public class WaitingRoom extends JFrame {
 		setVisible(true);
 
 		AppendText("User " + username + " connecting " + ip_addr + " " + port_no);
-		UserName = username;
+		userName = username;
 		lblUserName.setText(username);
 
 		imgBtn = new JButton("+");
@@ -135,7 +125,10 @@ public class WaitingRoom extends JFrame {
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 14));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg(UserName, "400", "Bye");
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("400")
+						.userName(userName)
+						.data("Bye")
+						.build();
 				sendObject(msg);
 				System.exit(0);
 			}
@@ -177,7 +170,10 @@ public class WaitingRoom extends JFrame {
 			oos.flush();
 			ois = new ObjectInputStream(socket.getInputStream());
 
-			ChatMsg obcm = new ChatMsg(UserName, "100", "Hello");
+			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("100")
+					.userName(userName)
+					.data("Hello")
+					.build();
 			sendObject(obcm);
 
 			ListenNetwork net = new ListenNetwork();
@@ -236,21 +232,29 @@ public class WaitingRoom extends JFrame {
 		room_no.setText(String.valueOf(roomList_client.size()));
 		roomEntry.add(room_no);
 
+		// join btn
 		JButton playBtn = new JButton("\uD50C\uB808\uC774");
 		playBtn.setBounds(697, 16, 74, 28);
 		playBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg(UserName, "602", "EnterRoom");
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("602")
+						.userName(userName)
+						.data("EnterRoom")
+						.build();
 				sendObject(msg);
 			}
 		});
 		roomEntry.add(playBtn);
 
+		// observe btn
 		JButton observeBtn = new JButton("\uAD00\uC804");
 		observeBtn.setBounds(697, 60, 74, 28);
 		observeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg(UserName, "603", "Observe");
+				ChatMsg msg= new ChatMsg.ChatMsgBuilder("603")
+						.userName(userName)
+						.data("Observe")
+						.build();
 				sendObject(msg);
 			}
 		});
@@ -304,7 +308,6 @@ public class WaitingRoom extends JFrame {
 					try {
 						obcm = ois.readObject();
 					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 						break;
 					}
@@ -316,22 +319,19 @@ public class WaitingRoom extends JFrame {
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
 					}
-//					else if (obcm instanceof ArrayList<?>) {
-//						roomList = (ArrayList<Room>) obcm;
-//					}
 					else
 						continue;
 
 					if (cm != null) {
 						switch (cm.code) {
 						case "200": // chat message
-							if (cm.UserName.equals(UserName))
+							if (cm.UserName.equals(userName))
 								AppendTextR(msg); // 내 메세지는 우측에
 							else
 								AppendText(msg);
 							break;
 						case "300": // Image 첨부
-							if (cm.UserName.equals(UserName))
+							if (cm.UserName.equals(userName))
 								AppendTextR("[" + cm.UserName + "]");
 							else
 								AppendText("[" + cm.UserName + "]");
@@ -341,20 +341,11 @@ public class WaitingRoom extends JFrame {
 					} else if (room != null) {
 						switch (room.code) {
 						case "601":
-							System.out.println("601 here");
 							roomList_client.clear();
 							roomList_client.add(room);
 							addRoomEntry(room);
-							
-							System.out.println("##received##");
 							break;
 						case "602":
-							System.out.println("602 here");
-							roomList_client.add(room);
-							addRoomEntry(room);
-							break;
-						case "603":
-							System.out.println("603 here");
 							roomList_client.add(room);
 							addRoomEntry(room);
 							break;
@@ -407,7 +398,10 @@ public class WaitingRoom extends JFrame {
 				fd.setVisible(true);
 				// System.out.println(fd.getDirectory() + fd.getFile());
 				if (fd.getDirectory().length() > 0 && fd.getFile().length() > 0) {
-					ChatMsg obcm = new ChatMsg(UserName, "300", "IMG");
+					ChatMsg obcm= new ChatMsg.ChatMsgBuilder("300")
+							.userName(userName)
+							.data("IMG")
+							.build();
 					ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile());
 					obcm.img = img;
 					sendObject(obcm);
@@ -468,7 +462,10 @@ public class WaitingRoom extends JFrame {
 	// Server에게 network으로 전송
 	public void SendMessage(String msg) {
 		try {
-			ChatMsg obcm = new ChatMsg(UserName, "200", msg);
+			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("200")
+					.userName(userName)
+					.data(msg)
+					.build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
 			// AppendText("dos.write() error");
