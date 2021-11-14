@@ -338,6 +338,7 @@ public class WaitingRoom extends JFrame {
 							System.out.println("All Room Entry Cleared");
 							roomListJPanel.removeAll();
 							roomList_client.clear();
+							repaint();
 							roomList_client.add(room);
 							addRoomEntry(room);
 							if(room.masterUser.equals(userName)) { // 방을 만든 사람은 바로 입장
@@ -353,7 +354,14 @@ public class WaitingRoom extends JFrame {
 								System.out.println("2####");
 								setVisible(false);
 								playRoom = new PlayRoom(view, room.room_name);
+								break;
 							}
+						}
+						else if(room.code.matches("603")) {
+							System.out.println("Remove All");
+							roomListJPanel.removeAll();
+							roomList_client.clear();
+							repaint();
 						}
 						
 					}

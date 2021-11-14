@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -258,7 +257,11 @@ public class JavaGameServer extends JFrame {
 
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void sendRoomListToAll() {
-			if (roomList_server.size() == 1) {
+			if(roomList_server.size() == 0) {
+				Room room = new Room.RoomBuilder("603").build();
+				writeAllObject(room);
+			}
+			else if (roomList_server.size() == 1) {
 				Room room = roomList_server.get(0);
 				room.code = "601";
 				writeAllObject(room);
@@ -383,6 +386,9 @@ public class JavaGameServer extends JFrame {
 									aroom.players.remove(chatmsg.userName);
 									aroom.players_cnt -= 1;
 									System.out.println("Exit room " + aroom.players_cnt);
+									if(aroom.players_cnt == 0)
+										roomList_server.remove(aroom);
+									break;
 								}
 							}
 							sendRoomListToAll();

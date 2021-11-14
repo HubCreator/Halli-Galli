@@ -87,7 +87,8 @@ public class PlayRoom extends JFrame {
 										.build();
 										
 				view.sendObject(msg);
-				System.exit(0);
+				setVisible(false);
+				view.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
