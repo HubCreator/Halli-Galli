@@ -401,13 +401,19 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 							sendRoomListToAll();
-						} else if (chatmsg.code.matches("605")) { // 방 입장
+						} else if (chatmsg.code.matches("606")) { // 방 입장
 							System.out.println("Just entered here!!");
 							for (Room aroom : roomList_server) {
-								if (aroom.room_name.equals(chatmsg.data)) {
+								if (aroom.room_name.equals(chatmsg.room_dst)) {
 									aroom.players.add(chatmsg.userName);
 									aroom.players_cnt += 1;
+									// sending allowing protocol
 									System.out.println("Enter room " + aroom.players_cnt);
+									ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
+														.room_dst(aroom.room_name)
+														.to_whom(chatmsg.userName)
+														.build();
+									writeOneObject(tmp);
 								}
 							}
 							sendRoomListToAll();
@@ -419,6 +425,11 @@ public class JavaGameServer extends JFrame {
 					if (room != null) {
 						if (room.code.matches("600")) { // create new room
 							roomList_server.add(room);
+							ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
+													.room_dst(room.room_name)
+													.to_whom(room.masterUser)
+													.build();
+							writeOneObject(tmp);
 							sendRoomListToAll();
 						}
 					}

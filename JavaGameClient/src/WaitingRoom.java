@@ -269,7 +269,8 @@ public class WaitingRoom extends JFrame {
 		playBtn.setBounds(697, 16, 74, 28);
 		playBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("605", userName).data(room_name.getText()).build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("606", userName)
+						.room_dst(room_name.getText()).build();
 				sendObject(msg);
 			}
 		});
@@ -325,19 +326,27 @@ public class WaitingRoom extends JFrame {
 								AppendText(msg);
 							break;
 						case "201": // chat message from room
-							if(cm.room_dst.equals(current_entered_room)) {
+							if (cm.room_dst.equals(current_entered_room)) {
 								if (cm.userName.equals(userName))
 									playRoom.AppendTextR(msg); // 내 메세지는 우측에
 								else
 									playRoom.AppendText(msg);
 							}
-							break;	
+							break;
 						case "300": // Image 첨부
 							if (cm.userName.equals(userName))
 								AppendTextR("[" + cm.userName + "]");
 							else
 								AppendText("[" + cm.userName + "]");
 							// AppendImage(cm.img);
+							break;
+						case "607": // Allow entering room
+							if (cm.to_whom.equals(userName) && current_status == CurrentStatus.WAITING) {
+								current_status = CurrentStatus.PLAYING;
+								current_entered_room = cm.room_dst;
+								setVisible(false);
+								playRoom = new PlayRoom(view, cm.room_dst);
+							}
 							break;
 						}
 					} else if (room != null) {
@@ -348,26 +357,15 @@ public class WaitingRoom extends JFrame {
 							repaint();
 							roomList_client.add(room);
 							addRoomEntry(room);
-							if (room.masterUser.equals(userName) && current_status == CurrentStatus.WAITING) { // 방을 만든
-																												// 사람은
-																												// 바로 입장
-								current_status = CurrentStatus.PLAYING;
-								current_entered_room = room.room_name;
-								setVisible(false);
-								playRoom = new PlayRoom(view, room.room_name);
-							}
 						} else if (room.code.matches("602")) {
 							roomList_client.add(room);
 							addRoomEntry(room);
-							if (room.masterUser.equals(userName) && current_status == CurrentStatus.WAITING) { // 방을 만든
-																												// 사람은
-																												// 바로 입장
-								current_status = CurrentStatus.PLAYING;
-								current_entered_room = room.room_name;
-								setVisible(false);
-								playRoom = new PlayRoom(view, room.room_name);
-								break;
-							}
+							/*
+							 * if (room.masterUser.equals(userName) && current_status ==
+							 * CurrentStatus.WAITING) { // 방을 만든 current_status = CurrentStatus.PLAYING;
+							 * current_entered_room = room.room_name; setVisible(false); playRoom = new
+							 * PlayRoom(view, room.room_name); break; }
+							 */
 						} else if (room.code.matches("603")) {
 							System.out.println("Remove All");
 							roomListJPanel.removeAll();
@@ -502,8 +500,7 @@ public class WaitingRoom extends JFrame {
 
 	public void sendMessageFromRoom(String msg) {
 		try {
-			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", userName)
-					.data(msg).room_dst(current_entered_room).build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", userName).data(msg).room_dst(current_entered_room).build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
 			// AppendText("dos.write() error");
