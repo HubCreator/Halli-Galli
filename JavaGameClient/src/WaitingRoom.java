@@ -352,19 +352,15 @@ public class WaitingRoom extends JFrame {
 						if (room.code.matches("601")) {
 							System.out.println("All Room Entry Cleared");
 							roomListJPanel.removeAll();
+							roomListJPanel.repaint();
 							roomList_client.clear();
-							repaint();
 							roomList_client.add(room);
 							addRoomEntry(room);
+							System.out.println("players> " + room.players_cnt);
 						} else if (room.code.matches("602")) {
 							roomList_client.add(room);
 							addRoomEntry(room);
-							/*
-							 * if (room.masterUser.equals(userName) && current_status ==
-							 * CurrentStatus.WAITING) { // 방을 만든 current_status = CurrentStatus.PLAYING;
-							 * current_entered_room = room.room_name; setVisible(false); playRoom = new
-							 * PlayRoom(view, room.room_name); break; }
-							 */
+							System.out.println("players> " + room.players_cnt);
 						} else if (room.code.matches("603")) {
 							System.out.println("Remove All");
 							roomListJPanel.removeAll();

@@ -257,6 +257,14 @@ public class JavaGameServer extends JFrame {
 
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void sendRoomListToAll() {
+			for(Room room:roomList_server) {
+				System.out.println("### Room Info ###");
+				System.out.println("code> " + room.code);
+				System.out.println("room_name> " + room.room_name);
+				System.out.println("masterUser> " + room.masterUser);
+				System.out.println("players_cnt> " + room.players_cnt);
+				System.out.println();
+			}
 			if(roomList_server.size() == 0) {
 				Room room = new Room.RoomBuilder("603").build();
 				writeAllObject(room);
@@ -267,12 +275,13 @@ public class JavaGameServer extends JFrame {
 				writeAllObject(room);
 			} else {
 				for (int i = 0; i < roomList_server.size(); i++) {
+					Room room = roomList_server.get(i);
 					if (i == 0) {
-						roomList_server.get(i).code = "601";
+						room.code = "601";
 					} else {
-						roomList_server.get(i).code = "602";
+						room.code = "602";
 					}
-					writeAllObject(roomList_server.get(i));
+					writeAllObject(room);
 				}
 			}
 
@@ -408,12 +417,14 @@ public class JavaGameServer extends JFrame {
 									aroom.players.add(chatmsg.userName);
 									aroom.players_cnt += 1;
 									// sending allowing protocol
-									System.out.println("Enter room " + aroom.players_cnt);
+									System.out.println("players> " + aroom.players_cnt);
 									ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
 														.room_dst(aroom.room_name)
 														.to_whom(chatmsg.userName)
 														.build();
+									// Room tmp2 = new Room.RoomBuilder("607").build();
 									writeOneObject(tmp);
+									break;
 								}
 							}
 							sendRoomListToAll();
