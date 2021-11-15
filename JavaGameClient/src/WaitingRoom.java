@@ -269,8 +269,7 @@ public class WaitingRoom extends JFrame {
 		playBtn.setBounds(697, 16, 74, 28);
 		playBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("606", userName)
-						.room_dst(room_name.getText()).build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("606", userName).room_dst(room_name.getText()).build();
 				sendObject(msg);
 			}
 		});
@@ -445,8 +444,8 @@ public class WaitingRoom extends JFrame {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
 		int len = textArea.getDocument().getLength();
 		// 끝으로 이동
-		// textArea.setCaretPosition(len);
-		// textArea.replaceSelection(msg + "\n");
+		textArea.setCaretPosition(len);
+		textArea.replaceSelection(msg + "\n");
 
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet left = new SimpleAttributeSet();
@@ -459,12 +458,15 @@ public class WaitingRoom extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	// 화면 우측에 출력
 	public void AppendTextR(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
+		// 끝으로 이동
+		int len = textArea.getDocument().getLength();
+		textArea.setCaretPosition(len);
+		textArea.replaceSelection(msg + "\n");
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
 		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
