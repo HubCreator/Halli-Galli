@@ -49,46 +49,46 @@ public class PlayRoom extends JFrame {
 			}
 		}
 	}
-	
+
 	// 화면에 출력
-		public void AppendText(String msg) {
-			// textArea.append(msg + "\n");
-			// AppendIcon(icon1);
-			msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
-			int len = textArea.getDocument().getLength();
-			// 끝으로 이동
-			// textArea.setCaretPosition(len);
-			// textArea.replaceSelection(msg + "\n");
+	public void appendText(String msg) {
+		// textArea.append(msg + "\n");
+		// AppendIcon(icon1);
+		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
+		int len = textArea.getDocument().getLength();
+		// 끝으로 이동
+		// textArea.setCaretPosition(len);
+		// textArea.replaceSelection(msg + "\n");
 
-			StyledDocument doc = textArea.getStyledDocument();
-			SimpleAttributeSet left = new SimpleAttributeSet();
-			StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
-			StyleConstants.setForeground(left, Color.BLACK);
-			doc.setParagraphAttributes(doc.getLength(), 1, left, false);
-			try {
-				doc.insertString(doc.getLength(), msg + "\n", left);
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+		StyledDocument doc = textArea.getStyledDocument();
+		SimpleAttributeSet left = new SimpleAttributeSet();
+		StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
+		StyleConstants.setForeground(left, Color.BLACK);
+		doc.setParagraphAttributes(doc.getLength(), 1, left, false);
+		try {
+			doc.insertString(doc.getLength(), msg + "\n", left);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
-		// 화면 우측에 출력
-		public void AppendTextR(String msg) {
-			msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
-			StyledDocument doc = textArea.getStyledDocument();
-			SimpleAttributeSet right = new SimpleAttributeSet();
-			StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
-			StyleConstants.setForeground(right, Color.BLUE);
-			doc.setParagraphAttributes(doc.getLength(), 1, right, false);
-			try {
-				doc.insertString(doc.getLength(), msg + "\n", right);
-			} catch (BadLocationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	}
+
+	// 화면 우측에 출력
+	public void appendTextR(String msg) {
+		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
+		StyledDocument doc = textArea.getStyledDocument();
+		SimpleAttributeSet right = new SimpleAttributeSet();
+		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
+		StyleConstants.setForeground(right, Color.BLUE);
+		doc.setParagraphAttributes(doc.getLength(), 1, right, false);
+		try {
+			doc.insertString(doc.getLength(), msg + "\n", right);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+	}
 
 	public PlayRoom(WaitingRoom view, String room_name) {
 		mainview = view;
@@ -133,8 +133,6 @@ public class PlayRoom extends JFrame {
 		contentPane.add(lblUserName);
 		setVisible(true);
 
-		// view.AppendText("User " + view.UserName + " connecting " + ip_addr + " " +
-		// port_no);
 		userName = view.userName;
 		lblUserName.setText(view.userName);
 

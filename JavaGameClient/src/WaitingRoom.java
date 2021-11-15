@@ -120,7 +120,7 @@ public class WaitingRoom extends JFrame {
 		contentPane.add(lblUserName);
 		setVisible(true);
 
-		AppendText("User " + username + " connecting " + ip_addr + " " + port_no);
+		appendText("User " + username + " connecting " + ip_addr + " " + port_no);
 		userName = username;
 		lblUserName.setText(username);
 
@@ -190,7 +190,7 @@ public class WaitingRoom extends JFrame {
 		} catch (NumberFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			AppendText("connect error");
+			appendText("connect error");
 		}
 
 	}
@@ -320,23 +320,23 @@ public class WaitingRoom extends JFrame {
 						switch (cm.code) {
 						case "200": // chat message
 							if (cm.userName.equals(userName))
-								AppendTextR(msg); // 내 메세지는 우측에
+								appendTextR(msg); // 내 메세지는 우측에
 							else
-								AppendText(msg);
+								appendText(msg);
 							break;
 						case "201": // chat message from room
 							if (cm.room_dst.equals(current_entered_room)) {
 								if (cm.userName.equals(userName))
-									playRoom.AppendTextR(msg); // 내 메세지는 우측에
+									playRoom.appendTextR(msg); // 내 메세지는 우측에
 								else
-									playRoom.AppendText(msg);
+									playRoom.appendText(msg);
 							}
 							break;
 						case "300": // Image 첨부
 							if (cm.userName.equals(userName))
-								AppendTextR("[" + cm.userName + "]");
+								appendTextR("[" + cm.userName + "]");
 							else
-								AppendText("[" + cm.userName + "]");
+								appendText("[" + cm.userName + "]");
 							// AppendImage(cm.img);
 							break;
 						case "607": // Allow entering room
@@ -374,7 +374,7 @@ public class WaitingRoom extends JFrame {
 
 					}
 				} catch (IOException e) {
-					AppendText("ois.readObject() error");
+					appendText("ois.readObject() error");
 					try {
 						ois.close();
 						oos.close();
@@ -438,15 +438,10 @@ public class WaitingRoom extends JFrame {
 	}
 
 	// 화면에 출력
-	public void AppendText(String msg) {
+	public void appendText(String msg) {
 		// textArea.append(msg + "\n");
 		// AppendIcon(icon1);
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
-		int len = textArea.getDocument().getLength();
-		// 끝으로 이동
-		textArea.setCaretPosition(len);
-		textArea.replaceSelection(msg + "\n");
-
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet left = new SimpleAttributeSet();
 		StyleConstants.setAlignment(left, StyleConstants.ALIGN_LEFT);
@@ -461,12 +456,8 @@ public class WaitingRoom extends JFrame {
 	}
 
 	// 화면 우측에 출력
-	public void AppendTextR(String msg) {
+	public void appendTextR(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
-		// 끝으로 이동
-		int len = textArea.getDocument().getLength();
-		textArea.setCaretPosition(len);
-		textArea.replaceSelection(msg + "\n");
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
 		StyleConstants.setAlignment(right, StyleConstants.ALIGN_RIGHT);
@@ -486,8 +477,8 @@ public class WaitingRoom extends JFrame {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", userName).data(msg).build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
-			// AppendText("dos.write() error");
-			AppendText("oos.writeObject() error");
+			// appendText("dos.write() error");
+			appendText("oos.writeObject() error");
 			try {
 				ois.close();
 				oos.close();
@@ -505,8 +496,8 @@ public class WaitingRoom extends JFrame {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", userName).data(msg).room_dst(current_entered_room).build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
-			// AppendText("dos.write() error");
-			AppendText("oos.writeObject() error");
+			// appendText("dos.write() error");
+			appendText("oos.writeObject() error");
 			try {
 				ois.close();
 				oos.close();
@@ -524,7 +515,7 @@ public class WaitingRoom extends JFrame {
 			oos.writeObject(ob);
 		} catch (IOException e) {
 			// textArea.append("메세지 송신 에러!!\n");
-			AppendText("sendObject Error");
+			appendText("sendObject Error");
 		}
 	}
 }
