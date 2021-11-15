@@ -38,7 +38,10 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class WaitingRoom extends JFrame {
-	public enum CurrentStatus {WAITING, PLAYING, OBSERVING};
+	public enum CurrentStatus {
+		WAITING, PLAYING, OBSERVING
+	};
+
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtInput;
@@ -54,6 +57,7 @@ public class WaitingRoom extends JFrame {
 	public CreateNewRoom createNewRoom = null;
 	public PlayRoom playRoom = null;
 	public CurrentStatus current_status = CurrentStatus.WAITING;
+	public String current_entered_room = null;
 
 	private JLabel lblUserName;
 	private JTextPane textArea;
@@ -78,7 +82,7 @@ public class WaitingRoom extends JFrame {
 	 * @throws BadLocationException
 	 */
 	public WaitingRoom(String username, String ip_addr, String port_no) {
-		
+
 		System.out.println("WaitingRoom : " + username);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,7 +133,7 @@ public class WaitingRoom extends JFrame {
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("604", userName).build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("604", userName).build();
 				sendObject(msg);
 				System.exit(0);
 			}
@@ -171,9 +175,7 @@ public class WaitingRoom extends JFrame {
 			oos.flush();
 			ois = new ObjectInputStream(socket.getInputStream());
 
-			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("100", userName)
-					.data("Hello")
-					.build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("100", userName).data("Hello").build();
 			sendObject(obcm);
 
 			ListenNetwork net = new ListenNetwork();
@@ -267,9 +269,7 @@ public class WaitingRoom extends JFrame {
 		playBtn.setBounds(697, 16, 74, 28);
 		playBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("605", userName)
-										.data(room_name.getText())
-										.build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("605", userName).data(room_name.getText()).build();
 				sendObject(msg);
 			}
 		});
@@ -280,9 +280,7 @@ public class WaitingRoom extends JFrame {
 		observeBtn.setBounds(697, 60, 74, 28);
 		observeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg= new ChatMsg.ChatMsgBuilder("603", userName)
-						.data("Observe")
-						.build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("603", userName).data("Observe").build();
 				sendObject(msg);
 			}
 		});
@@ -315,8 +313,7 @@ public class WaitingRoom extends JFrame {
 						msg = String.format("[%s]\n%s", cm.userName, cm.data);
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
-					}
-					else
+					} else
 						continue;
 
 					if (cm != null) {
@@ -327,6 +324,14 @@ public class WaitingRoom extends JFrame {
 							else
 								AppendText(msg);
 							break;
+						case "201": // chat message from room
+							if(cm.room_dst.equals(current_entered_room)) {
+								if (cm.userName.equals(userName))
+									playRoom.AppendTextR(msg); // 내 메세지는 우측에
+								else
+									playRoom.AppendText(msg);
+							}
+							break;	
 						case "300": // Image 첨부
 							if (cm.userName.equals(userName))
 								AppendTextR("[" + cm.userName + "]");
@@ -336,40 +341,40 @@ public class WaitingRoom extends JFrame {
 							break;
 						}
 					} else if (room != null) {
-						if(room.code.matches("601")) {
+						if (room.code.matches("601")) {
 							System.out.println("All Room Entry Cleared");
 							roomListJPanel.removeAll();
 							roomList_client.clear();
 							repaint();
 							roomList_client.add(room);
 							addRoomEntry(room);
-							if(room.masterUser.equals(userName) 
-									&& current_status == CurrentStatus.WAITING) { // 방을 만든 사람은 바로 입장
-								System.out.println("1####");
+							if (room.masterUser.equals(userName) && current_status == CurrentStatus.WAITING) { // 방을 만든
+																												// 사람은
+																												// 바로 입장
 								current_status = CurrentStatus.PLAYING;
+								current_entered_room = room.room_name;
 								setVisible(false);
 								playRoom = new PlayRoom(view, room.room_name);
 							}
-						} else if(room.code.matches("602")) {
-							System.out.println("Players "+room.players_cnt);
+						} else if (room.code.matches("602")) {
 							roomList_client.add(room);
 							addRoomEntry(room);
-							if(room.masterUser.equals(userName)
-									&& current_status == CurrentStatus.WAITING) { // 방을 만든 사람은 바로 입장
-								System.out.println("2####");
+							if (room.masterUser.equals(userName) && current_status == CurrentStatus.WAITING) { // 방을 만든
+																												// 사람은
+																												// 바로 입장
 								current_status = CurrentStatus.PLAYING;
+								current_entered_room = room.room_name;
 								setVisible(false);
 								playRoom = new PlayRoom(view, room.room_name);
 								break;
 							}
-						}
-						else if(room.code.matches("603")) {
+						} else if (room.code.matches("603")) {
 							System.out.println("Remove All");
 							roomListJPanel.removeAll();
 							roomList_client.clear();
 							repaint();
 						}
-						
+
 					}
 				} catch (IOException e) {
 					AppendText("ois.readObject() error");
@@ -396,7 +401,7 @@ public class WaitingRoom extends JFrame {
 				String msg = null;
 				// msg = String.format("[%s] %s\n", UserName, txtInput.getText());
 				msg = txtInput.getText();
-				SendMessage(msg);
+				sendMessage(msg);
 				txtInput.setText(""); // 메세지를 보내고 나면 메세지 쓰는창을 비운다.
 				txtInput.requestFocus(); // 메세지를 보내고 커서를 다시 텍스트 필드로 위치시킨다
 				if (msg.contains("/exit")) // 종료 처리
@@ -417,9 +422,7 @@ public class WaitingRoom extends JFrame {
 				fd.setVisible(true);
 				// System.out.println(fd.getDirectory() + fd.getFile());
 				if (fd.getDirectory().length() > 0 && fd.getFile().length() > 0) {
-					ChatMsg obcm= new ChatMsg.ChatMsgBuilder("300", userName)
-							.data("IMG")
-							.build();
+					ChatMsg obcm = new ChatMsg.ChatMsgBuilder("300", userName).data("IMG").build();
 					ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile());
 					obcm.img = img;
 					sendObject(obcm);
@@ -478,11 +481,29 @@ public class WaitingRoom extends JFrame {
 	}
 
 	// Server에게 network으로 전송
-	public void SendMessage(String msg) {
+	public void sendMessage(String msg) {
 		try {
-			ChatMsg obcm= new ChatMsg.ChatMsgBuilder("200", userName)
-					.data(msg)
-					.build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", userName).data(msg).build();
+			oos.writeObject(obcm);
+		} catch (IOException e) {
+			// AppendText("dos.write() error");
+			AppendText("oos.writeObject() error");
+			try {
+				ois.close();
+				oos.close();
+				socket.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}
+
+	public void sendMessageFromRoom(String msg) {
+		try {
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", userName)
+					.data(msg).room_dst(current_entered_room).build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
 			// AppendText("dos.write() error");

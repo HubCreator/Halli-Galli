@@ -380,7 +380,16 @@ public class JavaGameServer extends JFrame {
 								userStatus = "O";
 								writeAllObject(chatmsg);
 							}
-						} else if (chatmsg.code.matches("604")) {
+						} else if (chatmsg.code.matches("201")) {
+							for (int i = 0; i < user_vc.size(); i++) {
+								UserService user = (UserService) user_vc.elementAt(i);
+								if (user.userStatus == "O")
+									user.writeOneObject(chatmsg);
+							}
+							// writeAllObject(chatmsg);
+						}
+						
+						else if (chatmsg.code.matches("604")) {
 							for (Room aroom : roomList_server) { // 방 나가기
 								if (aroom.room_name.equals(chatmsg.data)) {
 									aroom.players.remove(chatmsg.userName);

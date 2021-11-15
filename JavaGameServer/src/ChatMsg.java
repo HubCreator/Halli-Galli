@@ -12,9 +12,7 @@ class ChatMsg implements Serializable {
 	public String data;
 	public ImageIcon img;
 	public MouseEvent mouse_e;
-	public int pen_size; // pen size
-	public boolean eraser = false;
-	public boolean screen_clear = false;
+	public String room_dst;
 	
 	public static class ChatMsgBuilder {
 		private static final long serialVersionUID = 1L;
@@ -23,6 +21,8 @@ class ChatMsg implements Serializable {
 		public String data;
 		public ImageIcon img;
 		public MouseEvent mouse_e;
+		public String room_dst;
+
 		
 		public ChatMsgBuilder(String code, String userName) {
 			this.code = code;
@@ -31,6 +31,7 @@ class ChatMsg implements Serializable {
 		public ChatMsgBuilder data(String data) {this.data = data; return this;}
 		public ChatMsgBuilder img(ImageIcon img) {this.img = img; return this;}
 		public ChatMsgBuilder mouse_e(MouseEvent mouse_e) {this.mouse_e = mouse_e; return this;}
+		public ChatMsgBuilder room_dst(String room_dst) {this.room_dst = room_dst; return this;}
 		public ChatMsg build() {
 			ChatMsg chatmsg = new ChatMsg();
 			chatmsg.code = this.code;
@@ -38,6 +39,7 @@ class ChatMsg implements Serializable {
 			chatmsg.data = this.data;
 			chatmsg.img = this.img;
 			chatmsg.mouse_e = this.mouse_e;
+			chatmsg.room_dst = this.room_dst;
 			return chatmsg;
 		}
 	}
