@@ -38,7 +38,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class WaitingRoom extends JFrame {
-
+	public enum CurrentStatus {WAITING, PLAYING, OBSERVING};
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtInput;
@@ -53,6 +53,7 @@ public class WaitingRoom extends JFrame {
 	public WaitingRoom view = null;
 	public CreateNewRoom createNewRoom = null;
 	public PlayRoom playRoom = null;
+	public CurrentStatus current_status = CurrentStatus.WAITING;
 
 	private JLabel lblUserName;
 	private JTextPane textArea;
@@ -77,6 +78,7 @@ public class WaitingRoom extends JFrame {
 	 * @throws BadLocationException
 	 */
 	public WaitingRoom(String username, String ip_addr, String port_no) {
+		
 		System.out.println("WaitingRoom : " + username);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -341,8 +343,10 @@ public class WaitingRoom extends JFrame {
 							repaint();
 							roomList_client.add(room);
 							addRoomEntry(room);
-							if(room.masterUser.equals(userName)) { // 방을 만든 사람은 바로 입장
+							if(room.masterUser.equals(userName) 
+									&& current_status == CurrentStatus.WAITING) { // 방을 만든 사람은 바로 입장
 								System.out.println("1####");
+								current_status = CurrentStatus.PLAYING;
 								setVisible(false);
 								playRoom = new PlayRoom(view, room.room_name);
 							}
@@ -350,8 +354,10 @@ public class WaitingRoom extends JFrame {
 							System.out.println("Players "+room.players_cnt);
 							roomList_client.add(room);
 							addRoomEntry(room);
-							if(room.masterUser.equals(userName)) { // 방을 만든 사람은 바로 입장
+							if(room.masterUser.equals(userName)
+									&& current_status == CurrentStatus.WAITING) { // 방을 만든 사람은 바로 입장
 								System.out.println("2####");
+								current_status = CurrentStatus.PLAYING;
 								setVisible(false);
 								playRoom = new PlayRoom(view, room.room_name);
 								break;

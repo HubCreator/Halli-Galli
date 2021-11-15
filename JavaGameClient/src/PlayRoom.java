@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +24,7 @@ public class PlayRoom extends JFrame {
 	private JLabel lblUserName;
 	private JButton imgBtn;
 
+	public enum CurrentStatus {WAITING, PLAYING, OBSERVING};
 	public PlayRoom(WaitingRoom view, String room_name) {
 		mainview = view;
 		setVisible(true);
