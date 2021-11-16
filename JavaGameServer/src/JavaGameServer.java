@@ -196,6 +196,7 @@ public class JavaGameServer extends JFrame {
 
 		public void writeOneObject(Object ob) {
 			try {
+				oos.reset();
 				oos.writeObject(ob);
 			} catch (IOException e) {
 				appendText("oos.writeObject(ob) error");
@@ -255,65 +256,12 @@ public class JavaGameServer extends JFrame {
 			}
 		}
 		
-		public void sendRoooooooomListToAll() {
-			try {
-				oos.reset();
-				Room room = new Room("999");
-				room.setRoomList(roomList_server);
-				writeAllObject(room);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		public void sendRoomListToAll() {
+			Room room = new Room("601");
+			room.setRoomList(roomList_server);
+			writeAllObject(room);
 		}
 
-		public void sendRoomListToAll() {
-			if(roomList_server.size() == 0) {
-				// Room room = new Room.RoomBuilder("603").build();
-				Room room = new Room("603");
-				writeAllObject(room);
-			}
-			else if (roomList_server.size() == 1) {
-				Room original_room = roomList_server.get(0);
-				// room.code = "601";
-//				Room room = new Room.RoomBuilder("601")
-//									.masterUser(original_room.masterUser)
-//									.players_cnt(original_room.players_cnt)
-//									.room_name(original_room.room_name)
-//									.room_index(original_room.room_index)
-//									.status(original_room.status)
-//									.build();
-				Room room = new Room("601");
-				room.setMasterUser(original_room.getMasterUser());
-				room.setPlayers_cnt(original_room.getPlayers_cnt());
-				room.setRoom_name(original_room.getRoom_name());
-				room.setRoom_index(original_room.getRoom_index());
-				room.setStatus(original_room.getStatus());
-				System.out.println("1!!!> "+room.getPlayers_cnt());
-				writeAllObject(room);
-			} else {
-				for (int i = 0; i < roomList_server.size(); i++) {
-					Room room = roomList_server.get(i);
-					if (i == 0) {
-						System.out.println("2!!!> "+room.getPlayers_cnt());
-						room.setCode("601");
-					} else {
-						System.out.println("3!!!> "+room.getPlayers_cnt());
-						room.setCode("602");
-					}
-					writeAllObject(room);
-					System.out.println("4@@> "+room.getPlayers_cnt());
-				}
-			}
-			for(Room room:roomList_server) {
-				System.out.println("### Room Info ###");
-				System.out.println("code> " + room.getCode());
-				System.out.println("room_name> " + room.getRoom_name());
-				System.out.println("masterUser> " + room.getMasterUser());
-				System.out.println("players_cnt> " + room.getPlayers_cnt());
-				System.out.println();
-			}
-		}
 
 		// 庇加富 傈价
 		public void WritePrivate(String msg) {
@@ -373,7 +321,7 @@ public class JavaGameServer extends JFrame {
 							userName = chatmsg.userName;
 							userStatus = "O"; // Online 惑怕
 							if (roomList_server.size() > 0)
-								sendRoooooooomListToAll();
+								sendRoomListToAll();
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.userName, chatmsg.data);
@@ -438,7 +386,7 @@ public class JavaGameServer extends JFrame {
 									break;
 								}
 							}
-							sendRoooooooomListToAll();
+							sendRoomListToAll();
 						} else if (chatmsg.code.matches("606")) { // 规 涝厘
 							System.out.println("Just entered here!!");
 							for (Room aroom : roomList_server) {
@@ -457,8 +405,7 @@ public class JavaGameServer extends JFrame {
 									break;
 								}
 							}
-							//sendRoomListToAll();
-							sendRoooooooomListToAll();
+							sendRoomListToAll();
 						} else if (chatmsg.code.matches("400")) { // logout message 贸府
 							logout();
 							break;
@@ -466,14 +413,14 @@ public class JavaGameServer extends JFrame {
 					}
 					if (room != null) {
 						if (room.getCode().matches("600")) { // create new room
+							System.out.println("Room Created");
 							roomList_server.add(room);
 							ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
 													.room_dst(room.getRoom_name())
 													.to_whom(room.getMasterUser())
 													.build();
 							writeOneObject(tmp);
-							// sendRoomListToAll();
-							sendRoooooooomListToAll();
+							sendRoomListToAll();
 						}
 					}
 
