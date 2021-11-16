@@ -30,7 +30,7 @@ public class JavaGameServer extends JFrame {
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
-	private ArrayList<Room> roomList_server = (new ArrayList<Room>()); // 전체 룸의 리스트
+	private ArrayList<Room> roomList_server = new ArrayList<>(); // 전체 룸의 리스트
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
@@ -255,8 +255,37 @@ public class JavaGameServer extends JFrame {
 			}
 		}
 
-		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void sendRoomListToAll() {
+			if(roomList_server.size() == 0) {
+				Room room = new Room.RoomBuilder("603").build();
+				writeAllObject(room);
+			}
+			else if (roomList_server.size() == 1) {
+				Room original_room = roomList_server.get(0);
+				// room.code = "601";
+				Room room = new Room.RoomBuilder("601")
+									.masterUser(original_room.masterUser)
+									.players_cnt(original_room.players_cnt)
+									.room_name(original_room.room_name)
+									.room_index(original_room.room_index)
+									.status(original_room.status)
+									.build();
+				System.out.println("1!!!> "+room.players_cnt);
+				writeAllObject(room);
+			} else {
+				for (int i = 0; i < roomList_server.size(); i++) {
+					Room room = roomList_server.get(i);
+					if (i == 0) {
+						System.out.println("2!!!> "+room.players_cnt);
+						room.code = "601";
+					} else {
+						System.out.println("3!!!> "+room.players_cnt);
+						room.code = "602";
+					}
+					writeAllObject(room);
+					System.out.println("4@@> "+room.players_cnt);
+				}
+			}
 			for(Room room:roomList_server) {
 				System.out.println("### Room Info ###");
 				System.out.println("code> " + room.code);
@@ -265,26 +294,6 @@ public class JavaGameServer extends JFrame {
 				System.out.println("players_cnt> " + room.players_cnt);
 				System.out.println();
 			}
-			if(roomList_server.size() == 0) {
-				Room room = new Room.RoomBuilder("603").build();
-				writeAllObject(room);
-			}
-			else if (roomList_server.size() == 1) {
-				Room room = roomList_server.get(0);
-				room.code = "601";
-				writeAllObject(room);
-			} else {
-				for (int i = 0; i < roomList_server.size(); i++) {
-					Room room = roomList_server.get(i);
-					if (i == 0) {
-						room.code = "601";
-					} else {
-						room.code = "602";
-					}
-					writeAllObject(room);
-				}
-			}
-
 		}
 
 		// 귓속말 전송

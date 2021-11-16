@@ -74,7 +74,7 @@ public class WaitingRoom extends JFrame {
 	public boolean eraser = false;
 	public JPanel roomListJPanel;
 	public JPanel roomEntry;
-	public ArrayList<Room> roomList_client = (new ArrayList<Room>());
+	public ArrayList<Room> roomList_client = new ArrayList<>();
 
 	/**
 	 * Create the frame.
@@ -351,23 +351,23 @@ public class WaitingRoom extends JFrame {
 					} else if (room != null) {
 						if (room.code.matches("601")) {
 							System.out.println("All Room Entry Cleared");
+							System.out.println(String.format("players> %d", room.players_cnt));
+							// System.out.println("players> " + room.players_cnt);
 							roomListJPanel.removeAll();
 							roomListJPanel.repaint();
 							roomList_client.clear();
 							roomList_client.add(room);
 							addRoomEntry(room);
-							System.out.println("players> " + room.players_cnt);
 						} else if (room.code.matches("602")) {
+							System.out.println("players> " + room.players_cnt);
 							roomList_client.add(room);
 							addRoomEntry(room);
-							System.out.println("players> " + room.players_cnt);
 						} else if (room.code.matches("603")) {
 							System.out.println("Remove All");
 							roomListJPanel.removeAll();
 							roomList_client.clear();
 							repaint();
 						}
-
 					}
 				} catch (IOException e) {
 					appendText("ois.readObject() error");

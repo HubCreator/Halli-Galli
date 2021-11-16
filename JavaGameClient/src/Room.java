@@ -4,29 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Room implements Serializable {
-	private static final long serialVersionUID = 1L;
+	public static final long serialVersionUID = 1L;
 	public String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500: Mouse Event
 	public String masterUser;
 	public int room_index;
 	public String room_name;
 	public String password;
-	public List<String> players = new ArrayList<String>();
-	public List<String> observers = new ArrayList<String>();
-	public List<Room> roomList =  new ArrayList<Room>();
+	public List<String> players = new ArrayList<>();
+	public List<String> observers = new ArrayList<>();
+	public List<Room> roomList =  new ArrayList<>();
 	public int players_cnt;
 	public int observers_cnt;
 	public String status;
 	
 	public static class RoomBuilder {
-		private static final long serialVersionUID = 1L;
+		public static final long serialVersionUID = 1L;
 		public String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500: Mouse Event
 		public String masterUser;
 		public int room_index;
 		public String room_name;
 		public String password;
-		public List<String> players = new ArrayList<String>();
-		public List<String> observers = new ArrayList<String>();
-		public List<Room> roomList = new ArrayList<Room>();
+		public List<String> players = new ArrayList<>();
+		public List<String> observers = new ArrayList<>();
+		public List<Room> roomList = new ArrayList<>();
 		public int players_cnt = 1;
 		public int observers_cnt;
 		public String status;
@@ -42,6 +42,9 @@ class Room implements Serializable {
 		public RoomBuilder players(List<String> players) {this.players = players; return this;}
 		public RoomBuilder observers(List<String> observers) {this.observers = observers; return this;}
 		public RoomBuilder roomList(List<Room> roomList) {this.roomList = roomList; return this;}
+		public RoomBuilder players_cnt(int players_cnt) {this.players_cnt = players_cnt; return this;}
+		public RoomBuilder observers_cnt(int observers_cnt) {this.observers_cnt = observers_cnt; return this;}
+		public RoomBuilder status(String status) {this.status = status; return this;}
 		public Room build() {
 			Room room = new Room();
 			room.code = this.code;

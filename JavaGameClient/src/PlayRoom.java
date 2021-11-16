@@ -148,6 +148,7 @@ public class PlayRoom extends JFrame {
 				// exit room
 				ChatMsg msg = new ChatMsg.ChatMsgBuilder("604", userName).data(room_name).build();
 
+				view.current_entered_room = null;
 				view.sendObject(msg);
 				setVisible(false);
 				view.setVisible(true);
