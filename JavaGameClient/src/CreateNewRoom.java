@@ -81,7 +81,7 @@ public class CreateNewRoom extends JFrame {
 				for (int i = 0; i < mainview.roomList_client.size(); i++) {
 					Room room = (Room) mainview.roomList_client.get(i);
 					// System.out.println(mainview.roomList.get(i));
-					if (room.masterUser.equals(masterUser)) {
+					if (room.getMasterUser().equals(masterUser)) {
 						JOptionPane.showMessageDialog(null, "이미 방을 만드셨습니다!"); // 다이얼로그 띄우기
 						setVisible(false);
 						return;
@@ -89,11 +89,11 @@ public class CreateNewRoom extends JFrame {
 				}
 				
 				// room = new Room(masterUser, "600", textField.getText(), passwordField.getPassword().toString());
-				room = new Room.RoomBuilder("600")
-						.masterUser(masterUser)
-						.room_name(textField.getText())
-						.password(passwordField.getPassword().toString())
-						.build();
+				room = new Room("600");
+				room.setMasterUser(masterUser);
+				room.setRoom_name(textField.getText());
+				room.setPassword(passwordField.getPassword().toString());
+				
 				mainview.sendObject(room);
 				setVisible(false);
 			}

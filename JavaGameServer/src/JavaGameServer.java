@@ -139,9 +139,9 @@ public class JavaGameServer extends JFrame {
 
 	public void appendRoom(Room room) {
 		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
-		textArea.append("code = " + room.code + "\n");
-		textArea.append("room_name = " + room.room_name + "\n");
-		textArea.append("password = " + room.password + "\n");
+		textArea.append("code = " + room.getCode() + "\n");
+		textArea.append("room_name = " + room.getRoom_name()+ "\n");
+		textArea.append("password = " + room.getPassword() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
@@ -254,44 +254,63 @@ public class JavaGameServer extends JFrame {
 				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
+		
+		public void sendRoooooooomListToAll() {
+			try {
+				oos.reset();
+				Room room = new Room("999");
+				room.setRoomList(roomList_server);
+				writeAllObject(room);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 
 		public void sendRoomListToAll() {
 			if(roomList_server.size() == 0) {
-				Room room = new Room.RoomBuilder("603").build();
+				// Room room = new Room.RoomBuilder("603").build();
+				Room room = new Room("603");
 				writeAllObject(room);
 			}
 			else if (roomList_server.size() == 1) {
 				Room original_room = roomList_server.get(0);
 				// room.code = "601";
-				Room room = new Room.RoomBuilder("601")
-									.masterUser(original_room.masterUser)
-									.players_cnt(original_room.players_cnt)
-									.room_name(original_room.room_name)
-									.room_index(original_room.room_index)
-									.status(original_room.status)
-									.build();
-				System.out.println("1!!!> "+room.players_cnt);
+//				Room room = new Room.RoomBuilder("601")
+//									.masterUser(original_room.masterUser)
+//									.players_cnt(original_room.players_cnt)
+//									.room_name(original_room.room_name)
+//									.room_index(original_room.room_index)
+//									.status(original_room.status)
+//									.build();
+				Room room = new Room("601");
+				room.setMasterUser(original_room.getMasterUser());
+				room.setPlayers_cnt(original_room.getPlayers_cnt());
+				room.setRoom_name(original_room.getRoom_name());
+				room.setRoom_index(original_room.getRoom_index());
+				room.setStatus(original_room.getStatus());
+				System.out.println("1!!!> "+room.getPlayers_cnt());
 				writeAllObject(room);
 			} else {
 				for (int i = 0; i < roomList_server.size(); i++) {
 					Room room = roomList_server.get(i);
 					if (i == 0) {
-						System.out.println("2!!!> "+room.players_cnt);
-						room.code = "601";
+						System.out.println("2!!!> "+room.getPlayers_cnt());
+						room.setCode("601");
 					} else {
-						System.out.println("3!!!> "+room.players_cnt);
-						room.code = "602";
+						System.out.println("3!!!> "+room.getPlayers_cnt());
+						room.setCode("602");
 					}
 					writeAllObject(room);
-					System.out.println("4@@> "+room.players_cnt);
+					System.out.println("4@@> "+room.getPlayers_cnt());
 				}
 			}
 			for(Room room:roomList_server) {
 				System.out.println("### Room Info ###");
-				System.out.println("code> " + room.code);
-				System.out.println("room_name> " + room.room_name);
-				System.out.println("masterUser> " + room.masterUser);
-				System.out.println("players_cnt> " + room.players_cnt);
+				System.out.println("code> " + room.getCode());
+				System.out.println("room_name> " + room.getRoom_name());
+				System.out.println("masterUser> " + room.getMasterUser());
+				System.out.println("players_cnt> " + room.getPlayers_cnt());
 				System.out.println();
 			}
 		}
@@ -354,7 +373,7 @@ public class JavaGameServer extends JFrame {
 							userName = chatmsg.userName;
 							userStatus = "O"; // Online 상태
 							if (roomList_server.size() > 0)
-								sendRoomListToAll();
+								sendRoooooooomListToAll();
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.userName, chatmsg.data);
@@ -409,48 +428,52 @@ public class JavaGameServer extends JFrame {
 						
 						else if (chatmsg.code.matches("604")) {
 							for (Room aroom : roomList_server) { // 방 나가기
-								if (aroom.room_name.equals(chatmsg.data)) {
-									aroom.players.remove(chatmsg.userName);
-									aroom.players_cnt -= 1;
-									System.out.println("Exit room " + aroom.players_cnt);
-									if(aroom.players_cnt == 0)
+								if (aroom.getRoom_name().equals(chatmsg.data)) {
+									aroom.getPlayers().remove(chatmsg.userName);
+									int tmp = aroom.getPlayers_cnt();
+									aroom.setPlayers_cnt(tmp--);
+									System.out.println("Exit room " + aroom.getPlayers_cnt());
+									if(aroom.getPlayers_cnt() == 0)
 										roomList_server.remove(aroom);
 									break;
 								}
 							}
-							sendRoomListToAll();
+							sendRoooooooomListToAll();
 						} else if (chatmsg.code.matches("606")) { // 방 입장
 							System.out.println("Just entered here!!");
 							for (Room aroom : roomList_server) {
-								if (aroom.room_name.equals(chatmsg.room_dst)) {
-									aroom.players.add(chatmsg.userName);
-									aroom.players_cnt += 1;
+								if (aroom.getRoom_name().equals(chatmsg.room_dst)) {
+									aroom.getPlayers().add(chatmsg.userName);
+									int tmp = aroom.getPlayers_cnt();
+									aroom.setPlayers_cnt(tmp--);
 									// sending allowing protocol
-									System.out.println("players> " + aroom.players_cnt);
-									ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
-														.room_dst(aroom.room_name)
+									System.out.println("players> " + aroom.getPlayers_cnt());
+									ChatMsg chattmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
+														.room_dst(aroom.getRoom_name())
 														.to_whom(chatmsg.userName)
 														.build();
 									// Room tmp2 = new Room.RoomBuilder("607").build();
-									writeOneObject(tmp);
+									writeOneObject(chattmp);
 									break;
 								}
 							}
-							sendRoomListToAll();
+							//sendRoomListToAll();
+							sendRoooooooomListToAll();
 						} else if (chatmsg.code.matches("400")) { // logout message 처리
 							logout();
 							break;
 						}
 					}
 					if (room != null) {
-						if (room.code.matches("600")) { // create new room
+						if (room.getCode().matches("600")) { // create new room
 							roomList_server.add(room);
 							ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
-													.room_dst(room.room_name)
-													.to_whom(room.masterUser)
+													.room_dst(room.getRoom_name())
+													.to_whom(room.getMasterUser())
 													.build();
 							writeOneObject(tmp);
-							sendRoomListToAll();
+							// sendRoomListToAll();
+							sendRoooooooomListToAll();
 						}
 					}
 
