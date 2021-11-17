@@ -182,11 +182,11 @@ public class WaitingRoom extends JFrame {
 	}
 
 	public void showRoomList(List<Room> list) {
-		// roomListJPanel.removeAll();
-		// roomListJPanel.repaint();
+		roomListJPanel.removeAll();
+		roomListJPanel.repaint();
 		System.out.println("start " + list.size());
 		for (int i = 0; i < list.size(); i++) {
-			System.out.println(list.get(i).getRoom_name());
+			System.out.println("room name " + list.get(i).getRoom_name());
 			JPanel roomEntry = new JPanel();
 			Border blackline = BorderFactory.createLineBorder(Color.black);
 			roomEntry.setBackground(Color.LIGHT_GRAY);
@@ -239,16 +239,16 @@ public class WaitingRoom extends JFrame {
 			JLabel room_player = new JLabel();
 			room_player.setBackground(Color.WHITE);
 			room_player.setBounds(514, 12, 116, 32);
-			// room_player.setText(String.valueOf(room.players_cnt));
-			// room_player.setText(String.valueOf(room.getPlayers().size()));
-			room_player.setText(String.valueOf(list.get(i).getPlayers().size()));
+			System.out.println("1-1)players " + list.get(i).getPlayers().size());
+			room_player.setText(Integer.toString(list.get(i).getPlayers().size()));
+			// room_player.repaint();
 			roomEntry.add(room_player);
 
 			JLabel room_observer = new JLabel();
 			room_observer.setBackground(Color.WHITE);
 			room_observer.setBounds(514, 56, 116, 32);
 			// room_observer.setText(String.valueOf(room.observers_cnt));
-			room_player.setText(String.valueOf(list.get(i).getObservers().size()));
+			room_observer.setText(Integer.toString(list.get(i).getObservers().size()));
 			roomEntry.add(room_observer);
 
 			JLabel room_status = new JLabel();

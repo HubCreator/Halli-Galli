@@ -146,10 +146,13 @@ public class PlayRoom extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// exit room
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("604", userName).data(room_name).build();
-
+				//ChatMsg msg = new ChatMsg.ChatMsgBuilder("604", userName)
+						//.data(room_name).build();
+				Room room = new Room("604");
+				room.setFrom_whom(userName);
+				room.setRoom_name(room_name);
 				view.current_entered_room = null;
-				view.sendObject(msg);
+				view.sendObject(room);
 				setVisible(false);
 				view.setVisible(true);
 			}

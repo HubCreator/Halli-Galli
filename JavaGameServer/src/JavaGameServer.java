@@ -274,7 +274,8 @@ public class JavaGameServer extends JFrame {
 			for(Room aroom:roomList_server) { // 조사한다
 				if(aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
 					// 방을 만든 사람이 나라면
-					if(room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
+					if(room.getMasterUser() != null 
+							&& room.getMasterUser().equals(userName)) {
 						Room roomTmp = room;
 						roomTmp.setCode("607");
 						List<String> players = new ArrayList<>();
@@ -379,6 +380,17 @@ public class JavaGameServer extends JFrame {
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(room.getRoom_name())) {
 									allowEnteringRoom(room);									
+									break;
+								}
+							}
+							sendRoomListToAll();
+						}  else if (room.getCode().matches("604")) { // 방 퇴장
+							System.out.println("Exit!!");
+							for (Room aroom : roomList_server) {
+								if (aroom.getRoom_name().equals(room.getRoom_name())) {
+									List<String> players = new ArrayList<>();
+									players = aroom.getPlayers();
+									players.remove(room.getFrom_whom());
 									break;
 								}
 							}
