@@ -16,15 +16,32 @@ class Room implements Serializable {
 	private int players_cnt;
 	private int observers_cnt;
 	private String status;
+	private String from_whom;
+
+	public Room(String code, String masterUser) {
+		this.code = code;
+//		this.players = new ArrayList<>() {
+//			private static final long serialVersionUID = 1L;
+//			{ add(masterUser); }
+//		};
+		// players.add(masterUser);
+		this.masterUser = masterUser;
+		this.observers = new ArrayList<>();
+	}
 	
 	public Room(String code) {
 		this.code = code;
-		this.players = new ArrayList<>() {
-			{ add(masterUser); }
-		};
-		// players.add(masterUser);
-		this.observers = new ArrayList<>();
 	}
+	
+
+	public String getFrom_whom() {
+		return from_whom;
+	}
+
+	public void setFrom_whom(String from_whom) {
+		this.from_whom = from_whom;
+	}
+	
 	public List<Room> getRoomList() {
 		return roomList;
 	}

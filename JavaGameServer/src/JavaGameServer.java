@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -140,22 +141,28 @@ public class JavaGameServer extends JFrame {
 	public void appendRoom(Room room) {
 		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
 		textArea.append("code = " + room.getCode() + "\n");
-		textArea.append("room_name = " + room.getRoom_name()+ "\n");
+		textArea.append("room_name = " + room.getRoom_name() + "\n");
 		textArea.append("password = " + room.getPassword() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
+	}
+	
+
+	public enum Status {
+		WAITING, RUNNING;
 	}
 
 	// User 당 생성되는 Thread
 	// Read One 에서 대기 -> Write All
 	class UserService extends Thread {
-
 		private ObjectInputStream ois;
 		private ObjectOutputStream oos;
 
 		private Socket client_socket;
 		private Vector user_vc;
 		public String userName = "";
-		public String userStatus;
+		// public String userStatus;
+		public Status userStatus = Status.WAITING;
+		public Room enteredRoom = null;
 
 		public UserService(Socket client_socket) {
 			// 매개변수로 넘어온 자료 저장
@@ -189,7 +196,7 @@ public class JavaGameServer extends JFrame {
 		public void writeAll(String str) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user.userStatus == "O")
+				if (user.userStatus == Status.WAITING)
 					user.writeOne(str);
 			}
 		}
@@ -219,7 +226,7 @@ public class JavaGameServer extends JFrame {
 		public void writeAllObject(Object ob) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user.userStatus == "O")
+				if (user.userStatus == Status.WAITING)
 					user.writeOneObject(ob);
 			}
 		}
@@ -228,7 +235,7 @@ public class JavaGameServer extends JFrame {
 		public void writeOthers(String str) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user != this && user.userStatus == "O")
+				if (user != this && user.userStatus == Status.WAITING)
 					user.writeOne(str);
 			}
 		}
@@ -255,35 +262,43 @@ public class JavaGameServer extends JFrame {
 				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
-		
+
 		public void sendRoomListToAll() {
 			Room room = new Room("601");
 			room.setRoomList(roomList_server);
 			writeAllObject(room);
 		}
 
-
-		// 귓속말 전송
-		public void WritePrivate(String msg) {
-			try {
-				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", "귓속말").data(msg).build();
-				oos.writeObject(obcm);
-			} catch (IOException e) {
-				appendText("dos.writeObject() error");
-				try {
-					oos.close();
-					client_socket.close();
-					client_socket = null;
-					ois = null;
-					oos = null;
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+		public void allowEnteringRoom(Room room) {
+			enteredRoom = room;
+			for(Room aroom:roomList_server) { // 조사한다
+				if(aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+					// 방을 만든 사람이 나라면
+					if(room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
+						Room roomTmp = room;
+						roomTmp.setCode("607");
+						List<String> players = new ArrayList<>();
+						players.add(userName);
+						roomTmp.setPlayers(players);
+						aroom.setPlayers(players);
+						writeOneObject(roomTmp);
+						System.out.println("내가 만든방");
+					} else { // 그 외 참가자
+						List<String> players = aroom.getPlayers();
+						players.add(room.getFrom_whom());
+						aroom.setPlayers(players);
+						
+						Room roomTmp = room;
+						roomTmp.setCode("607");
+						writeOneObject(roomTmp);
+						System.out.println("딴놈이 만든방 입장");
+					}
+				} else {
+					System.out.println("해당 방이 없습니다..");
 				}
-				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
-
+		
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -319,61 +334,22 @@ public class JavaGameServer extends JFrame {
 					if (chatmsg != null) {
 						if (chatmsg.code.matches("100")) {
 							userName = chatmsg.userName;
-							userStatus = "O"; // Online 상태
+							userStatus = Status.WAITING; // Online 상태
 							if (roomList_server.size() > 0)
 								sendRoomListToAll();
 							login();
 						} else if (chatmsg.code.matches("200")) {
 							msg = String.format("[%s] %s", chatmsg.userName, chatmsg.data);
 							appendText(msg); // server 화면에 출력
-							String[] args = msg.split(" "); // 단어들을 분리한다.
-							if (args.length == 1) { // Enter key 만 들어온 경우 Wakeup 처리만 한다.
-								userStatus = "O";
-							} else if (args[1].matches("/exit")) {
-								logout();
-								break;
-							} else if (args[1].matches("/list")) {
-								writeOne("User list\n");
-								writeOne("Name\tStatus\n");
-								writeOne("-----------------------------\n");
-								for (int i = 0; i < user_vc.size(); i++) {
-									UserService user = (UserService) user_vc.elementAt(i);
-									writeOne(user.userName + "\t" + user.userStatus + "\n");
-								}
-								writeOne("-----------------------------\n");
-							} else if (args[1].matches("/sleep")) {
-								userStatus = "S";
-							} else if (args[1].matches("/wakeup")) {
-								userStatus = "O";
-							} else if (args[1].matches("/to")) { // 귓속말
-								for (int i = 0; i < user_vc.size(); i++) {
-									UserService user = (UserService) user_vc.elementAt(i);
-									if (user.userName.matches(args[2]) && user.userName.matches("O")) {
-										String msg2 = "";
-										for (int j = 3; j < args.length; j++) {// 실제 message 부분
-											msg2 += args[j];
-											if (j < args.length - 1)
-												msg2 += " ";
-										}
-										// /to 빼고.. [귓속말] [user1] Hello user2..
-										user.WritePrivate(args[0] + " " + msg2 + "\n");
-										// user.writeOne("[귓속말] " + args[0] + " " + msg2 + "\n");
-										break;
-									}
-								}
-							} else { // 일반 채팅 메시지
-								userStatus = "O";
-								writeAllObject(chatmsg);
-							}
+							writeAllObject(chatmsg);
 						} else if (chatmsg.code.matches("201")) {
 							for (int i = 0; i < user_vc.size(); i++) {
 								UserService user = (UserService) user_vc.elementAt(i);
-								if (user.userStatus == "O")
+								if (user.userStatus == Status.WAITING)
 									user.writeOneObject(chatmsg);
 							}
-							// writeAllObject(chatmsg);
 						}
-						
+
 						else if (chatmsg.code.matches("604")) {
 							for (Room aroom : roomList_server) { // 방 나가기
 								if (aroom.getRoom_name().equals(chatmsg.data)) {
@@ -381,27 +357,8 @@ public class JavaGameServer extends JFrame {
 									int tmp = aroom.getPlayers_cnt();
 									aroom.setPlayers_cnt(tmp--);
 									System.out.println("Exit room " + aroom.getPlayers_cnt());
-									if(aroom.getPlayers_cnt() == 0)
+									if (aroom.getPlayers_cnt() == 0)
 										roomList_server.remove(aroom);
-									break;
-								}
-							}
-							sendRoomListToAll();
-						} else if (chatmsg.code.matches("606")) { // 방 입장
-							System.out.println("Just entered here!!");
-							for (Room aroom : roomList_server) {
-								if (aroom.getRoom_name().equals(chatmsg.room_dst)) {
-									aroom.getPlayers().add(chatmsg.userName);
-									int tmp = aroom.getPlayers_cnt();
-									aroom.setPlayers_cnt(tmp--);
-									// sending allowing protocol
-									System.out.println("players> " + aroom.getPlayers_cnt());
-									ChatMsg chattmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
-														.room_dst(aroom.getRoom_name())
-														.to_whom(chatmsg.userName)
-														.build();
-									// Room tmp2 = new Room.RoomBuilder("607").build();
-									writeOneObject(chattmp);
 									break;
 								}
 							}
@@ -415,13 +372,18 @@ public class JavaGameServer extends JFrame {
 						if (room.getCode().matches("600")) { // create new room
 							System.out.println("Room Created");
 							roomList_server.add(room);
-							ChatMsg tmp = new ChatMsg.ChatMsgBuilder("607", "SERVER")
-													.room_dst(room.getRoom_name())
-													.to_whom(room.getMasterUser())
-													.build();
-							writeOneObject(tmp);
+							allowEnteringRoom(room);
 							sendRoomListToAll();
-						}
+						} else if (room.getCode().matches("606")) { // 방 입장
+							System.out.println("Just entered here!!");
+							for (Room aroom : roomList_server) {
+								if (aroom.getRoom_name().equals(room.getRoom_name())) {
+									allowEnteringRoom(room);									
+									break;
+								}
+							}
+							sendRoomListToAll();
+						} 
 					}
 
 				} catch (IOException e) {

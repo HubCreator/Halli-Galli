@@ -262,8 +262,12 @@ public class WaitingRoom extends JFrame {
 			playBtn.setBounds(697, 16, 74, 28);
 			playBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					ChatMsg msg = new ChatMsg.ChatMsgBuilder("606", userName).room_dst(room_name.getText()).build();
-					sendObject(msg);
+					//ChatMsg msg = new ChatMsg.ChatMsgBuilder("606", userName)
+							//.room_dst(room_name.getText()).build();
+					Room room = new Room("606");
+					room.setRoom_name(room_name.getText());
+					room.setFrom_whom(userName);
+					sendObject(room);
 				}
 			});
 			roomEntry.add(playBtn);
@@ -335,13 +339,13 @@ public class WaitingRoom extends JFrame {
 							// AppendImage(cm.img);
 							break;
 						case "607": // Allow entering room
-							System.out.println("Entering allowed");
-							if (cm.to_whom.equals(userName) && current_status == CurrentStatus.WAITING) {
-								current_status = CurrentStatus.PLAYING;
-								current_entered_room = cm.room_dst;
-								setVisible(false);
-								playRoom = new PlayRoom(view, cm.room_dst);
-							}
+							//System.out.println("Entering allowed");
+							//if (cm.to_whom.equals(userName) && current_status == CurrentStatus.WAITING) {
+//								current_status = CurrentStatus.PLAYING;
+//								current_entered_room = cm.room_dst;
+//								setVisible(false);
+//								playRoom = new PlayRoom(view, cm.room_dst);
+//							}
 							break;
 						}
 					} else if (room != null) {
@@ -353,6 +357,12 @@ public class WaitingRoom extends JFrame {
 							roomListJPanel.removeAll();
 							roomList_client.clear();
 							repaint();
+						} else if (room.getCode().matches("607")) {
+							System.out.println("Entering allowed");
+							current_status = CurrentStatus.PLAYING;
+							current_entered_room = room.getRoom_name();
+							setVisible(false);
+							playRoom = new PlayRoom(view, room.getRoom_name());
 						}
 					}
 				} catch (IOException e) {
