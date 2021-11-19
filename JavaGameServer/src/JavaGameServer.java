@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 public class JavaGameServer extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	JTextArea textArea;
+	private JTextArea textArea;
 	private JTextField txtPortNumber;
 
 	private ServerSocket socket; // 서버소켓
@@ -145,10 +145,9 @@ public class JavaGameServer extends JFrame {
 		textArea.append("password = " + room.getPassword() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
-	
 
 	public enum Status {
-		WAITING, RUNNING;
+		WAITING, RUNNING, OBSERVING;
 	}
 
 	// User 당 생성되는 Thread
@@ -160,7 +159,6 @@ public class JavaGameServer extends JFrame {
 		private Socket client_socket;
 		private Vector user_vc;
 		public String userName = "";
-		// public String userStatus;
 		public Status userStatus = Status.WAITING;
 		public Room enteredRoom = null;
 
@@ -268,14 +266,42 @@ public class JavaGameServer extends JFrame {
 			room.setRoomList(roomList_server);
 			writeAllObject(room);
 		}
+		
+		public void allowObservingRoom(Room room) {
+			enteredRoom = room;
+			for (Room aroom : roomList_server) { // 조사한다
+				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+					if(aroom.getObservers().size() > 4) { // 방 꽉참
+						System.out.println("Room is full to observe!!");
+						return;
+					}
+					Room roomTmp = room;
+					roomTmp.setCode("609");
+					List<String> observers;
+					if(room.getObservers() != null) {
+						observers = room.getObservers();
+						observers.add(room.getFrom_whom());	
+					} else {
+						observers = new ArrayList<>();
+						observers.add(room.getFrom_whom());
+					}
+					roomTmp.setObservers(observers);
+					aroom.setObservers(observers);
+					writeOneObject(roomTmp);
+					
+					System.out.println("들어왔다");
+				} else {
+					System.out.println("해당 방이 없습니다..");
+				}
+			}
+		}
 
 		public void allowEnteringRoom(Room room) {
 			enteredRoom = room;
-			for(Room aroom:roomList_server) { // 조사한다
-				if(aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+			for (Room aroom : roomList_server) { // 조사한다
+				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
 					// 방을 만든 사람이 나라면
-					if(room.getMasterUser() != null 
-							&& room.getMasterUser().equals(userName)) {
+					if (room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
 						Room roomTmp = room;
 						roomTmp.setCode("607");
 						List<String> players = new ArrayList<>();
@@ -288,7 +314,7 @@ public class JavaGameServer extends JFrame {
 						List<String> players = aroom.getPlayers();
 						players.add(room.getFrom_whom());
 						aroom.setPlayers(players);
-						
+
 						Room roomTmp = room;
 						roomTmp.setCode("607");
 						writeOneObject(roomTmp);
@@ -299,7 +325,7 @@ public class JavaGameServer extends JFrame {
 				}
 			}
 		}
-		
+
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -349,21 +375,6 @@ public class JavaGameServer extends JFrame {
 								if (user.userStatus == Status.WAITING)
 									user.writeOneObject(chatmsg);
 							}
-						}
-
-						else if (chatmsg.code.matches("604")) {
-							for (Room aroom : roomList_server) { // 방 나가기
-								if (aroom.getRoom_name().equals(chatmsg.data)) {
-									aroom.getPlayers().remove(chatmsg.userName);
-									int tmp = aroom.getPlayers_cnt();
-									aroom.setPlayers_cnt(tmp--);
-									System.out.println("Exit room " + aroom.getPlayers_cnt());
-									if (aroom.getPlayers_cnt() == 0)
-										roomList_server.remove(aroom);
-									break;
-								}
-							}
-							sendRoomListToAll();
 						} else if (chatmsg.code.matches("400")) { // logout message 처리
 							logout();
 							break;
@@ -375,16 +386,11 @@ public class JavaGameServer extends JFrame {
 							roomList_server.add(room);
 							allowEnteringRoom(room);
 							sendRoomListToAll();
-						} else if (room.getCode().matches("606")) { // 방 입장
+						} else if (room.getCode().matches("606")) { // 방 입장 (Play)
 							System.out.println("Just entered here!!");
-							for (Room aroom : roomList_server) {
-								if (aroom.getRoom_name().equals(room.getRoom_name())) {
-									allowEnteringRoom(room);									
-									break;
-								}
-							}
+							allowEnteringRoom(room);
 							sendRoomListToAll();
-						}  else if (room.getCode().matches("604")) { // 방 퇴장
+						} else if (room.getCode().matches("604")) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(room.getRoom_name())) {
@@ -395,7 +401,11 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 							sendRoomListToAll();
-						} 
+						} else if (room.getCode().matches("608")) { // 방 입장 (Observe)
+							System.out.println("Observer In");
+							allowObservingRoom(room);
+							sendRoomListToAll();
+						}
 					}
 
 				} catch (IOException e) {

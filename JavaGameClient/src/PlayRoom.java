@@ -133,8 +133,8 @@ public class PlayRoom extends JFrame {
 		contentPane.add(lblUserName);
 		setVisible(true);
 
-		userName = view.userName;
-		lblUserName.setText(view.userName);
+		userName = view.client_userName;
+		lblUserName.setText(view.client_userName);
 
 		imgBtn = new JButton("+");
 		imgBtn.setFont(new Font("±¼¸²", Font.PLAIN, 16));
