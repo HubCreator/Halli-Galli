@@ -276,8 +276,6 @@ public class WaitingRoom extends JFrame {
 			observeBtn.setBounds(697, 60, 74, 28);
 			observeBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//ChatMsg msg = new ChatMsg.ChatMsgBuilder("603", client_userName)
-					//		.data("Observe").build();
 					Room room = new Room("608");
 					room.setFrom_whom(client_userName);
 					room.setRoom_name(room_name.getText());
