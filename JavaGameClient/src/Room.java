@@ -15,7 +15,7 @@ class Room implements Serializable {
 	private List<Room> roomList;
 	private int players_cnt;
 	private int observers_cnt;
-	private String status;
+	private String status = "¥Î±‚¡ﬂ";
 	private String from_whom;
 
 	public Room(String code, String masterUser) {

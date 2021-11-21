@@ -190,8 +190,7 @@ public class WaitingRoom extends JFrame {
 			Border blackline = BorderFactory.createLineBorder(Color.black);
 			roomEntry.setBackground(Color.LIGHT_GRAY);
 			roomEntry.setBorder(blackline);
-			// roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783,
-			// 151);
+			// roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783, 151);
 			roomEntry.setBounds(12, 21 + (i * 151), 783, 151);
 			roomEntry.setLayout(null);
 
@@ -339,19 +338,12 @@ public class WaitingRoom extends JFrame {
 								appendText("[" + cm.userName + "]");
 							// AppendImage(cm.img);
 							break;
-						case "607": // Allow entering room
-							//System.out.println("Entering allowed");
-							//if (cm.to_whom.equals(userName) && current_status == CurrentStatus.WAITING) {
-//								current_status = CurrentStatus.PLAYING;
-//								current_entered_room = cm.room_dst;
-//								setVisible(false);
-//								playRoom = new PlayRoom(view, cm.room_dst);
-//							}
-							break;
 						}
 					} else if (room != null) {
 						if (room.getCode().matches("601")) {
 							List<Room> list = room.getRoomList();
+							roomList_client.clear();
+							roomList_client = (ArrayList<Room>) room.getRoomList();
 							showRoomList(list);
 						} else if (room.getCode().matches("603")) {
 							System.out.println("Remove All");
