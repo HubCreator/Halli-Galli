@@ -245,7 +245,6 @@ public class WaitingRoom extends JFrame {
 			JLabel room_observer = new JLabel();
 			room_observer.setBackground(Color.WHITE);
 			room_observer.setBounds(514, 56, 116, 32);
-			// room_observer.setText(String.valueOf(room.observers_cnt));
 			room_observer.setText(Integer.toString(list.get(i).getObservers().size()));
 			roomEntry.add(room_observer);
 
@@ -260,8 +259,6 @@ public class WaitingRoom extends JFrame {
 			playBtn.setBounds(697, 16, 74, 28);
 			playBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//ChatMsg msg = new ChatMsg.ChatMsgBuilder("606", userName)
-							//.room_dst(room_name.getText()).build();
 					Room room = new Room("606");
 					room.setRoom_name(room_name.getText());
 					room.setFrom_whom(client_userName);
