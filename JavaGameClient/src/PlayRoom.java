@@ -2,7 +2,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -178,20 +182,27 @@ public class PlayRoom extends JFrame {
 		lblUserName_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblUserName_1.setBackground(Color.WHITE);
 		lblUserName_1.setBounds(902, 37, 84, 40);
-		lblUserName_1.setText("<dynamic>");
+		lblUserName_1.setText("Room : " + room_name);
 		contentPane.add(lblUserName_1);
 		
 		
-		bell = new JButton(new ImageIcon(((new ImageIcon(
-	            "C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png").getImage()
-	           ))));
-		bell.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("bell ring!!");
-			}
-		});
-		bell.setBounds(326, 265, 232, 195);
-		contentPane.add(bell);
+		/*
+		 * bell = new JButton(new ImageIcon(((new ImageIcon(
+		 * "C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png").
+		 * getImage() )))); bell.addActionListener(new ActionListener() { public void
+		 * actionPerformed(ActionEvent e) { System.out.println("bell ring!!"); } });
+		 * bell.setBounds(326, 265, 232, 195); contentPane.add(bell);
+		 */
+		
+		try {
+			BufferedImage myPicture = ImageIO.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png"));
+			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+			picLabel.setBounds(326, 265, 232, 195);
+			contentPane.add(picLabel);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		gamePane = new JPanel();
 		gamePane.setBounds(12, 10, 878, 713);
