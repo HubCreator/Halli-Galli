@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -113,10 +115,9 @@ public class PlayRoom extends JFrame {
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
 		// contentPane = new JPanel();
-		contentPane = new ImagePanel(new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\background3.jpg")
-				.getImage()
-				.getScaledInstance(1193, 772, DEFAULT_CURSOR)
-				);
+		contentPane = new ImagePanel(
+				new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\background3.jpg")
+						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -157,8 +158,7 @@ public class PlayRoom extends JFrame {
 		imgBtn.setFont(new Font("±¼¸²", Font.PLAIN, 16));
 		imgBtn.setBounds(902, 683, 50, 40);
 		contentPane.add(imgBtn);
-		
-		
+
 		JButton btnNewButton = new JButton("\uB098\uAC00\uAE30");
 		btnNewButton.setFont(new Font("±¼¸²", Font.PLAIN, 11));
 		btnNewButton.addActionListener(new ActionListener() {
@@ -182,10 +182,10 @@ public class PlayRoom extends JFrame {
 		lblUserName_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblUserName_1.setBackground(Color.WHITE);
 		lblUserName_1.setBounds(902, 37, 84, 40);
-		lblUserName_1.setText("Room : " + room_name);
+		lblUserName_1.setText(room_name);
+		// lblUserName_1.setText("Room : " + room_name);
 		contentPane.add(lblUserName_1);
-		
-		
+
 		/*
 		 * bell = new JButton(new ImageIcon(((new ImageIcon(
 		 * "C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png").
@@ -193,48 +193,54 @@ public class PlayRoom extends JFrame {
 		 * actionPerformed(ActionEvent e) { System.out.println("bell ring!!"); } });
 		 * bell.setBounds(326, 265, 232, 195); contentPane.add(bell);
 		 */
-		
+
 		try {
-			BufferedImage myPicture = ImageIO.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png"));
+			BufferedImage myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
+			picLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("Yay you clicked me");
+				}
+			});
 			picLabel.setBounds(326, 265, 232, 195);
 			contentPane.add(picLabel);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		gamePane = new JPanel();
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
 		gamePane.setLayout(null);
-		
+
 		player1 = new JPanel();
 		player1.setBounds(12, 10, 420, 346);
 		gamePane.add(player1);
 		player1.setLayout(null);
-		
+
 		player2 = new JPanel();
 		player2.setBounds(430, 10, 436, 346);
 		gamePane.add(player2);
 		player2.setLayout(null);
-		
+
 		player3 = new JPanel();
 		player3.setBounds(12, 357, 420, 346);
 		gamePane.add(player3);
 		player3.setLayout(null);
-		
+
 		player4 = new JPanel();
 		player4.setBounds(430, 357, 434, 346);
 		gamePane.add(player4);
 		player4.setLayout(null);
-		
+
 //		panel = new ImagePanel(new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\background2.jpg").getImage());
 //		panel.setBounds(12, 60, 878, 663);
 //		contentPane.add(panel);
 //		panel.setLayout(null);
-		
-		
+
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
