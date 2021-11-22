@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -41,11 +43,6 @@ public class PlayRoom extends JFrame {
 	private JPanel player2;
 	private JPanel player3;
 	private JPanel player4;
-	private JButton bell;
-
-	public enum CurrentStatus {
-		WAITING, PLAYING, OBSERVING
-	};
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -105,16 +102,15 @@ public class PlayRoom extends JFrame {
 		}
 	}
 
-	public PlayRoom(WaitingRoom view, String room_name) {
+	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
+		List<String> players = current_entered_room.getPlayers();
 		setVisible(true);
 		setResizable(false);
 		setBounds(100, 100, 1232, 772);
 		setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
-
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
-		// contentPane = new JPanel();
 		contentPane = new ImagePanel(
 				new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\background3.jpg")
 						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
@@ -122,6 +118,9 @@ public class PlayRoom extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		contentPane.repaint();
+		
+		
+		
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(902, 87, 263, 524);
@@ -166,7 +165,7 @@ public class PlayRoom extends JFrame {
 				// exit room
 				Room room = new Room("604");
 				room.setFrom_whom(userName);
-				room.setRoom_name(room_name);
+				room.setRoom_name(current_entered_room.getRoom_name());
 				view.current_entered_room = null;
 				view.sendObject(room);
 				setVisible(false);
@@ -182,17 +181,9 @@ public class PlayRoom extends JFrame {
 		lblUserName_1.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblUserName_1.setBackground(Color.WHITE);
 		lblUserName_1.setBounds(902, 37, 84, 40);
-		lblUserName_1.setText(room_name);
-		// lblUserName_1.setText("Room : " + room_name);
+		lblUserName_1.setText(current_entered_room.getRoom_name());
 		contentPane.add(lblUserName_1);
 
-		/*
-		 * bell = new JButton(new ImageIcon(((new ImageIcon(
-		 * "C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png").
-		 * getImage() )))); bell.addActionListener(new ActionListener() { public void
-		 * actionPerformed(ActionEvent e) { System.out.println("bell ring!!"); } });
-		 * bell.setBounds(326, 265, 232, 195); contentPane.add(bell);
-		 */
 
 		try {
 			BufferedImage myPicture = ImageIO
@@ -215,31 +206,64 @@ public class PlayRoom extends JFrame {
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
 		gamePane.setLayout(null);
+		
+		for(String player : players) {
+			System.out.println("player name >> " + player);
+		}
+		
 
 		player1 = new JPanel();
 		player1.setBounds(12, 10, 420, 346);
 		gamePane.add(player1);
 		player1.setLayout(null);
+		
+		JLabel player1_name = new JLabel((String) null);
+		player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+		player1_name.setFont(new Font("굴림", Font.BOLD, 14));
+		player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+		player1_name.setBackground(Color.WHITE);
+		player1_name.setBounds(12, 10, 84, 40);
+		player1.add(player1_name);
 
 		player2 = new JPanel();
 		player2.setBounds(430, 10, 436, 346);
 		gamePane.add(player2);
 		player2.setLayout(null);
+		
+		JLabel player2_name = new JLabel((String) null);
+		player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+		player2_name.setFont(new Font("굴림", Font.BOLD, 14));
+		player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+		player2_name.setBackground(Color.WHITE);
+		player2_name.setBounds(340, 10, 84, 40);
+		player2.add(player2_name);
 
 		player3 = new JPanel();
 		player3.setBounds(12, 357, 420, 346);
 		gamePane.add(player3);
 		player3.setLayout(null);
+		
+		JLabel player4_name = new JLabel((String) null);
+		player4_name.setBounds(12, 296, 84, 40);
+		player3.add(player4_name);
+		player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+		player4_name.setFont(new Font("굴림", Font.BOLD, 14));
+		player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+		player4_name.setBackground(Color.WHITE);
 
 		player4 = new JPanel();
 		player4.setBounds(430, 357, 434, 346);
 		gamePane.add(player4);
 		player4.setLayout(null);
+		
+		JLabel player3_name = new JLabel((String) null);
+		player3_name.setBounds(338, 296, 84, 40);
+		player4.add(player3_name);
+		player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+		player3_name.setFont(new Font("굴림", Font.BOLD, 14));
+		player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+		player3_name.setBackground(Color.WHITE);
 
-//		panel = new ImagePanel(new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\background2.jpg").getImage());
-//		panel.setBounds(12, 60, 878, 663);
-//		contentPane.add(panel);
-//		panel.setLayout(null);
 
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);

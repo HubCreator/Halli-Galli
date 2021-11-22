@@ -147,7 +147,7 @@ public class JavaGameServer extends JFrame {
 	}
 
 	public enum Status {
-		WAITING, RUNNING, OBSERVING;
+		WAITING, PLAYING, OBSERVING;
 	}
 
 	// User 당 생성되는 Thread
@@ -237,7 +237,7 @@ public class JavaGameServer extends JFrame {
 					user.writeOne(str);
 			}
 		}
-
+		
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void writeOne(String msg) {
 			try {
@@ -260,6 +260,7 @@ public class JavaGameServer extends JFrame {
 				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
+		
 
 		public void sendRoomListToAll() {
 			Room room = new Room("601");
@@ -297,27 +298,32 @@ public class JavaGameServer extends JFrame {
 		}
 
 		public void allowEnteringRoom(Room room) {
-			enteredRoom = room;
 			for (Room aroom : roomList_server) { // 조사한다
 				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+					enteredRoom = aroom;
+					userStatus = Status.PLAYING;
 					// 방을 만든 사람이 나라면
-					if (room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
-						Room roomTmp = room;
-						roomTmp.setCode("607");
-						List<String> players = new ArrayList<>();
-						players.add(userName);
-						roomTmp.setPlayers(players);
-						aroom.setPlayers(players);
-						writeOneObject(roomTmp);
+					if (room.getMasterUser() != null 
+							&& room.getMasterUser().equals(userName)) {
+						
+						//Room roomTmp = room;
+						aroom.setCode("607");
+						aroom.players.add(userName);
+						//List<String> players = new ArrayList<>();
+						//players.add(userName);
+						// roomTmp.setPlayers(players);
+						// aroom.setPlayers(players);
+						writeOneObject(aroom);
 						System.out.println("내가 만든방");
 					} else { // 그 외 참가자
-						List<String> players = aroom.getPlayers();
-						players.add(room.getFrom_whom());
-						aroom.setPlayers(players);
-
-						Room roomTmp = room;
-						roomTmp.setCode("607");
-						writeOneObject(roomTmp);
+						//List<String> players = new ArrayList<>();
+						//players = aroom.getPlayers();
+						//players.add(room.getFrom_whom());
+						//aroom.setPlayers(players);
+						//Room roomTmp = room;
+						aroom.players.add(room.getFrom_whom());
+						aroom.setCode("607");
+						writeOneObject(aroom);
 						System.out.println("딴놈이 만든방 입장");
 					}
 				} else {
@@ -361,7 +367,7 @@ public class JavaGameServer extends JFrame {
 					if (chatmsg != null) {
 						if (chatmsg.code.matches("100")) {
 							userName = chatmsg.userName;
-							userStatus = Status.WAITING; // Online 상태
+							userStatus = Status.WAITING;
 							if (roomList_server.size() > 0)
 								sendRoomListToAll();
 							login();
@@ -383,6 +389,7 @@ public class JavaGameServer extends JFrame {
 					if (room != null) {
 						if (room.getCode().matches("600")) { // create new room
 							System.out.println("Room Created");
+							// room에는 masterUser, room_name, password 들어있음 
 							roomList_server.add(room);
 							allowEnteringRoom(room);
 							sendRoomListToAll();
@@ -392,6 +399,8 @@ public class JavaGameServer extends JFrame {
 							sendRoomListToAll();
 						} else if (room.getCode().matches("604")) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
+							enteredRoom = null;
+							userStatus = Status.WAITING;
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(room.getRoom_name())) {
 									List<String> players = new ArrayList<>();

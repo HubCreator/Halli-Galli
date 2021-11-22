@@ -52,7 +52,7 @@ public class WaitingRoom extends JFrame {
 	public WaitingRoom view = null;
 	public CreateNewRoom createNewRoom = null;
 	public PlayRoom playRoom = null;
-	public String current_entered_room = null;
+	public Room current_entered_room = null;
 
 	private JLabel lblUserName;
 	private JTextPane textArea;
@@ -338,6 +338,7 @@ public class WaitingRoom extends JFrame {
 						}
 					} else if (room != null) {
 						if (room.getCode().matches("601")) {
+							System.out.println("Received Room List");
 							List<Room> list = room.getRoomList();
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();
@@ -349,14 +350,14 @@ public class WaitingRoom extends JFrame {
 							repaint();
 						} else if (room.getCode().matches("607")) {
 							System.out.println("Entering allowed");
-							current_entered_room = room.getRoom_name();
+							current_entered_room = room;
 							setVisible(false);
-							playRoom = new PlayRoom(view, room.getRoom_name());
+							playRoom = new PlayRoom(view, current_entered_room);
 						} else if (room.getCode().matches("609")) {
 							System.out.println("Observing allowed");
-							current_entered_room = room.getRoom_name();
+							current_entered_room = room;
 							setVisible(false);
-							playRoom = new PlayRoom(view, room.getRoom_name());
+							playRoom = new PlayRoom(view, current_entered_room);
 						}
 					}
 				} catch (IOException e) {
@@ -479,7 +480,8 @@ public class WaitingRoom extends JFrame {
 
 	public void sendMessageFromRoom(String msg) {
 		try {
-			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName).data(msg).room_dst(current_entered_room).build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName)
+					.data(msg).room_dst(current_entered_room.getRoom_name()).build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
 			// appendText("dos.write() error");

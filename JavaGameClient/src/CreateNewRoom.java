@@ -88,11 +88,9 @@ public class CreateNewRoom extends JFrame {
 					}
 				}
 				
-				// room = new Room(masterUser, "600", textField.getText(), passwordField.getPassword().toString());
 				room = new Room("600", masterUser);
 				room.setRoom_name(textField.getText());
 				room.setPassword(passwordField.getPassword().toString());
-				System.out.println("create!");
 				mainview.sendObject(room);
 				setVisible(false);
 			}

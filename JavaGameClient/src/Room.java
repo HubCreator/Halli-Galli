@@ -10,11 +10,9 @@ class Room implements Serializable {
 	private int room_index;
 	private String room_name;
 	private String password;
-	private List<String> players;
-	private List<String> observers;
-	private List<Room> roomList;
-	private int players_cnt;
-	private int observers_cnt;
+	public List<String> players = new ArrayList<>();
+	public List<String> observers = new ArrayList<>();
+	public List<Room> roomList = new ArrayList<>();
 	private String status = "¥Î±‚¡ﬂ";
 	private String from_whom;
 
@@ -104,22 +102,6 @@ class Room implements Serializable {
 
 	public void setObservers(List<String> observers) {
 		this.observers = observers;
-	}
-
-	public int getPlayers_cnt() {
-		return players_cnt;
-	}
-
-	public void setPlayers_cnt(int players_cnt) {
-		this.players_cnt = players_cnt;
-	}
-
-	public int getObservers_cnt() {
-		return observers_cnt;
-	}
-
-	public void setObservers_cnt(int observers_cnt) {
-		this.observers_cnt = observers_cnt;
 	}
 
 	public String getStatus() {
