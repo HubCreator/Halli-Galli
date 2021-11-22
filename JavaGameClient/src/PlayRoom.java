@@ -33,7 +33,17 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+
+class UserConfig {
+	public static final double PLAYER1_DEG = -45.0;
+	public static final double PLAYER2_DEG = 45.0;
+	public static final double PLAYER3_DEG = -45.0;
+	public static final double PLAYER4_DEG = 45.0;
+}
+
+
 public class PlayRoom extends JFrame {
+	private static final long serialVersionUID = 1L;
 	public WaitingRoom mainview;
 	public JTextPane textArea;
 	private JPanel contentPane;
@@ -216,71 +226,71 @@ public class PlayRoom extends JFrame {
 			// ########## Deck Part ##############
 			
 			myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back1.png"));
-			BufferedImage player1_deck_rotated = rotate(myPicture, 60.0);
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.PLAYER1_DEG);
 			Image player1_deck_res = player1_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT); // need to define value later
 			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
 			palyer1_deck.setText("player1_deck");
-			palyer1_deck.setBounds(27, 60, 166, 119);
+			palyer1_deck.setBounds(35, 110, 166, 119);
 			gamePane.add(palyer1_deck);
 			
-			BufferedImage player2_deck_rotated = rotate(myPicture, 60.0);
+			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.PLAYER2_DEG);
 			Image player2_deck_res = player2_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_deck = new JLabel(new ImageIcon(player2_deck_res));
 			palyer2_deck.setText("palyer2_deck");
-			palyer2_deck.setBounds(678, 60, 166, 119);
+			palyer2_deck.setBounds(680, 110, 166, 119);
 			gamePane.add(palyer2_deck);
 			
-			BufferedImage player3_deck_rotated = rotate(myPicture, 60.0);
+			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.PLAYER3_DEG);
 			Image player3_deck_res = player3_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer3_deck = new JLabel(new ImageIcon(player3_deck_res));
 			palyer3_deck.setText("palyer3_deck");
-			palyer3_deck.setBounds(678, 535, 166, 119);
+			palyer3_deck.setBounds(692, 506, 166, 119);
 			gamePane.add(palyer3_deck);
 			
-			BufferedImage player4_deck_rotated = rotate(myPicture, 60.0);
+			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.PLAYER4_DEG);
 			Image player4_deck_res = player4_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer4_deck = new JLabel(new ImageIcon(player4_deck_res));
 			palyer4_deck.setText("palyer4_deck");
-			palyer4_deck.setBounds(27, 535, 166, 119);
+			palyer4_deck.setBounds(52, 506, 166, 119);
 			gamePane.add(palyer4_deck);
 			
 			// ########## Card Part ##############
 			
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana1.jpg"));
-			BufferedImage player1_card = rotate(myPicture, 60.0);
+			BufferedImage player1_card = rotate(myPicture, UserConfig.PLAYER1_DEG);
 			Image player1_result = player1_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer1_card = new JLabel(new ImageIcon(player1_result));
 			palyer1_card.setText("palyer1_card");
-			palyer1_card.setBounds(175, 189, 166, 119);
+			palyer1_card.setBounds(203, 207, 172, 119);
 			gamePane.add(palyer1_card);
 			
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana2.jpg"));
-			BufferedImage player2_card = rotate(myPicture, 60.0);
+			BufferedImage player2_card = rotate(myPicture, UserConfig.PLAYER2_DEG);
 			Image player2_result = player2_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_card = new JLabel(new ImageIcon(player2_result));
 			palyer2_card.setText("palyer2_card");
-			palyer2_card.setBounds(514, 189, 166, 119);
+			palyer2_card.setBounds(514, 194, 166, 119);
 			gamePane.add(palyer2_card);
 			
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana4.jpg"));
-			BufferedImage player3_card = rotate(myPicture, 60.0);
+			BufferedImage player3_card = rotate(myPicture, UserConfig.PLAYER3_DEG);
 			Image player3_result = player3_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer3_card = new JLabel(new ImageIcon(player3_result));
 			palyer3_card.setText("palyer3_card");
-			palyer3_card.setBounds(514, 403, 166, 119);
+			palyer3_card.setBounds(528, 415, 166, 119);
 			gamePane.add(palyer3_card);
 			
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana5.jpg"));
-			BufferedImage player4_card = rotate(myPicture, 60.0);
+			BufferedImage player4_card = rotate(myPicture, UserConfig.PLAYER4_DEG);
 			Image player4_result = player4_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer4_card = new JLabel(new ImageIcon(player4_result));
 			palyer4_card.setText("palyer4_card");
-			palyer4_card.setBounds(193, 403, 166, 119);
+			palyer4_card.setBounds(215, 415, 166, 119);
 			gamePane.add(palyer4_card);
 			repaint();
 		

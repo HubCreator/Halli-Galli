@@ -5,7 +5,7 @@ import java.util.List;
 
 class Room implements Serializable {
 	public static final long serialVersionUID = 1L;
-	private String code; // 100:로그인, 400:로그아웃, 200:채팅메시지, 300:Image, 500: Mouse Event
+	private String code;
 	private String masterUser;
 	private int room_index;
 	private String room_name;
@@ -26,11 +26,10 @@ class Room implements Serializable {
 		// players.add(masterUser);
 		this.observers = new ArrayList<>();
 	}
-	
+
 	public Room(String code) {
 		this.code = code;
 	}
-	
 
 	public String getFrom_whom() {
 		return from_whom;
@@ -39,7 +38,7 @@ class Room implements Serializable {
 	public void setFrom_whom(String from_whom) {
 		this.from_whom = from_whom;
 	}
-	
+
 	public List<Room> getRoomList() {
 		return roomList;
 	}
@@ -47,7 +46,7 @@ class Room implements Serializable {
 	public void setRoomList(List<Room> roomList) {
 		this.roomList = roomList;
 	}
-	
+
 	public String getCode() {
 		return code;
 	}
