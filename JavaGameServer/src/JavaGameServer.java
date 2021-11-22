@@ -298,22 +298,22 @@ public class JavaGameServer extends JFrame {
 		}
 
 		public void allowEnteringRoom(Room room) {
-			for (Room aroom : roomList_server) { // 조사한다
-				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
-					enteredRoom = aroom;
+			for (int i = 0; i < roomList_server.size(); i++) { // 조사한다
+				if (roomList_server.get(i).getRoom_name()
+						.equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+					enteredRoom = roomList_server.get(i);
 					userStatus = Status.PLAYING;
 					// 방을 만든 사람이 나라면
 					if (room.getMasterUser() != null 
 							&& room.getMasterUser().equals(userName)) {
-						
 						//Room roomTmp = room;
-						aroom.setCode("607");
-						aroom.players.add(userName);
 						//List<String> players = new ArrayList<>();
 						//players.add(userName);
 						// roomTmp.setPlayers(players);
 						// aroom.setPlayers(players);
-						writeOneObject(aroom);
+						enteredRoom.setCode("603");
+						enteredRoom.players.add(userName);
+						writeOneObject(enteredRoom);
 						System.out.println("내가 만든방");
 					} else { // 그 외 참가자
 						//List<String> players = new ArrayList<>();
@@ -321,9 +321,23 @@ public class JavaGameServer extends JFrame {
 						//players.add(room.getFrom_whom());
 						//aroom.setPlayers(players);
 						//Room roomTmp = room;
-						aroom.players.add(room.getFrom_whom());
-						aroom.setCode("607");
-						writeOneObject(aroom);
+						
+						// room.getFrom_whom() == userName
+						enteredRoom.setCode("607");
+						enteredRoom.players.add(room.getFrom_whom());
+						for (int j = 0; j < user_vc.size(); j++) {
+							UserService user = (UserService) user_vc.elementAt(j);
+							for(String player : enteredRoom.players) {
+								if(user.userName.equals(player))
+									user.writeOneObject(enteredRoom);
+							}
+							/*
+							 * if (user.userName.equals(enteredRoom.players.get(i))) {
+							 * System.out.println(enteredRoom.players.get(i));
+							 * user.writeOneObject(enteredRoom); }
+							 */
+						}
+						// writeAllObject(aroom); // 모두에게 입장을 알려라
 						System.out.println("딴놈이 만든방 입장");
 					}
 				} else {

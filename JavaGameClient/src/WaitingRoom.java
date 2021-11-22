@@ -190,7 +190,8 @@ public class WaitingRoom extends JFrame {
 			Border blackline = BorderFactory.createLineBorder(Color.black);
 			roomEntry.setBackground(Color.LIGHT_GRAY);
 			roomEntry.setBorder(blackline);
-			// roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783, 151);
+			// roomEntry.setBounds(12, 21 + ((roomList_client.size() - 1) * 151 + 5), 783,
+			// 151);
 			roomEntry.setBounds(12, 21 + (i * 151), 783, 151);
 			roomEntry.setLayout(null);
 
@@ -343,16 +344,30 @@ public class WaitingRoom extends JFrame {
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();
 							showRoomList(list);
-						} else if (room.getCode().matches("603")) {
-							System.out.println("Remove All");
-							roomListJPanel.removeAll();
-							roomList_client.clear();
-							repaint();
-						} else if (room.getCode().matches("607")) {
-							System.out.println("Entering allowed");
+						} /*
+							 * else if (room.getCode().matches("603")) { System.out.println("Remove All");
+							 * roomListJPanel.removeAll(); roomList_client.clear(); repaint(); }
+							 */
+						else if (room.getCode().matches("603")) {
+							System.out.println("MasterUser entered");
+							// current_entered_room : 전달 받은 Room의 정보
 							current_entered_room = room;
 							setVisible(false);
+							// playRoom : client가 만든 새로운 룸
 							playRoom = new PlayRoom(view, current_entered_room);
+						} else if (room.getCode().matches("607")) {
+							System.out.println("Someone got entered");
+							if (playRoom == null) {
+								current_entered_room = room;
+								setVisible(false);
+								playRoom = new PlayRoom(view, current_entered_room);
+							} else {
+								playRoom.players = room.players;
+							}
+							for(String player : playRoom.players) {
+								System.out.println("player name >> " + player);
+							}
+							
 						} else if (room.getCode().matches("609")) {
 							System.out.println("Observing allowed");
 							current_entered_room = room;
@@ -480,8 +495,8 @@ public class WaitingRoom extends JFrame {
 
 	public void sendMessageFromRoom(String msg) {
 		try {
-			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName)
-					.data(msg).room_dst(current_entered_room.getRoom_name()).build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName).data(msg)
+					.room_dst(current_entered_room.getRoom_name()).build();
 			oos.writeObject(obcm);
 		} catch (IOException e) {
 			// appendText("dos.write() error");

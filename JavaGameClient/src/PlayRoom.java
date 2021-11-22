@@ -43,6 +43,7 @@ public class PlayRoom extends JFrame {
 	private JPanel player2;
 	private JPanel player3;
 	private JPanel player4;
+	List<String> players;
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -104,7 +105,7 @@ public class PlayRoom extends JFrame {
 
 	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
-		List<String> players = current_entered_room.getPlayers();
+		players = current_entered_room.getPlayers();
 		setVisible(true);
 		setResizable(false);
 		setBounds(100, 100, 1232, 772);
@@ -119,9 +120,6 @@ public class PlayRoom extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.repaint();
 		
-		
-		
-
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(902, 87, 263, 524);
 		contentPane.add(scrollPane);
@@ -206,10 +204,6 @@ public class PlayRoom extends JFrame {
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
 		gamePane.setLayout(null);
-		
-		for(String player : players) {
-			System.out.println("player name >> " + player);
-		}
 		
 
 		player1 = new JPanel();
