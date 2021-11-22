@@ -322,7 +322,7 @@ public class WaitingRoom extends JFrame {
 								appendText(msg);
 							break;
 						case "201": // chat message from room
-							if (cm.room_dst.equals(current_entered_room)) {
+							if (cm.room_dst.equals(current_entered_room.getRoom_name())) {
 								if (cm.userName.equals(client_userName))
 									playRoom.appendTextR(msg); // 내 메세지는 우측에
 								else
@@ -344,10 +344,7 @@ public class WaitingRoom extends JFrame {
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();
 							showRoomList(list);
-						} /*
-							 * else if (room.getCode().matches("603")) { System.out.println("Remove All");
-							 * roomListJPanel.removeAll(); roomList_client.clear(); repaint(); }
-							 */
+						} 
 						else if (room.getCode().matches("603")) {
 							System.out.println("MasterUser entered");
 							// current_entered_room : 전달 받은 Room의 정보
@@ -360,9 +357,10 @@ public class WaitingRoom extends JFrame {
 							if (playRoom == null) {
 								current_entered_room = room;
 								setVisible(false);
-								playRoom = new PlayRoom(view, current_entered_room);
+								playRoom = new PlayRoom( view, current_entered_room);
 							} else {
 								playRoom.players = room.players;
+								playRoom.repaint();
 							}
 							for(String player : playRoom.players) {
 								System.out.println("player name >> " + player);
