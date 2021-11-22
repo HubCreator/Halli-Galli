@@ -354,7 +354,7 @@ public class WaitingRoom extends JFrame {
 							current_entered_room = room;
 							setVisible(false);
 							// playRoom : client가 만든 새로운 룸
-							playRoom = new PlayRoom(view, current_entered_room);
+							playRoom = new PlayRoom(view, room);
 						} else if (room.getCode().matches("607")) {
 							System.out.println("Someone got entered");
 							if (playRoom == null) {

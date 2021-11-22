@@ -41,8 +41,8 @@ public class PlayRoom extends JFrame {
 	private JPanel gamePane;
 	private JPanel player1;
 	private JPanel player2;
-	private JPanel player3;
 	private JPanel player4;
+	private JPanel player3;
 	List<String> players;
 
 	// keyboard enter key Ä¡¸é ¼­¹ö·Î Àü¼Û
@@ -105,7 +105,7 @@ public class PlayRoom extends JFrame {
 
 	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
-		players = current_entered_room.getPlayers();
+		players = current_entered_room.players; // getPlayers();
 		setVisible(true);
 		setResizable(false);
 		setBounds(100, 100, 1232, 772);
@@ -211,53 +211,72 @@ public class PlayRoom extends JFrame {
 		gamePane.add(player1);
 		player1.setLayout(null);
 		
-		JLabel player1_name = new JLabel((String) null);
-		player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-		player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-		player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-		player1_name.setBackground(Color.WHITE);
-		player1_name.setBounds(12, 10, 84, 40);
-		player1.add(player1_name);
+		if(players.size() >= 1 &&!players.get(0).equals(null)) {
+			JLabel player1_name = new JLabel((String) null);
+			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player1_name.setText(players.get(0));
+			player1_name.setBackground(Color.WHITE);
+			player1_name.setBounds(12, 10, 84, 40);
+			player1.add(player1_name);
+			repaint();
+		}
+		
 
 		player2 = new JPanel();
 		player2.setBounds(430, 10, 436, 346);
 		gamePane.add(player2);
 		player2.setLayout(null);
 		
-		JLabel player2_name = new JLabel((String) null);
-		player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-		player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-		player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-		player2_name.setBackground(Color.WHITE);
-		player2_name.setBounds(340, 10, 84, 40);
-		player2.add(player2_name);
-
-		player3 = new JPanel();
-		player3.setBounds(12, 357, 420, 346);
-		gamePane.add(player3);
-		player3.setLayout(null);
+		if(players.size() >= 2 && !players.get(1).equals(null)) {
+			JLabel player2_name = new JLabel((String) null);
+			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player2_name.setText(players.get(1));
+			player2_name.setBackground(Color.WHITE);
+			player2_name.setBounds(340, 10, 84, 40);
+			player2.add(player2_name);
+			repaint();
+		}
 		
-		JLabel player4_name = new JLabel((String) null);
-		player4_name.setBounds(12, 296, 84, 40);
-		player3.add(player4_name);
-		player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-		player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-		player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-		player4_name.setBackground(Color.WHITE);
 
 		player4 = new JPanel();
-		player4.setBounds(430, 357, 434, 346);
+		player4.setBounds(12, 357, 420, 346);
 		gamePane.add(player4);
 		player4.setLayout(null);
 		
-		JLabel player3_name = new JLabel((String) null);
-		player3_name.setBounds(338, 296, 84, 40);
-		player4.add(player3_name);
-		player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-		player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-		player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-		player3_name.setBackground(Color.WHITE);
+		
+		if(players.size() >= 3 && !players.get(3).equals(null)) {
+			JLabel player4_name = new JLabel((String) null);
+			player4_name.setBounds(12, 296, 84, 40);
+			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player4_name.setText(players.get(3));
+			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player4_name.setBackground(Color.WHITE);
+			player4.add(player4_name);
+			repaint();
+		}
+		
 
+		player3 = new JPanel();
+		player3.setBounds(430, 357, 434, 346);
+		gamePane.add(player3);
+		player3.setLayout(null);
+		
+		if(players.size() >= 4 && !players.get(2).equals(null)) {
+			JLabel player3_name = new JLabel((String) null);
+			player3_name.setBounds(338, 296, 84, 40);
+			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player3_name.setText(players.get(2));
+			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player3_name.setBackground(Color.WHITE);
+			player3.add(player3_name);
+			repaint();
+		}
 
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
