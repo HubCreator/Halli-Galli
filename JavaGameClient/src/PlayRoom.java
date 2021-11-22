@@ -1,5 +1,11 @@
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -10,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -43,6 +50,14 @@ public class PlayRoom extends JFrame {
 	private JPanel player4;
 	private JPanel player3;
 	List<String> players;
+	private JLabel palyer1_card;
+	private JLabel palyer2_card;
+	private JLabel palyer3_card;
+	private JLabel palyer4_card;
+	private JLabel palyer1_deck;
+	private JLabel palyer2_deck;
+	private JLabel palyer3_deck;
+	private JLabel palyer4_deck;
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -197,6 +212,54 @@ public class PlayRoom extends JFrame {
 			});
 			picLabel.setBounds(326, 265, 232, 195);
 			gamePane.add(picLabel);
+			
+			myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back1.png"));
+			Image image = myPicture.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
+					
+			palyer1_deck = new JLabel(new ImageIcon(image));
+			palyer1_deck.setText("player1_deck");
+			palyer1_deck.setBounds(27, 60, 166, 119);
+			gamePane.add(palyer1_deck);
+			
+			palyer2_deck = new JLabel((Icon) null);
+			palyer2_deck.setText("palyer2_deck");
+			palyer2_deck.setBounds(678, 60, 166, 119);
+			gamePane.add(palyer2_deck);
+			
+			palyer3_deck = new JLabel((Icon) null);
+			palyer3_deck.setText("palyer3_deck");
+			palyer3_deck.setBounds(678, 535, 166, 119);
+			gamePane.add(palyer3_deck);
+			
+			palyer4_deck = new JLabel((Icon) null);
+			palyer4_deck.setText("palyer4_deck");
+			palyer4_deck.setBounds(27, 535, 166, 119);
+			gamePane.add(palyer4_deck);
+			
+			myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana1.jpg"));
+			BufferedImage result = rotate(myPicture, 45.0);
+			Image image1 = result.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
+			palyer1_card = new JLabel(new ImageIcon(image1));
+			palyer1_card.setText("palyer1_card");
+			palyer1_card.setBounds(175, 189, 166, 119);
+			gamePane.add(palyer1_card);
+			
+			palyer2_card = new JLabel((Icon) null);
+			palyer2_card.setText("palyer2_card");
+			palyer2_card.setBounds(514, 189, 166, 119);
+			gamePane.add(palyer2_card);
+			
+			palyer3_card = new JLabel((Icon) null);
+			palyer3_card.setText("palyer3_card");
+			palyer3_card.setBounds(514, 403, 166, 119);
+			gamePane.add(palyer3_card);
+			
+			palyer4_card = new JLabel((Icon) null);
+			palyer4_card.setText("palyer4_card");
+			palyer4_card.setBounds(193, 403, 166, 119);
+			gamePane.add(palyer4_card);
 			repaint();
 		
 		} catch (IOException e1) {
@@ -207,7 +270,27 @@ public class PlayRoom extends JFrame {
 		GameEngine engine = new GameEngine();
 		engine.start();
 	}
+	
+	public static BufferedImage rotate(BufferedImage image, double angle) {
+	    double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+	    int w = image.getWidth(), h = image.getHeight();
+	    int neww = (int)Math.floor(w*cos+h*sin), newh = (int) Math.floor(h * cos + w * sin);
+	    GraphicsConfiguration gc = getDefaultConfiguration();
+	    BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+	    Graphics2D g = result.createGraphics();
+	    g.translate((neww - w) / 2, (newh - h) / 2);
+	    g.rotate(angle, w / 2, h / 2);
+	    g.drawRenderedImage(image, null);
+	    g.dispose();
+	    return result;
+	}
 
+	private static GraphicsConfiguration getDefaultConfiguration() {
+	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    GraphicsDevice gd = ge.getDefaultScreenDevice();
+	    return gd.getDefaultConfiguration();
+	}
+	
 	class GameEngine extends Thread {
 		public void run() {
 			while (true) {
