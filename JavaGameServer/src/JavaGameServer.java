@@ -237,7 +237,7 @@ public class JavaGameServer extends JFrame {
 					user.writeOne(str);
 			}
 		}
-		
+
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
 		public void writeOne(String msg) {
 			try {
@@ -260,28 +260,27 @@ public class JavaGameServer extends JFrame {
 				logout(); // 에러가난 현재 객체를 벡터에서 지운다
 			}
 		}
-		
 
 		public void sendRoomListToAll() {
 			Room room = new Room("601");
 			room.setRoomList(roomList_server);
 			writeAllObject(room);
 		}
-		
+
 		public void allowObservingRoom(Room room) {
 			enteredRoom = room;
 			for (Room aroom : roomList_server) { // 조사한다
 				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
-					if(aroom.getObservers().size() > 4) { // 방 꽉참
+					if (aroom.getObservers().size() > 4) { // 방 꽉참
 						System.out.println("Room is full to observe!!");
 						return;
 					}
 					Room roomTmp = room;
 					roomTmp.setCode("609");
 					List<String> observers;
-					if(room.getObservers() != null) {
+					if (room.getObservers() != null) {
 						observers = room.getObservers();
-						observers.add(room.getFrom_whom());	
+						observers.add(room.getFrom_whom());
 					} else {
 						observers = new ArrayList<>();
 						observers.add(room.getFrom_whom());
@@ -289,7 +288,7 @@ public class JavaGameServer extends JFrame {
 					roomTmp.setObservers(observers);
 					aroom.setObservers(observers);
 					writeOneObject(roomTmp);
-					
+
 					System.out.println("들어왔다");
 				} else {
 					System.out.println("해당 방이 없습니다..");
@@ -299,36 +298,22 @@ public class JavaGameServer extends JFrame {
 
 		public void allowEnteringRoom(Room room) {
 			for (int i = 0; i < roomList_server.size(); i++) { // 조사한다
-				if (roomList_server.get(i).getRoom_name()
-						.equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+				if (roomList_server.get(i).getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
 					enteredRoom = roomList_server.get(i);
 					userStatus = Status.PLAYING;
 					// 방을 만든 사람이 나라면
-					if (room.getMasterUser() != null 
-							&& room.getMasterUser().equals(userName)) {
-						//Room roomTmp = room;
-						//List<String> players = new ArrayList<>();
-						//players.add(userName);
-						// roomTmp.setPlayers(players);
-						// aroom.setPlayers(players);
+					if (room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
 						enteredRoom.setCode("603");
 						enteredRoom.players.add(userName);
 						writeOneObject(enteredRoom);
 						System.out.println("내가 만든방");
 					} else { // 그 외 참가자
-						//List<String> players = new ArrayList<>();
-						//players = aroom.getPlayers();
-						//players.add(room.getFrom_whom());
-						//aroom.setPlayers(players);
-						//Room roomTmp = room;
-						
-						// room.getFrom_whom() == userName
 						enteredRoom.setCode("607");
 						enteredRoom.players.add(room.getFrom_whom());
 						for (int j = 0; j < user_vc.size(); j++) {
 							UserService user = (UserService) user_vc.elementAt(j);
-							for(String player : enteredRoom.players) {
-								if(user.userName.equals(player))
+							for (String player : enteredRoom.players) {
+								if (user.userName.equals(player))
 									user.writeOneObject(enteredRoom);
 							}
 							/*
@@ -390,9 +375,10 @@ public class JavaGameServer extends JFrame {
 							appendText(msg); // server 화면에 출력
 							writeAllObject(chatmsg);
 						} else if (chatmsg.code.matches("201")) {
+							// System.out.println("111");
 							for (int i = 0; i < user_vc.size(); i++) {
 								UserService user = (UserService) user_vc.elementAt(i);
-								if (user.userStatus == Status.WAITING)
+								if(user.userStatus.equals(Status.PLAYING))
 									user.writeOneObject(chatmsg);
 							}
 						} else if (chatmsg.code.matches("400")) { // logout message 처리
@@ -403,7 +389,7 @@ public class JavaGameServer extends JFrame {
 					if (room != null) {
 						if (room.getCode().matches("600")) { // create new room
 							System.out.println("Room Created");
-							// room에는 masterUser, room_name, password 들어있음 
+							// room에는 masterUser, room_name, password 들어있음
 							roomList_server.add(room);
 							allowEnteringRoom(room);
 							sendRoomListToAll();
@@ -411,7 +397,7 @@ public class JavaGameServer extends JFrame {
 							System.out.println("Just entered here!!");
 							allowEnteringRoom(room);
 							sendRoomListToAll();
-						} else if (room.getCode().matches("604")) { // 방 퇴장 (Play)
+						} else if (room.getCode().matches("605")) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
 							enteredRoom = null;
 							userStatus = Status.WAITING;

@@ -44,10 +44,10 @@ public class WaitingRoom extends JFrame {
 	public String client_userName;
 	private JButton btnSend;
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
-	private Socket socket; // 연결소켓
+	public Socket socket; // 연결소켓
 
-	private ObjectInputStream ois;
-	private ObjectOutputStream oos;
+	public ObjectInputStream ois;
+	public ObjectOutputStream oos;
 
 	public WaitingRoom view = null;
 	public CreateNewRoom createNewRoom = null;
@@ -68,6 +68,7 @@ public class WaitingRoom extends JFrame {
 	public JPanel roomListJPanel;
 	// public JPanel roomEntry;
 	public List<Room> roomList_client = new ArrayList<>();
+	ListenNetwork net;
 
 	public WaitingRoom(String username, String ip_addr, String port_no) {
 		System.out.println("WaitingRoom : " + username);
@@ -120,7 +121,7 @@ public class WaitingRoom extends JFrame {
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("604", client_userName).build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder("400", client_userName).build();
 				sendObject(msg);
 				System.exit(0);
 			}
@@ -165,7 +166,7 @@ public class WaitingRoom extends JFrame {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("100", client_userName).data("Hello").build();
 			sendObject(obcm);
 
-			ListenNetwork net = new ListenNetwork();
+			net = new ListenNetwork();
 			net.start();
 			TextSendAction action = new TextSendAction();
 			btnSend.addActionListener(action);
@@ -322,7 +323,8 @@ public class WaitingRoom extends JFrame {
 								appendText(msg);
 							break;
 						case "201": // chat message from room
-							if (cm.room_dst.equals(current_entered_room.getRoom_name())) {
+							if (current_entered_room != null
+									&& cm.room_dst.equals(current_entered_room.getRoom_name())) {
 								if (cm.userName.equals(client_userName))
 									playRoom.appendTextR(msg); // 내 메세지는 우측에
 								else
@@ -344,28 +346,34 @@ public class WaitingRoom extends JFrame {
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();
 							showRoomList(list);
-						} 
-						else if (room.getCode().matches("603")) {
+						} else if (room.getCode().matches("603")) {
 							System.out.println("MasterUser entered");
 							// current_entered_room : 전달 받은 Room의 정보
 							current_entered_room = room;
 							setVisible(false);
 							// playRoom : client가 만든 새로운 룸
 							playRoom = new PlayRoom(view, room);
+							//Thread.sleep(Long.MAX_VALUE);
+							//interrupt();
+						} else if (room.getCode().matches("605")) {
+							System.out.println("EXIT!!");
+							current_entered_room = null;
+							setVisible(true);
 						} else if (room.getCode().matches("607")) {
 							System.out.println("Someone got entered");
 							if (playRoom == null) {
 								current_entered_room = room;
 								setVisible(false);
-								playRoom = new PlayRoom( view, current_entered_room);
+								playRoom = new PlayRoom(view, current_entered_room);
+								// this.interrupt();
+								//Thread.sleep(Long.MAX_VALUE);
 							} else {
 								playRoom.players = room.players;
 								playRoom.repaint();
 							}
-							for(String player : playRoom.players) {
+							for (String player : playRoom.players) {
 								System.out.println("player name >> " + player);
 							}
-							
 						} else if (room.getCode().matches("609")) {
 							System.out.println("Observing allowed");
 							current_entered_room = room;
@@ -384,6 +392,10 @@ public class WaitingRoom extends JFrame {
 						break;
 					} // catch문 끝
 				} // 바깥 catch문끝
+				catch  (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			}
 		}

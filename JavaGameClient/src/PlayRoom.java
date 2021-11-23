@@ -13,10 +13,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -54,12 +54,12 @@ public class PlayRoom extends JFrame {
 	private JButton imgBtn;
 	private ImagePanel contentPane2;
 	private ImagePanel panel;
+	List<String> players;
 	private JPanel gamePane;
 	private JPanel player1;
 	private JPanel player2;
 	private JPanel player4;
 	private JPanel player3;
-	List<String> players;
 	private JLabel palyer1_card;
 	private JLabel palyer2_card;
 	private JLabel palyer3_card;
@@ -123,6 +123,7 @@ public class PlayRoom extends JFrame {
 
 	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
+		// view.net.interrupt();
 		players = current_entered_room.players; // getPlayers();
 		setVisible(true);
 		setResizable(false);
@@ -185,7 +186,8 @@ public class PlayRoom extends JFrame {
 				view.current_entered_room = null;
 				view.sendObject(room);
 				setVisible(false);
-				view.setVisible(true);
+				// view.net.run();
+				// view.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
@@ -211,6 +213,14 @@ public class PlayRoom extends JFrame {
 		txtInput.requestFocus();
 		
 		try {
+			GameEngine2 engine = new GameEngine2();
+			engine.start();
+		} catch(NumberFormatException e) {
+			e.printStackTrace();
+			appendText("connect error");
+		}
+		
+		try {
 			BufferedImage myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
@@ -231,14 +241,14 @@ public class PlayRoom extends JFrame {
 			Image player1_deck_res = player1_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT); // need to define value later
 			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
 			palyer1_deck.setText("player1_deck");
-			palyer1_deck.setBounds(35, 110, 166, 119);
+			palyer1_deck.setBounds(28, 121, 166, 119);
 			gamePane.add(palyer1_deck);
 			
 			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.PLAYER2_DEG);
 			Image player2_deck_res = player2_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_deck = new JLabel(new ImageIcon(player2_deck_res));
 			palyer2_deck.setText("palyer2_deck");
-			palyer2_deck.setBounds(680, 110, 166, 119);
+			palyer2_deck.setBounds(692, 121, 166, 119);
 			gamePane.add(palyer2_deck);
 			
 			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.PLAYER3_DEG);
@@ -272,7 +282,7 @@ public class PlayRoom extends JFrame {
 			Image player2_result = player2_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_card = new JLabel(new ImageIcon(player2_result));
 			palyer2_card.setText("palyer2_card");
-			palyer2_card.setBounds(514, 194, 166, 119);
+			palyer2_card.setBounds(514, 207, 166, 119);
 			gamePane.add(palyer2_card);
 			
 			myPicture = ImageIO
@@ -294,13 +304,11 @@ public class PlayRoom extends JFrame {
 			gamePane.add(palyer4_card);
 			repaint();
 		
-		} catch (IOException e1) {
+			repaint();
+		} catch (NumberFormatException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		repaint();
-		GameEngine engine = new GameEngine();
-		engine.start();
 	}
 	
 	public static BufferedImage rotate(BufferedImage image, double angle) {
@@ -324,6 +332,113 @@ public class PlayRoom extends JFrame {
 	}
 	
 	class GameEngine extends Thread {
+		public void run() {
+			while (true) {
+				try {
+					Object obcm = null;
+					String msg = null;
+					ChatMsg cm = null;
+					Room room = null;
+
+					try {
+						obcm = mainview.ois.readObject();
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+						break;
+					}
+					if (obcm == null)
+						break;
+					if (obcm instanceof ChatMsg) {
+						cm = (ChatMsg) obcm;
+						msg = String.format("[%s]\n%s", cm.userName, cm.data);
+					} else if (obcm instanceof Room) {
+						room = (Room) obcm;
+					} else
+						continue;
+
+					if (cm != null) {
+						switch (cm.code) {
+						case "200": // chat message
+							if (cm.userName.equals(mainview.client_userName))
+								appendTextR(msg); // 내 메세지는 우측에
+							else
+								appendText(msg);
+							break;
+						case "201": // chat message from room
+							System.out.println("Chat message from room!!");
+							if (mainview.current_entered_room != null
+									&& cm.room_dst.equals(mainview.current_entered_room.getRoom_name())) {
+								if (cm.userName.equals(mainview.client_userName))
+									mainview.playRoom.appendTextR(msg); // 내 메세지는 우측에
+								else
+									mainview.playRoom.appendText(msg);
+							}
+							break;
+						case "300": // Image 첨부
+							if (cm.userName.equals(mainview.client_userName))
+								appendTextR("[" + cm.userName + "]");
+							else
+								appendText("[" + cm.userName + "]");
+							// AppendImage(cm.img);
+							break;
+						}
+					} else if (room != null) {
+						if (room.getCode().matches("601")) {
+							System.out.println("Received Room List");
+							List<Room> list = room.getRoomList();
+							mainview.roomList_client.clear();
+							mainview.roomList_client = (ArrayList<Room>) room.getRoomList();
+							mainview.showRoomList(list);
+						} else if (room.getCode().matches("603")) {
+							System.out.println("MasterUser entered");
+							// current_entered_room : 전달 받은 Room의 정보
+							mainview.current_entered_room = room;
+							setVisible(false);
+							// playRoom : client가 만든 새로운 룸
+							Thread.sleep(Long.MAX_VALUE);
+							mainview.playRoom = new PlayRoom(mainview.view, room);
+						} else if (room.getCode().matches("607")) {
+							System.out.println("Someone got entered");
+							if (mainview.playRoom == null) {
+								mainview.current_entered_room = room;
+								setVisible(false);
+								mainview.playRoom = new PlayRoom(mainview.view, mainview.current_entered_room);
+							} else {
+								mainview.playRoom.players = room.players;
+								mainview.playRoom.repaint();
+							}
+							for (String player : mainview.playRoom.players) {
+								System.out.println("player name >> " + player);
+							}
+
+						} else if (room.getCode().matches("609")) {
+							System.out.println("Observing allowed");
+							mainview.current_entered_room = room;
+							setVisible(false);
+							mainview.playRoom = new PlayRoom(mainview.view, mainview.current_entered_room);
+						}
+					}
+				} catch (IOException e) {
+					appendText("ois.readObject() error");
+					try {
+						mainview.ois.close();
+						mainview.oos.close();
+						mainview.socket.close();
+						break;
+					} catch (Exception ee) {
+						break;
+					} // catch문 끝
+				} // 바깥 catch문끝
+				catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+	
+	class GameEngine2 extends Thread {
 		public void run() {
 			while (true) {
 				if (players.size() >= 1 && !players.get(0).equals(null)) {
