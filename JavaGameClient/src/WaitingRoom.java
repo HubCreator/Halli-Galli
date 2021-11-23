@@ -366,7 +366,6 @@ public class WaitingRoom extends JFrame {
 							} else {
 								playRoom.players = room.players;
 								playRoom.updatePlayers();
-								// playRoom.repaint();
 							}
 							for (String player : playRoom.players) {
 								System.out.println("player name >> " + player);

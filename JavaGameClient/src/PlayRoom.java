@@ -323,7 +323,7 @@ public class PlayRoom extends JFrame {
 	public void updatePlayers() throws IOException {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+					.read(new File("images/back2.png"));
 			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_deck_res = player1_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT); 
 			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
@@ -349,7 +349,7 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			BufferedImage myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+					.read(new File("images/back2.png"));
 
 			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_deck_res = player2_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
@@ -375,7 +375,7 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			BufferedImage myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+					.read(new File("images/back2.png"));
 
 			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_deck_res = player3_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
@@ -401,7 +401,7 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			BufferedImage myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+					.read(new File("simages/back2.png"));
 
 			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_deck_res = player4_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
