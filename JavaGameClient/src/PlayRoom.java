@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -33,14 +32,40 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-
 class UserConfig {
 	public static final double PLAYER1_DEG = -45.0;
 	public static final double PLAYER2_DEG = 45.0;
 	public static final double PLAYER3_DEG = -45.0;
 	public static final double PLAYER4_DEG = 45.0;
+	
+	public static final int PLAYER1_DEKX = 28;
+	public static final int PLAYER1_DEKY = 121;
+	public static final int PLAYER2_DEKX = 692;
+	public static final int PLAYER2_DEKY = 121;
+	public static final int PLAYER3_DEKX = 692;
+	public static final int PLAYER3_DEKY = 506;
+	public static final int PLAYER4_DEKX = 28;
+	public static final int PLAYER4_DEKY = 506;
+	
+	public static final int PLAYER1_ONCARDX = 215;
+	public static final int PLAYER1_ONCARDY = 206;
+	public static final int PLAYER2_ONCARDX = 528;
+	public static final int PLAYER2_ONCARDY = 206;
+	public static final int PLAYER3_ONCARDX = 528;
+	public static final int PLAYER3_ONCARDY = 415;
+	public static final int PLAYER4_ONCARDX = 215;
+	public static final int PLAYER4_ONCARDY = 415;
 }
-
+class CardConfig {
+	public static final int CARD_WIDTH = 170;
+	public static final int CARD_HEIGHT= 120;	
+}
+class BellConfig {
+	public static final int BELL_WIDTH = 232;
+	public static final int BELL_HEIGHT = 195;
+	public static final int BELL_X = 331;
+	public static final int BELL_Y = 265;
+}
 
 public class PlayRoom extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -52,8 +77,6 @@ public class PlayRoom extends JFrame {
 	private JButton btnSend;
 	private JLabel user_name;
 	private JButton imgBtn;
-	private ImagePanel contentPane2;
-	private ImagePanel panel;
 	List<String> players;
 	private JPanel gamePane;
 	private JPanel player1;
@@ -211,15 +234,13 @@ public class PlayRoom extends JFrame {
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
 		txtInput.requestFocus();
-		
-		try {
-			GameEngine2 engine = new GameEngine2();
-			engine.start();
-		} catch(NumberFormatException e) {
-			e.printStackTrace();
-			appendText("connect error");
-		}
-		
+
+		/*
+		 * try { GameEngine2 engine = new GameEngine2(); engine.start(); }
+		 * catch(NumberFormatException e) { e.printStackTrace();
+		 * appendText("connect error"); }
+		 */
+
 		try {
 			BufferedImage myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png"));
@@ -230,284 +251,188 @@ public class PlayRoom extends JFrame {
 					System.out.println("Yay you clicked me");
 				}
 			});
-			picLabel.setBounds(326, 265, 232, 195);
+			picLabel.setBounds(BellConfig.BELL_X, BellConfig.BELL_Y, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
-			
-			// ########## Deck Part ##############
-			
-			myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
-			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.PLAYER1_DEG);
-			Image player1_deck_res = player1_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT); // need to define value later
-			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
-			palyer1_deck.setText("player1_deck");
-			palyer1_deck.setBounds(28, 121, 166, 119);
-			gamePane.add(palyer1_deck);
-			
-			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.PLAYER2_DEG);
-			Image player2_deck_res = player2_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer2_deck = new JLabel(new ImageIcon(player2_deck_res));
-			palyer2_deck.setText("palyer2_deck");
-			palyer2_deck.setBounds(692, 121, 166, 119);
-			gamePane.add(palyer2_deck);
-			
-			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.PLAYER3_DEG);
-			Image player3_deck_res = player3_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer3_deck = new JLabel(new ImageIcon(player3_deck_res));
-			palyer3_deck.setText("palyer3_deck");
-			palyer3_deck.setBounds(692, 506, 166, 119);
-			gamePane.add(palyer3_deck);
-			
-			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.PLAYER4_DEG);
-			Image player4_deck_res = player4_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer4_deck = new JLabel(new ImageIcon(player4_deck_res));
-			palyer4_deck.setText("palyer4_deck");
-			palyer4_deck.setBounds(52, 506, 166, 119);
-			gamePane.add(palyer4_deck);
-			
+
 			// ########## Card Part ##############
-			
+
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana1.jpg"));
 			BufferedImage player1_card = rotate(myPicture, UserConfig.PLAYER1_DEG);
 			Image player1_result = player1_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer1_card = new JLabel(new ImageIcon(player1_result));
 			palyer1_card.setText("palyer1_card");
-			palyer1_card.setBounds(203, 207, 172, 119);
+			palyer1_card.setBounds(UserConfig.PLAYER1_ONCARDX, UserConfig.PLAYER1_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_card);
-			
+
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana2.jpg"));
 			BufferedImage player2_card = rotate(myPicture, UserConfig.PLAYER2_DEG);
 			Image player2_result = player2_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_card = new JLabel(new ImageIcon(player2_result));
 			palyer2_card.setText("palyer2_card");
-			palyer2_card.setBounds(514, 207, 166, 119);
+			palyer2_card.setBounds(UserConfig.PLAYER2_ONCARDX, UserConfig.PLAYER2_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer2_card);
-			
+
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana4.jpg"));
 			BufferedImage player3_card = rotate(myPicture, UserConfig.PLAYER3_DEG);
 			Image player3_result = player3_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer3_card = new JLabel(new ImageIcon(player3_result));
 			palyer3_card.setText("palyer3_card");
-			palyer3_card.setBounds(528, 415, 166, 119);
+			palyer3_card.setBounds(UserConfig.PLAYER3_ONCARDX, UserConfig.PLAYER3_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer3_card);
-			
+
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana5.jpg"));
 			BufferedImage player4_card = rotate(myPicture, UserConfig.PLAYER4_DEG);
 			Image player4_result = player4_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer4_card = new JLabel(new ImageIcon(player4_result));
 			palyer4_card.setText("palyer4_card");
-			palyer4_card.setBounds(215, 415, 166, 119);
+			palyer4_card.setBounds(UserConfig.PLAYER4_ONCARDX, UserConfig.PLAYER4_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer4_card);
 			repaint();
-		
+
 			repaint();
 		} catch (NumberFormatException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
-	
+
 	public static BufferedImage rotate(BufferedImage image, double angle) {
-	    double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
-	    int w = image.getWidth(), h = image.getHeight();
-	    int neww = (int)Math.floor(w*cos+h*sin), newh = (int) Math.floor(h * cos + w * sin);
-	    GraphicsConfiguration gc = getDefaultConfiguration();
-	    BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
-	    Graphics2D g = result.createGraphics();
-	    g.translate((neww - w) / 2, (newh - h) / 2);
-	    g.rotate(angle, w / 2, h / 2);
-	    g.drawRenderedImage(image, null);
-	    g.dispose();
-	    return result;
+		double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+		int w = image.getWidth(), h = image.getHeight();
+		int neww = (int) Math.floor(w * cos + h * sin), newh = (int) Math.floor(h * cos + w * sin);
+		GraphicsConfiguration gc = getDefaultConfiguration();
+		BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+		Graphics2D g = result.createGraphics();
+		g.translate((neww - w) / 2, (newh - h) / 2);
+		g.rotate(angle, w / 2, h / 2);
+		g.drawRenderedImage(image, null);
+		g.dispose();
+		return result;
 	}
 
 	private static GraphicsConfiguration getDefaultConfiguration() {
-	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    GraphicsDevice gd = ge.getDefaultScreenDevice();
-	    return gd.getDefaultConfiguration();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsDevice gd = ge.getDefaultScreenDevice();
+		return gd.getDefaultConfiguration();
 	}
-	
-	class GameEngine extends Thread {
-		public void run() {
-			while (true) {
-				try {
-					Object obcm = null;
-					String msg = null;
-					ChatMsg cm = null;
-					Room room = null;
 
-					try {
-						obcm = mainview.ois.readObject();
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-						break;
-					}
-					if (obcm == null)
-						break;
-					if (obcm instanceof ChatMsg) {
-						cm = (ChatMsg) obcm;
-						msg = String.format("[%s]\n%s", cm.userName, cm.data);
-					} else if (obcm instanceof Room) {
-						room = (Room) obcm;
-					} else
-						continue;
+	public void updatePlayers() throws IOException {
+		if (players.size() >= 1 && !players.get(0).equals(null)) {
+			BufferedImage myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.PLAYER1_DEG);
+			Image player1_deck_res = player1_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT); 
+			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
+			palyer1_deck.setText("player1_deck");
+			palyer1_deck.setBounds(UserConfig.PLAYER1_DEKX, UserConfig.PLAYER1_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			gamePane.add(palyer1_deck);
 
-					if (cm != null) {
-						switch (cm.code) {
-						case "200": // chat message
-							if (cm.userName.equals(mainview.client_userName))
-								appendTextR(msg); // ³» ¸Þ¼¼Áö´Â ¿ìÃø¿¡
-							else
-								appendText(msg);
-							break;
-						case "201": // chat message from room
-							System.out.println("Chat message from room!!");
-							if (mainview.current_entered_room != null
-									&& cm.room_dst.equals(mainview.current_entered_room.getRoom_name())) {
-								if (cm.userName.equals(mainview.client_userName))
-									mainview.playRoom.appendTextR(msg); // ³» ¸Þ¼¼Áö´Â ¿ìÃø¿¡
-								else
-									mainview.playRoom.appendText(msg);
-							}
-							break;
-						case "300": // Image Ã·ºÎ
-							if (cm.userName.equals(mainview.client_userName))
-								appendTextR("[" + cm.userName + "]");
-							else
-								appendText("[" + cm.userName + "]");
-							// AppendImage(cm.img);
-							break;
-						}
-					} else if (room != null) {
-						if (room.getCode().matches("601")) {
-							System.out.println("Received Room List");
-							List<Room> list = room.getRoomList();
-							mainview.roomList_client.clear();
-							mainview.roomList_client = (ArrayList<Room>) room.getRoomList();
-							mainview.showRoomList(list);
-						} else if (room.getCode().matches("603")) {
-							System.out.println("MasterUser entered");
-							// current_entered_room : Àü´Þ ¹ÞÀº RoomÀÇ Á¤º¸
-							mainview.current_entered_room = room;
-							setVisible(false);
-							// playRoom : client°¡ ¸¸µç »õ·Î¿î ·ë
-							Thread.sleep(Long.MAX_VALUE);
-							mainview.playRoom = new PlayRoom(mainview.view, room);
-						} else if (room.getCode().matches("607")) {
-							System.out.println("Someone got entered");
-							if (mainview.playRoom == null) {
-								mainview.current_entered_room = room;
-								setVisible(false);
-								mainview.playRoom = new PlayRoom(mainview.view, mainview.current_entered_room);
-							} else {
-								mainview.playRoom.players = room.players;
-								mainview.playRoom.repaint();
-							}
-							for (String player : mainview.playRoom.players) {
-								System.out.println("player name >> " + player);
-							}
+			player1 = new JPanel();
+			player1.setBounds(12, 10, 420, 346);
+			gamePane.add(player1);
+			player1.setLayout(null);
 
-						} else if (room.getCode().matches("609")) {
-							System.out.println("Observing allowed");
-							mainview.current_entered_room = room;
-							setVisible(false);
-							mainview.playRoom = new PlayRoom(mainview.view, mainview.current_entered_room);
-						}
-					}
-				} catch (IOException e) {
-					appendText("ois.readObject() error");
-					try {
-						mainview.ois.close();
-						mainview.oos.close();
-						mainview.socket.close();
-						break;
-					} catch (Exception ee) {
-						break;
-					} // catch¹® ³¡
-				} // ¹Ù±ù catch¹®³¡
-				catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			JLabel player1_name = new JLabel((String) null);
+			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player1_name.setText(players.get(0));
+			player1_name.setBackground(Color.WHITE);
+			player1_name.setBounds(12, 10, 84, 40);
+			player1.add(player1_name);
 
-			}
+			repaint();
+		}
+
+		if (players.size() >= 2 && !players.get(1).equals(null)) {
+			BufferedImage myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+
+			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.PLAYER2_DEG);
+			Image player2_deck_res = player2_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
+			palyer2_deck = new JLabel(new ImageIcon(player2_deck_res));
+			palyer2_deck.setText("palyer2_deck");
+			palyer2_deck.setBounds(UserConfig.PLAYER2_DEKX, UserConfig.PLAYER2_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			gamePane.add(palyer2_deck);
+			
+			player2 = new JPanel();
+			player2.setBounds(430, 10, 436, 346);
+			gamePane.add(player2);
+			player2.setLayout(null);
+
+			JLabel player2_name = new JLabel((String) null);
+			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player2_name.setText(players.get(1));
+			player2_name.setBackground(Color.WHITE);
+			player2_name.setBounds(340, 10, 84, 40);
+			player2.add(player2_name);
+			repaint();
+		}
+
+		if (players.size() >= 3 && !players.get(2).equals(null)) {
+			BufferedImage myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+
+			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.PLAYER3_DEG);
+			Image player3_deck_res = player3_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
+			palyer3_deck = new JLabel(new ImageIcon(player3_deck_res));
+			palyer3_deck.setText("palyer3_deck");
+			palyer3_deck.setBounds(UserConfig.PLAYER3_DEKX, UserConfig.PLAYER3_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			gamePane.add(palyer3_deck);
+
+			player4 = new JPanel();
+			player4.setBounds(430, 357, 434, 346);
+			gamePane.add(player4);
+			player4.setLayout(null);
+
+			JLabel player4_name = new JLabel((String) null);
+			player4_name.setBounds(338, 296, 84, 40);
+			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player4_name.setText(players.get(2));
+			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player4_name.setBackground(Color.WHITE);
+			player4.add(player4_name);
+			repaint();
+		}
+
+		if (players.size() >= 4 && !players.get(3).equals(null)) {
+			BufferedImage myPicture = ImageIO
+					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
+
+			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.PLAYER4_DEG);
+			Image player4_deck_res = player4_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
+			palyer4_deck = new JLabel(new ImageIcon(player4_deck_res));
+			palyer4_deck.setText("palyer4_deck");
+			palyer4_deck.setBounds(UserConfig.PLAYER4_DEKX, UserConfig.PLAYER4_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			gamePane.add(palyer4_deck);
+			player3 = new JPanel();
+			player3.setBounds(12, 357, 420, 346);
+			gamePane.add(player3);
+			player3.setLayout(null);
+
+			JLabel player3_name = new JLabel((String) null);
+			player3_name.setBounds(12, 296, 84, 40);
+			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player3_name.setText(players.get(3));
+			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player3_name.setBackground(Color.WHITE);
+			player3.add(player3_name);
+			repaint();
 		}
 	}
-	
+
 	class GameEngine2 extends Thread {
 		public void run() {
 			while (true) {
-				if (players.size() >= 1 && !players.get(0).equals(null)) {
-					player1 = new JPanel();
-					player1.setBounds(12, 10, 420, 346);
-					gamePane.add(player1);
-					player1.setLayout(null);
-					
-					JLabel player1_name = new JLabel((String) null);
-					player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-					player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-					player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-					player1_name.setText(players.get(0));
-					player1_name.setBackground(Color.WHITE);
-					player1_name.setBounds(12, 10, 84, 40);
-					player1.add(player1_name);
-					repaint();
-				}
 
-				if (players.size() >= 2 && !players.get(1).equals(null)) {
-					player2 = new JPanel();
-					player2.setBounds(430, 10, 436, 346);
-					gamePane.add(player2);
-					player2.setLayout(null);
-					
-					JLabel player2_name = new JLabel((String) null);
-					player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-					player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-					player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-					player2_name.setText(players.get(1));
-					player2_name.setBackground(Color.WHITE);
-					player2_name.setBounds(340, 10, 84, 40);
-					player2.add(player2_name);
-					repaint();
-				}
-
-				if (players.size() >= 3 && !players.get(2).equals(null)) {
-					player4 = new JPanel();
-					player4.setBounds(430, 357, 434, 346);
-					gamePane.add(player4);
-					player4.setLayout(null);
-					
-					JLabel player4_name = new JLabel((String) null);
-					player4_name.setBounds(338, 296, 84, 40);
-					player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-					player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-					player4_name.setText(players.get(2));
-					player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-					player4_name.setBackground(Color.WHITE);
-					player4.add(player4_name);
-					repaint();
-				}
-
-				if (players.size() >= 4 && !players.get(3).equals(null)) {
-					player3 = new JPanel();
-					player3.setBounds(12, 357, 420, 346);
-					gamePane.add(player3);
-					player3.setLayout(null);
-					
-					JLabel player3_name = new JLabel((String) null);
-					player3_name.setBounds(12, 296, 84, 40);
-					player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-					player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-					player3_name.setText(players.get(3));
-					player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-					player3_name.setBackground(Color.WHITE);
-					player3.add(player3_name);
-					repaint();
-				}
 			}
 		}
 	}

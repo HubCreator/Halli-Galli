@@ -348,13 +348,10 @@ public class WaitingRoom extends JFrame {
 							showRoomList(list);
 						} else if (room.getCode().matches("603")) {
 							System.out.println("MasterUser entered");
-							// current_entered_room : 전달 받은 Room의 정보
-							current_entered_room = room;
+							current_entered_room = room; // current_entered_room : 전달 받은 Room의 정보
 							setVisible(false);
-							// playRoom : client가 만든 새로운 룸
-							playRoom = new PlayRoom(view, room);
-							//Thread.sleep(Long.MAX_VALUE);
-							//interrupt();
+							playRoom = new PlayRoom(view, room); // playRoom : client가 만든 새로운 룸
+							playRoom.updatePlayers();
 						} else if (room.getCode().matches("605")) {
 							System.out.println("EXIT!!");
 							current_entered_room = null;
@@ -365,11 +362,11 @@ public class WaitingRoom extends JFrame {
 								current_entered_room = room;
 								setVisible(false);
 								playRoom = new PlayRoom(view, current_entered_room);
-								// this.interrupt();
-								//Thread.sleep(Long.MAX_VALUE);
+								playRoom.updatePlayers();
 							} else {
 								playRoom.players = room.players;
-								playRoom.repaint();
+								playRoom.updatePlayers();
+								// playRoom.repaint();
 							}
 							for (String player : playRoom.players) {
 								System.out.println("player name >> " + player);
