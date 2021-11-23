@@ -33,28 +33,28 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 class UserConfig {
-	public static final double PLAYER1_DEG = -45.0;
-	public static final double PLAYER2_DEG = 45.0;
-	public static final double PLAYER3_DEG = -45.0;
-	public static final double PLAYER4_DEG = 45.0;
+	public static final double P1_DEG = -45.0;
+	public static final double P2_DEG = 45.0;
+	public static final double P3_DEG = -45.0;
+	public static final double P4_DEG = 45.0;
 	
-	public static final int PLAYER1_DEKX = 28;
-	public static final int PLAYER1_DEKY = 121;
-	public static final int PLAYER2_DEKX = 692;
-	public static final int PLAYER2_DEKY = 121;
-	public static final int PLAYER3_DEKX = 692;
-	public static final int PLAYER3_DEKY = 506;
-	public static final int PLAYER4_DEKX = 28;
-	public static final int PLAYER4_DEKY = 506;
+	public static final int P1_BACKX = 28;
+	public static final int P1_BACKY = 121;
+	public static final int P2_BACKX = 692;
+	public static final int P2_BACKY = 121;
+	public static final int P3_BACKX = 692;
+	public static final int P3_BACKY = 506;
+	public static final int P4_BACKX = 28;
+	public static final int P4_BACKY = 506;
 	
-	public static final int PLAYER1_ONCARDX = 215;
-	public static final int PLAYER1_ONCARDY = 206;
-	public static final int PLAYER2_ONCARDX = 528;
-	public static final int PLAYER2_ONCARDY = 206;
-	public static final int PLAYER3_ONCARDX = 528;
-	public static final int PLAYER3_ONCARDY = 415;
-	public static final int PLAYER4_ONCARDX = 215;
-	public static final int PLAYER4_ONCARDY = 415;
+	public static final int P1_ONCARDX = 215;
+	public static final int P1_ONCARDY = 206;
+	public static final int P2_ONCARDX = 528;
+	public static final int P2_ONCARDY = 206;
+	public static final int P3_ONCARDX = 528;
+	public static final int P3_ONCARDY = 415;
+	public static final int P4_ONCARDX = 215;
+	public static final int P4_ONCARDY = 415;
 }
 class CardConfig {
 	public static final int CARD_WIDTH = 170;
@@ -63,8 +63,8 @@ class CardConfig {
 class BellConfig {
 	public static final int BELL_WIDTH = 232;
 	public static final int BELL_HEIGHT = 195;
-	public static final int BELL_X = 331;
-	public static final int BELL_Y = 265;
+	public static final int BELLX = 331;
+	public static final int BELLY = 265;
 }
 
 public class PlayRoom extends JFrame {
@@ -251,45 +251,45 @@ public class PlayRoom extends JFrame {
 					System.out.println("Yay you clicked me");
 				}
 			});
-			picLabel.setBounds(BellConfig.BELL_X, BellConfig.BELL_Y, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
+			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
 
 			// ########## Card Part ##############
 
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana1.jpg"));
-			BufferedImage player1_card = rotate(myPicture, UserConfig.PLAYER1_DEG);
+			BufferedImage player1_card = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_result = player1_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer1_card = new JLabel(new ImageIcon(player1_result));
 			palyer1_card.setText("palyer1_card");
-			palyer1_card.setBounds(UserConfig.PLAYER1_ONCARDX, UserConfig.PLAYER1_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer1_card.setBounds(UserConfig.P1_ONCARDX, UserConfig.P1_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_card);
 
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana2.jpg"));
-			BufferedImage player2_card = rotate(myPicture, UserConfig.PLAYER2_DEG);
+			BufferedImage player2_card = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_result = player2_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_card = new JLabel(new ImageIcon(player2_result));
 			palyer2_card.setText("palyer2_card");
-			palyer2_card.setBounds(UserConfig.PLAYER2_ONCARDX, UserConfig.PLAYER2_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer2_card.setBounds(UserConfig.P2_ONCARDX, UserConfig.P2_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer2_card);
 
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana4.jpg"));
-			BufferedImage player3_card = rotate(myPicture, UserConfig.PLAYER3_DEG);
+			BufferedImage player3_card = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_result = player3_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer3_card = new JLabel(new ImageIcon(player3_result));
 			palyer3_card.setText("palyer3_card");
-			palyer3_card.setBounds(UserConfig.PLAYER3_ONCARDX, UserConfig.PLAYER3_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer3_card.setBounds(UserConfig.P3_ONCARDX, UserConfig.P3_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer3_card);
 
 			myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana5.jpg"));
-			BufferedImage player4_card = rotate(myPicture, UserConfig.PLAYER4_DEG);
+			BufferedImage player4_card = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_result = player4_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer4_card = new JLabel(new ImageIcon(player4_result));
 			palyer4_card.setText("palyer4_card");
-			palyer4_card.setBounds(UserConfig.PLAYER4_ONCARDX, UserConfig.PLAYER4_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer4_card.setBounds(UserConfig.P4_ONCARDX, UserConfig.P4_ONCARDY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer4_card);
 			repaint();
 
@@ -324,11 +324,10 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
-			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.PLAYER1_DEG);
+			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_deck_res = player1_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT); 
 			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
-			palyer1_deck.setText("player1_deck");
-			palyer1_deck.setBounds(UserConfig.PLAYER1_DEKX, UserConfig.PLAYER1_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer1_deck.setBounds(UserConfig.P1_BACKX, UserConfig.P1_BACKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_deck);
 
 			player1 = new JPanel();
@@ -352,11 +351,10 @@ public class PlayRoom extends JFrame {
 			BufferedImage myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
 
-			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.PLAYER2_DEG);
+			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_deck_res = player2_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer2_deck = new JLabel(new ImageIcon(player2_deck_res));
-			palyer2_deck.setText("palyer2_deck");
-			palyer2_deck.setBounds(UserConfig.PLAYER2_DEKX, UserConfig.PLAYER2_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer2_deck.setBounds(UserConfig.P2_BACKX, UserConfig.P2_BACKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer2_deck);
 			
 			player2 = new JPanel();
@@ -379,11 +377,10 @@ public class PlayRoom extends JFrame {
 			BufferedImage myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
 
-			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.PLAYER3_DEG);
+			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_deck_res = player3_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer3_deck = new JLabel(new ImageIcon(player3_deck_res));
-			palyer3_deck.setText("palyer3_deck");
-			palyer3_deck.setBounds(UserConfig.PLAYER3_DEKX, UserConfig.PLAYER3_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer3_deck.setBounds(UserConfig.P3_BACKX, UserConfig.P3_BACKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer3_deck);
 
 			player4 = new JPanel();
@@ -406,11 +403,10 @@ public class PlayRoom extends JFrame {
 			BufferedImage myPicture = ImageIO
 					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\back2.png"));
 
-			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.PLAYER4_DEG);
+			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_deck_res = player4_deck_rotated.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
 			palyer4_deck = new JLabel(new ImageIcon(player4_deck_res));
-			palyer4_deck.setText("palyer4_deck");
-			palyer4_deck.setBounds(UserConfig.PLAYER4_DEKX, UserConfig.PLAYER4_DEKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			palyer4_deck.setBounds(UserConfig.P4_BACKX, UserConfig.P4_BACKY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer4_deck);
 			player3 = new JPanel();
 			player3.setBounds(12, 357, 420, 346);
