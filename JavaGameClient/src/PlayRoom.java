@@ -58,7 +58,6 @@ public class PlayRoom extends JFrame {
 	public Player player2;
 	public Player player3;
 	public Player player4;
-	public Vector<Card> total_cards;
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -75,37 +74,6 @@ public class PlayRoom extends JFrame {
 				if (msg.contains("/exit")) // 종료 처리
 					System.exit(0);
 			}
-		}
-	}
-
-	public void cardGenerator() {
-		total_cards = new Vector<>();
-
-		for (int i = 0; i < 4; i++) {
-			String tmp = "";
-			if(i == 0) tmp = "PLUM";
-			else if (i == 1) tmp = "PEAR";
-			else if (i == 2) tmp = "BANANA";
-			else if (i == 3) tmp = "BERRY";
-			
-			for (int j = 0; j < 4; i++) {
-				Card card1 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
-				total_cards.add(card1);
-			}
-			for (int j = 0; j < 2; i++) {
-				Card card2 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
-				total_cards.add(card2);
-			}
-			for (int j = 0; j < 2; i++) {
-				Card card3 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
-				total_cards.add(card3);
-			}
-			for (int j = 0; j < 1; i++) {
-				Card card4 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
-				total_cards.add(card4);
-			}
-			Card card5 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
-			total_cards.add(card5);
 		}
 	}
 

@@ -9,6 +9,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
@@ -169,6 +171,7 @@ public class JavaGameServer extends JFrame {
 		public String userName = "";
 		public UserStatus userStatus = UserStatus.WAITING;
 		public Room enteredRoom = null;
+		public Vector<Card> total_cards;
 
 		public UserService(Socket client_socket) {
 			// 매개변수로 넘어온 자료 저장
@@ -333,6 +336,47 @@ public class JavaGameServer extends JFrame {
 				}
 			}
 		}
+		
+		public void cardGenerator() {
+			System.out.println("here haaa");
+			total_cards = new Vector<>();
+			
+			for (int i = 0; i < 4; i++) {
+				String tmp = "";
+				if(i == 0) tmp = "PLUM";
+				else if (i == 1) tmp = "PEAR";
+				else if (i == 2) tmp = "BANANA";
+				else if (i == 3) tmp = "BERRY";
+				else break;
+				
+				for (int j = 0; j < 5; j++) {
+					Card card1 = new Card(String.format("%s%d", tmp, 1), enteredRoom);
+					total_cards.addElement(card1);
+				}
+				for (int j = 0; j < 3; j++) {
+					Card card2 = new Card(String.format("%s%d", tmp, 2), enteredRoom);
+					total_cards.addElement(card2);
+				}
+				for (int j = 0; j < 3; j++) {
+					Card card3 = new Card(String.format("%s%d", tmp, 3), enteredRoom);
+					total_cards.addElement(card3);
+				}
+				for (int j = 0; j < 2; j++) {
+					Card card4 = new Card(String.format("%s%d", tmp, 4), enteredRoom);
+					total_cards.addElement(card4);
+				}
+				Card card5 = new Card(String.format("%s%d", tmp, 5), enteredRoom);
+				total_cards.addElement(card5);
+			}
+			
+			// shuffle cards
+			Collections.shuffle(total_cards);
+
+			System.out.println("22222");
+			for(Card acard:(Vector<Card>)total_cards) {
+				System.out.println(acard.getCard_info());
+			}
+		}
 
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
@@ -436,6 +480,9 @@ public class JavaGameServer extends JFrame {
 										user.writeOneObject(ingame);
 								}
 							}
+							cardGenerator();
+							System.out.println("@@@@@@@@@@");
+							// TODO: card generate, card distribute, send them all
 						} 
 					}
 				} catch (IOException e) {
