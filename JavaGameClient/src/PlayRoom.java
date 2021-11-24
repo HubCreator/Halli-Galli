@@ -32,44 +32,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-class UserConfig {
-	public static final double P1_DEG = -45.0;
-	public static final double P2_DEG = 45.0;
-	public static final double P3_DEG = -45.0;
-	public static final double P4_DEG = 45.0;
-
-	public static final int P1_DOWNX = 28;
-	public static final int P1_DOWNY = 121;
-	public static final int P2_DOWNX = 692;
-	public static final int P2_DOWNY = 121;
-	public static final int P3_DOWNX = 692;
-	public static final int P3_DOWNY = 506;
-	public static final int P4_DOWNX = 28;
-	public static final int P4_DOWNY = 506;
-
-	public static final int P1_UPX = 215;
-	public static final int P1_UPY = 206;
-	public static final int P2_UPX = 528;
-	public static final int P2_UPY = 206;
-	public static final int P3_UPX = 528;
-	public static final int P3_UPY = 415;
-	public static final int P4_UPX = 215;
-	public static final int P4_UPY = 415;
-}
-
-class CardConfig {
-	public static final int CARD_WIDTH = 170;
-	public static final int CARD_HEIGHT = 120;
-}
-
-class OthersConfig {
-	public static final int BELL_WIDTH = 232;
-	public static final int BELL_HEIGHT = 195;
-	public static final int BELLX = 331;
-	public static final int BELLY = 265;
-	public static final int STARTX = 400;
-	public static final int STARTY = 115;
-}
 
 public class PlayRoom extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -238,7 +200,7 @@ public class PlayRoom extends JFrame {
 
 		try {
 			BufferedImage myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\bell.png"));
+					.read(new File("images/bell.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			picLabel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -290,7 +252,7 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_down);
 
-			myPicture = ImageIO.read(new File("images/banana1.jpg"));
+			myPicture = ImageIO.read(new File(CardConfig.BERRY3));
 			BufferedImage player1_up_image = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -330,7 +292,7 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer2_down);
 
-			myPicture = ImageIO.read(new File("images/banana2.jpg"));
+			myPicture = ImageIO.read(new File(CardConfig.PEAR1));
 			BufferedImage player2_up_image = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -368,7 +330,7 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer3_down);
 
-			myPicture = ImageIO.read(new File("images/banana3.jpg"));
+			myPicture = ImageIO.read(new File(CardConfig.BANANA5));
 			BufferedImage player3_up_image = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -406,7 +368,7 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer4_down);
 
-			myPicture = ImageIO.read(new File("images/banana4.jpg"));
+			myPicture = ImageIO.read(new File(CardConfig.PLUM1));
 			BufferedImage player4_up_image = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
