@@ -297,6 +297,7 @@ public class WaitingRoom extends JFrame {
 					String msg = null;
 					ChatMsg cm = null;
 					Room room = null;
+					InGame ingame = null;
 
 					try {
 						obcm = ois.readObject();
@@ -311,6 +312,8 @@ public class WaitingRoom extends JFrame {
 						msg = String.format("[%s]\n%s", cm.userName, cm.data);
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
+					} else if (obcm instanceof InGame) {
+						ingame = (InGame) obcm;
 					} else
 						continue;
 
@@ -358,8 +361,9 @@ public class WaitingRoom extends JFrame {
 							setVisible(true);
 						} else if (room.getCode().matches("607")) {
 							System.out.println("Someone got entered");
+							current_entered_room = null;
+							current_entered_room = room;
 							if (playRoom == null) {
-								current_entered_room = room;
 								setVisible(false);
 								playRoom = new PlayRoom(view, current_entered_room);
 								playRoom.updatePlayers();
@@ -376,6 +380,10 @@ public class WaitingRoom extends JFrame {
 							setVisible(false);
 							playRoom = new PlayRoom(view, current_entered_room);
 						}
+					} else if(ingame != null) {
+						if (ingame.getCode().matches("700")) {
+							playRoom.appendText("GAME START!!");
+						}
 					}
 				} catch (IOException e) {
 					appendText("ois.readObject() error");
@@ -388,7 +396,7 @@ public class WaitingRoom extends JFrame {
 						break;
 					} // catch문 끝
 				} // 바깥 catch문끝
-				catch  (Exception e) {
+				catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -483,7 +491,9 @@ public class WaitingRoom extends JFrame {
 	public void sendMessage(String msg) {
 		try {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", client_userName).data(msg).build();
+			oos.reset();
 			oos.writeObject(obcm);
+			oos.reset();
 		} catch (IOException e) {
 			// appendText("dos.write() error");
 			appendText("oos.writeObject() error");
@@ -503,7 +513,9 @@ public class WaitingRoom extends JFrame {
 		try {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName).data(msg)
 					.room_dst(current_entered_room.getRoom_name()).build();
+			oos.reset();
 			oos.writeObject(obcm);
+			oos.reset();
 		} catch (IOException e) {
 			// appendText("dos.write() error");
 			appendText("oos.writeObject() error");
@@ -523,6 +535,7 @@ public class WaitingRoom extends JFrame {
 		try {
 			oos.reset();
 			oos.writeObject(ob);
+			oos.reset();
 		} catch (IOException e) {
 			// textArea.append("메세지 송신 에러!!\n");
 			appendText("sendObject Error");

@@ -145,8 +145,16 @@ public class JavaGameServer extends JFrame {
 		textArea.append("password = " + room.getPassword() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
+	public void appendInGame(InGame ingame) {
+		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
+		textArea.append("code = " + ingame.getCode() + "\n");
+		textArea.append("from_whom = " + ingame.getFrom_whom() + "\n");
+		textArea.append("from_where = " + ingame.getFrom_where().getRoom_name() + "\n");
+		textArea.setCaretPosition(textArea.getText().length());
+	}
+	
 
-	public enum Status {
+	public enum UserStatus {
 		WAITING, PLAYING, OBSERVING;
 	}
 
@@ -159,7 +167,7 @@ public class JavaGameServer extends JFrame {
 		private Socket client_socket;
 		private Vector user_vc;
 		public String userName = "";
-		public Status userStatus = Status.WAITING;
+		public UserStatus userStatus = UserStatus.WAITING;
 		public Room enteredRoom = null;
 
 		public UserService(Socket client_socket) {
@@ -194,7 +202,7 @@ public class JavaGameServer extends JFrame {
 		public void writeAll(String str) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user.userStatus == Status.WAITING)
+				if (user.userStatus == UserStatus.WAITING)
 					user.writeOne(str);
 			}
 		}
@@ -203,6 +211,7 @@ public class JavaGameServer extends JFrame {
 			try {
 				oos.reset();
 				oos.writeObject(ob);
+				oos.reset();
 			} catch (IOException e) {
 				appendText("oos.writeObject(ob) error");
 				try {
@@ -224,7 +233,7 @@ public class JavaGameServer extends JFrame {
 		public void writeAllObject(Object ob) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user.userStatus == Status.WAITING)
+				if (user.userStatus == UserStatus.WAITING)
 					user.writeOneObject(ob);
 			}
 		}
@@ -233,7 +242,7 @@ public class JavaGameServer extends JFrame {
 		public void writeOthers(String str) {
 			for (int i = 0; i < user_vc.size(); i++) {
 				UserService user = (UserService) user_vc.elementAt(i);
-				if (user != this && user.userStatus == Status.WAITING)
+				if (user != this && user.userStatus == UserStatus.WAITING)
 					user.writeOne(str);
 			}
 		}
@@ -300,13 +309,12 @@ public class JavaGameServer extends JFrame {
 			for (int i = 0; i < roomList_server.size(); i++) { // 조사한다
 				if (roomList_server.get(i).getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
 					enteredRoom = roomList_server.get(i);
-					userStatus = Status.PLAYING;
+					userStatus = UserStatus.PLAYING;
 					// 방을 만든 사람이 나라면
 					if (room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
 						enteredRoom.setCode("603");
 						enteredRoom.players.add(userName);
 						writeOneObject(enteredRoom);
-						System.out.println("내가 만든방");
 					} else { // 그 외 참가자
 						enteredRoom.setCode("607");
 						enteredRoom.players.add(room.getFrom_whom());
@@ -316,14 +324,7 @@ public class JavaGameServer extends JFrame {
 								if (user.userName.equals(player))
 									user.writeOneObject(enteredRoom);
 							}
-							/*
-							 * if (user.userName.equals(enteredRoom.players.get(i))) {
-							 * System.out.println(enteredRoom.players.get(i));
-							 * user.writeOneObject(enteredRoom); }
-							 */
 						}
-						// writeAllObject(aroom); // 모두에게 입장을 알려라
-						System.out.println("딴놈이 만든방 입장");
 					}
 				} else {
 					System.out.println("해당 방이 없습니다..");
@@ -338,6 +339,8 @@ public class JavaGameServer extends JFrame {
 					String msg = null;
 					ChatMsg chatmsg = null;
 					Room room = null;
+					InGame ingame = null;
+					
 					if (socket == null)
 						break;
 					// 메시지 수신
@@ -357,6 +360,9 @@ public class JavaGameServer extends JFrame {
 					} else if (obcm instanceof Room) {
 						room = (Room) obcm;
 						appendRoom(room);
+					} else if (obcm instanceof InGame) {
+						ingame = (InGame) obcm;
+						appendInGame(ingame);
 					} else {
 						writeAllObject(chatmsg);
 						continue;
@@ -366,7 +372,7 @@ public class JavaGameServer extends JFrame {
 					if (chatmsg != null) {
 						if (chatmsg.code.matches("100")) {
 							userName = chatmsg.userName;
-							userStatus = Status.WAITING;
+							userStatus = UserStatus.WAITING;
 							if (roomList_server.size() > 0)
 								sendRoomListToAll();
 							login();
@@ -375,10 +381,9 @@ public class JavaGameServer extends JFrame {
 							appendText(msg); // server 화면에 출력
 							writeAllObject(chatmsg);
 						} else if (chatmsg.code.matches("201")) {
-							// System.out.println("111");
 							for (int i = 0; i < user_vc.size(); i++) {
 								UserService user = (UserService) user_vc.elementAt(i);
-								if(user.userStatus.equals(Status.PLAYING))
+								if(user.userStatus.equals(UserStatus.PLAYING))
 									user.writeOneObject(chatmsg);
 							}
 						} else if (chatmsg.code.matches("400")) { // logout message 처리
@@ -400,7 +405,7 @@ public class JavaGameServer extends JFrame {
 						} else if (room.getCode().matches("605")) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
 							enteredRoom = null;
-							userStatus = Status.WAITING;
+							userStatus = UserStatus.WAITING;
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(room.getRoom_name())) {
 									List<String> players = new ArrayList<>();
@@ -416,7 +421,27 @@ public class JavaGameServer extends JFrame {
 							sendRoomListToAll();
 						}
 					}
-
+					
+					if(ingame != null) {
+						if (ingame.getCode().matches("700")) { // Game start echo
+							System.out.println("start!!");
+							for(String player : ingame.getFrom_where().players) {
+								System.out.println("player>>"+player);
+								for (int i = 0; i < user_vc.size(); i++) {
+									UserService user = (UserService) user_vc.elementAt(i);
+									if(user.userStatus.equals(UserStatus.PLAYING) 
+											&& player.equals(user.userName))
+										user.writeOneObject(ingame);
+								}
+							}
+//							for (int i = 0; i < user_vc.size(); i++) {
+//								UserService user = (UserService) user_vc.elementAt(i);
+//								if(user.userStatus.equals(UserStatus.PLAYING)) 
+//									user.writeOneObject(ingame);
+//							}
+							
+						} 
+					}
 				} catch (IOException e) {
 					appendText("ois.readObject() error");
 					try {

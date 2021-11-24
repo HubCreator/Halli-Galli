@@ -447,6 +447,8 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("Start Btn Clicked");
+						InGame tmp = new InGame("700", mainview.client_userName, mainview.current_entered_room);
+						mainview.sendObject(tmp);
 					}
 				});
 			}
