@@ -38,23 +38,23 @@ class UserConfig {
 	public static final double P3_DEG = -45.0;
 	public static final double P4_DEG = 45.0;
 
-	public static final int P1_BACKX = 28;
-	public static final int P1_BACKY = 121;
-	public static final int P2_BACKX = 692;
-	public static final int P2_BACKY = 121;
-	public static final int P3_BACKX = 692;
-	public static final int P3_BACKY = 506;
-	public static final int P4_BACKX = 28;
-	public static final int P4_BACKY = 506;
+	public static final int P1_DOWNX = 28;
+	public static final int P1_DOWNY = 121;
+	public static final int P2_DOWNX = 692;
+	public static final int P2_DOWNY = 121;
+	public static final int P3_DOWNX = 692;
+	public static final int P3_DOWNY = 506;
+	public static final int P4_DOWNX = 28;
+	public static final int P4_DOWNY = 506;
 
-	public static final int P1_ONCARDX = 215;
-	public static final int P1_ONCARDY = 206;
-	public static final int P2_ONCARDX = 528;
-	public static final int P2_ONCARDY = 206;
-	public static final int P3_ONCARDX = 528;
-	public static final int P3_ONCARDY = 415;
-	public static final int P4_ONCARDX = 215;
-	public static final int P4_ONCARDY = 415;
+	public static final int P1_UPX = 215;
+	public static final int P1_UPY = 206;
+	public static final int P2_UPX = 528;
+	public static final int P2_UPY = 206;
+	public static final int P3_UPX = 528;
+	public static final int P3_UPY = 415;
+	public static final int P4_UPX = 215;
+	public static final int P4_UPY = 415;
 }
 
 class CardConfig {
@@ -83,20 +83,15 @@ public class PlayRoom extends JFrame {
 	private JButton imgBtn;
 	List<String> players;
 	private JPanel gamePane;
-	private JPanel player1;
-	private JPanel player2;
-	private JPanel player4;
-	private JPanel player3;
-	private JLabel palyer1_card;
-	private JLabel palyer2_card;
-	private JLabel palyer3_card;
-	private JLabel palyer4_card;
-	private JLabel palyer1_deck;
-	private JLabel palyer2_deck;
-	private JLabel palyer3_deck;
-	private JLabel palyer4_deck;
-	private JLabel startBtnLabel;
-	private JButton startBtn;
+	private JLabel palyer1_up;
+	private JLabel palyer2_up;
+	private JLabel palyer3_up;
+	private JLabel palyer4_up;
+	private JLabel palyer1_down;
+	private JLabel palyer2_down;
+	private JLabel palyer3_down;
+	private JLabel palyer4_down;
+	protected JLabel startBtnLabel;
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -255,50 +250,6 @@ public class PlayRoom extends JFrame {
 					OthersConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
 
-			// ########## Card Part ##############
-
-			myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana1.jpg"));
-			BufferedImage player1_card = rotate(myPicture, UserConfig.P1_DEG);
-			Image player1_result = player1_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer1_card = new JLabel(new ImageIcon(player1_result));
-			palyer1_card.setText("palyer1_card");
-			palyer1_card.setBounds(UserConfig.P1_ONCARDX, UserConfig.P1_ONCARDY, CardConfig.CARD_WIDTH,
-					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer1_card);
-
-			myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana2.jpg"));
-			BufferedImage player2_card = rotate(myPicture, UserConfig.P2_DEG);
-			Image player2_result = player2_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer2_card = new JLabel(new ImageIcon(player2_result));
-			palyer2_card.setText("palyer2_card");
-			palyer2_card.setBounds(UserConfig.P2_ONCARDX, UserConfig.P2_ONCARDY, CardConfig.CARD_WIDTH,
-					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer2_card);
-
-			myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana4.jpg"));
-			BufferedImage player3_card = rotate(myPicture, UserConfig.P3_DEG);
-			Image player3_result = player3_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer3_card = new JLabel(new ImageIcon(player3_result));
-			palyer3_card.setText("palyer3_card");
-			palyer3_card.setBounds(UserConfig.P3_ONCARDX, UserConfig.P3_ONCARDY, CardConfig.CARD_WIDTH,
-					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer3_card);
-
-			myPicture = ImageIO
-					.read(new File("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\banana5.jpg"));
-			BufferedImage player4_card = rotate(myPicture, UserConfig.P4_DEG);
-			Image player4_result = player4_card.getScaledInstance(166, 119, Image.SCALE_DEFAULT);
-			palyer4_card = new JLabel(new ImageIcon(player4_result));
-			palyer4_card.setText("palyer4_card");
-			palyer4_card.setBounds(UserConfig.P4_ONCARDX, UserConfig.P4_ONCARDY, CardConfig.CARD_WIDTH,
-					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer4_card);
-
-			repaint();
-
 			GameEngine2 engine = new GameEngine2();
 			engine.start();
 		} catch (NumberFormatException | IOException e1) {
@@ -330,18 +281,31 @@ public class PlayRoom extends JFrame {
 	public void updatePlayers() throws IOException {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			BufferedImage player1_deck_rotated = rotate(myPicture, UserConfig.P1_DEG);
-			Image player1_deck_res = player1_deck_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+			System.out.println("1 entered");
+			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
+			Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-			palyer1_deck = new JLabel(new ImageIcon(player1_deck_res));
-			palyer1_deck.setBounds(UserConfig.P1_BACKX, UserConfig.P1_BACKY, CardConfig.CARD_WIDTH,
+			palyer1_down = new JLabel(new ImageIcon(player1_down_res));
+			palyer1_down.setBounds(UserConfig.P1_DOWNX, UserConfig.P1_DOWNY, CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer1_deck);
+			gamePane.add(palyer1_down);
 
-//			player1 = new JPanel();
-//			player1.setBounds(12, 10, 420, 346);
-//			gamePane.add(player1);
-//			player1.setLayout(null);
+			myPicture = ImageIO.read(new File("images/banana1.jpg"));
+			BufferedImage player1_up_image = rotate(myPicture, UserConfig.P1_DEG);
+			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
+			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(0))) {
+				palyer1_up.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("1111111111111111111");
+					}
+				});
+			}
+
+			gamePane.add(palyer1_up);
 
 			JLabel player1_name = new JLabel((String) null);
 			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -357,19 +321,30 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-
-			BufferedImage player2_deck_rotated = rotate(myPicture, UserConfig.P2_DEG);
-			Image player2_deck_res = player2_deck_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+			System.out.println("2 entered");
+			BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
+			Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-			palyer2_deck = new JLabel(new ImageIcon(player2_deck_res));
-			palyer2_deck.setBounds(UserConfig.P2_BACKX, UserConfig.P2_BACKY, CardConfig.CARD_WIDTH,
+			palyer2_down = new JLabel(new ImageIcon(player2_down_res));
+			palyer2_down.setBounds(UserConfig.P2_DOWNX, UserConfig.P2_DOWNY, CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer2_deck);
+			gamePane.add(palyer2_down);
 
-//			player2 = new JPanel();
-//			player2.setBounds(430, 10, 436, 346);
-//			gamePane.add(player2);
-//			player2.setLayout(null);
+			myPicture = ImageIO.read(new File("images/banana2.jpg"));
+			BufferedImage player2_up_image = rotate(myPicture, UserConfig.P2_DEG);
+			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
+			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(1))) {
+				palyer2_up.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("2222222222222");
+					}
+				});
+			}
+			gamePane.add(palyer2_up);
 
 			JLabel player2_name = new JLabel((String) null);
 			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -377,29 +352,40 @@ public class PlayRoom extends JFrame {
 			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player2_name.setText(players.get(1));
 			player2_name.setBackground(Color.WHITE);
-			player2_name.setBounds(866-84, 10, 84, 40);
+			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
 			repaint();
 		}
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-
-			BufferedImage player3_deck_rotated = rotate(myPicture, UserConfig.P3_DEG);
-			Image player3_deck_res = player3_deck_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+			System.out.println("3 entered");
+			BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
+			Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-			palyer3_deck = new JLabel(new ImageIcon(player3_deck_res));
-			palyer3_deck.setBounds(UserConfig.P3_BACKX, UserConfig.P3_BACKY, CardConfig.CARD_WIDTH,
+			palyer3_down = new JLabel(new ImageIcon(player3_down_res));
+			palyer3_down.setBounds(UserConfig.P3_DOWNX, UserConfig.P3_DOWNY, CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer3_deck);
+			gamePane.add(palyer3_down);
 
-//			player4 = new JPanel();
-//			player4.setBounds(430, 357, 434, 346);
-//			gamePane.add(player4);
-//			player4.setLayout(null);
+			myPicture = ImageIO.read(new File("images/banana3.jpg"));
+			BufferedImage player3_up_image = rotate(myPicture, UserConfig.P3_DEG);
+			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
+			palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(2))) {
+				palyer3_up.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("33333333333333333");
+					}
+				});
+			}
+			gamePane.add(palyer3_up);
 
 			JLabel player4_name = new JLabel((String) null);
-			player4_name.setBounds(866-84, 703-40, 84, 40);
+			player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player4_name.setFont(new Font("굴림", Font.BOLD, 14));
 			player4_name.setText(players.get(2));
@@ -411,29 +397,40 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-
-			BufferedImage player4_deck_rotated = rotate(myPicture, UserConfig.P4_DEG);
-			Image player4_deck_res = player4_deck_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+			System.out.println("4 entered");
+			BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
+			Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-			palyer4_deck = new JLabel(new ImageIcon(player4_deck_res));
-			palyer4_deck.setBounds(UserConfig.P4_BACKX, UserConfig.P4_BACKY, CardConfig.CARD_WIDTH,
+			palyer4_down = new JLabel(new ImageIcon(player4_down_res));
+			palyer4_down.setBounds(UserConfig.P4_DOWNX, UserConfig.P4_DOWNY, CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT);
-			gamePane.add(palyer4_deck);
+			gamePane.add(palyer4_down);
 
-//			player3 = new JPanel();
-//			player3.setBounds(12, 357, 420, 346);
-//			gamePane.add(player3);
-//			player3.setLayout(null);
+			myPicture = ImageIO.read(new File("images/banana4.jpg"));
+			BufferedImage player4_up_image = rotate(myPicture, UserConfig.P4_DEG);
+			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
+			palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(3))) {
+				palyer4_up.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("4444444444444444444444");
+					}
+				});
+			}
+			gamePane.add(palyer4_up);
 
 			JLabel player3_name = new JLabel((String) null);
-			player3_name.setBounds(12, 703-40, 84, 40);
+			player3_name.setBounds(12, 703 - 40, 84, 40);
 			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player3_name.setFont(new Font("굴림", Font.BOLD, 14));
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
 			gamePane.add(player3_name);
-			
+
 			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
 				System.out.println("PLAY BUTTON!!");
 				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
@@ -452,7 +449,8 @@ public class PlayRoom extends JFrame {
 					}
 				});
 			}
-			gamePane.repaint();
+			// gamePane.repaint();
+			repaint();
 		}
 	}
 

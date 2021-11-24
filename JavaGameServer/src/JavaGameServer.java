@@ -321,8 +321,10 @@ public class JavaGameServer extends JFrame {
 						for (int j = 0; j < user_vc.size(); j++) {
 							UserService user = (UserService) user_vc.elementAt(j);
 							for (String player : enteredRoom.players) {
-								if (user.userName.equals(player))
+								if (user.userName.equals(player)) {
 									user.writeOneObject(enteredRoom);
+									System.out.println("send to.. "+user.userName);
+								}
 							}
 						}
 					}
@@ -434,12 +436,6 @@ public class JavaGameServer extends JFrame {
 										user.writeOneObject(ingame);
 								}
 							}
-//							for (int i = 0; i < user_vc.size(); i++) {
-//								UserService user = (UserService) user_vc.elementAt(i);
-//								if(user.userStatus.equals(UserStatus.PLAYING)) 
-//									user.writeOneObject(ingame);
-//							}
-							
 						} 
 					}
 				} catch (IOException e) {
