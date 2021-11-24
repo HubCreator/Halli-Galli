@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -31,7 +32,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-
 
 public class PlayRoom extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -54,6 +54,11 @@ public class PlayRoom extends JFrame {
 	private JLabel palyer3_down;
 	private JLabel palyer4_down;
 	protected JLabel startBtnLabel;
+	public Player player1;
+	public Player player2;
+	public Player player3;
+	public Player player4;
+	public Vector<Card> total_cards;
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -70,6 +75,37 @@ public class PlayRoom extends JFrame {
 				if (msg.contains("/exit")) // 종료 처리
 					System.exit(0);
 			}
+		}
+	}
+
+	public void cardGenerator() {
+		total_cards = new Vector<>();
+
+		for (int i = 0; i < 4; i++) {
+			String tmp = "";
+			if(i == 0) tmp = "PLUM";
+			else if (i == 1) tmp = "PEAR";
+			else if (i == 2) tmp = "BANANA";
+			else if (i == 3) tmp = "BERRY";
+			
+			for (int j = 0; j < 4; i++) {
+				Card card1 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
+				total_cards.add(card1);
+			}
+			for (int j = 0; j < 2; i++) {
+				Card card2 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
+				total_cards.add(card2);
+			}
+			for (int j = 0; j < 2; i++) {
+				Card card3 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
+				total_cards.add(card3);
+			}
+			for (int j = 0; j < 1; i++) {
+				Card card4 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
+				total_cards.add(card4);
+			}
+			Card card5 = new Card(String.format("%s%d", tmp, i+1), mainview.current_entered_room);
+			total_cards.add(card5);
 		}
 	}
 
@@ -199,8 +235,7 @@ public class PlayRoom extends JFrame {
 		txtInput.requestFocus();
 
 		try {
-			BufferedImage myPicture = ImageIO
-					.read(new File("images/bell.png"));
+			BufferedImage myPicture = ImageIO.read(new File("images/bell.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
 			picLabel.addMouseListener(new MouseAdapter() {
 				@Override
@@ -208,8 +243,7 @@ public class PlayRoom extends JFrame {
 					System.out.println("Yay you clicked me");
 				}
 			});
-			picLabel.setBounds(OthersConfig.BELLX, OthersConfig.BELLY, OthersConfig.BELL_WIDTH,
-					OthersConfig.BELL_HEIGHT);
+			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
 
 			GameEngine2 engine = new GameEngine2();
@@ -398,7 +432,7 @@ public class PlayRoom extends JFrame {
 				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
 				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
-				startBtnLabel.setBounds(OthersConfig.STARTX, OthersConfig.STARTY, 100, 80);
+				startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
 				gamePane.add(startBtnLabel);
 				startBtnLabel.setVisible(true);
 
@@ -411,7 +445,6 @@ public class PlayRoom extends JFrame {
 					}
 				});
 			}
-			// gamePane.repaint();
 			repaint();
 		}
 	}

@@ -27,6 +27,7 @@ class UserConfig {
 class CardConfig {
 	public static final int CARD_WIDTH = 170;
 	public static final int CARD_HEIGHT = 120;
+	
 	public static final String BANANA1 = "images/banana1.jpg";
 	public static final String BANANA2 = "images/banana2.jpg";
 	public static final String BANANA3 = "images/banana3.jpg";
@@ -52,12 +53,14 @@ class CardConfig {
 	public static final String BERRY5 = "images/strawberry5.jpg";
 }
 
-class OthersConfig {
+class BellConfig {
 	public static final int BELL_WIDTH = 232;
 	public static final int BELL_HEIGHT = 195;
 	public static final int BELLX = 331;
 	public static final int BELLY = 265;
+}
+
+class ButtonsConfig {
 	public static final int STARTX = 400;
 	public static final int STARTY = 115;
 }
-
