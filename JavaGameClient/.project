@@ -14,4 +14,36 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/Card.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/JavaGameServer/src/Card.java</locationURI>
+		</link>
+		<link>
+			<name>src/ChatMsg.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/JavaGameServer/src/ChatMsg.java</locationURI>
+		</link>
+		<link>
+			<name>src/Config.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/JavaGameServer/src/Config.java</locationURI>
+		</link>
+		<link>
+			<name>src/InGame.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/JavaGameServer/src/InGame.java</locationURI>
+		</link>
+		<link>
+			<name>src/Player.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/JavaGameServer/src/Player.java</locationURI>
+		</link>
+		<link>
+			<name>src/Room.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/JavaGameServer/src/Room.java</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
