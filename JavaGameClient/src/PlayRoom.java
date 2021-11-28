@@ -58,6 +58,8 @@ public class PlayRoom extends JFrame {
 	public Player player2;
 	public Player player3;
 	public Player player4;
+	public Vector<Card> myUpCards = new Vector<Card>();
+	public Vector<Card> myDownCards = new Vector<Card>();
 //	public GameEngine2 engine;
 
 	// keyboard enter key 치면 서버로 전송
@@ -243,6 +245,8 @@ public class PlayRoom extends JFrame {
 	}
 
 	public void updatePlayers() throws IOException {
+		gamePane.removeAll();
+		repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			System.out.println("1 entered");
@@ -255,7 +259,14 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_down);
 
-			myPicture = ImageIO.read(new File(CardConfig.BERRY3));
+			if(myUpCards.isEmpty()) 
+				myPicture = ImageIO.read(new File("images/blank.jpg"));
+			else  {
+				myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
+				System.out.println("!!!>> " + myUpCards.get(myUpCards.size()-1).getCard_info());
+			}
+			
+			
 			BufferedImage player1_up_image = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -267,6 +278,9 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("1111111111111111111");
+						if(!myDownCards.isEmpty()) {
+							myUpCards.addElement(myDownCards.remove(0));
+						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 						mainview.sendObject(tmp);
 					}
@@ -299,7 +313,9 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer2_down);
 
-			myPicture = ImageIO.read(new File(CardConfig.PEAR1));
+			if(myUpCards.isEmpty()) 
+				myPicture = ImageIO.read(new File("images/blank.jpg"));
+			else myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
 			BufferedImage player2_up_image = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -310,6 +326,9 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("2222222222222");
+						if(!myDownCards.isEmpty()) {
+							myUpCards.addElement(myDownCards.remove(0));
+						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 					}
 				});
@@ -339,7 +358,9 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer3_down);
 
-			myPicture = ImageIO.read(new File(CardConfig.BANANA5));
+			if(myUpCards.isEmpty()) 
+				myPicture = ImageIO.read(new File("images/blank.jpg"));
+			else myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
 			BufferedImage player3_up_image = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -350,6 +371,9 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("33333333333333333");
+						if(!myDownCards.isEmpty()) {
+							myUpCards.addElement(myDownCards.remove(0));
+						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 					}
 				});
@@ -379,7 +403,9 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer4_down);
 
-			myPicture = ImageIO.read(new File(CardConfig.PLUM1));
+			if(myUpCards.isEmpty()) 
+				myPicture = ImageIO.read(new File("images/blank.jpg"));
+			else myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
 			BufferedImage player4_up_image = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -390,6 +416,9 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("4444444444444444444444");
+						if(!myDownCards.isEmpty()) {
+							myUpCards.addElement(myDownCards.remove(0));
+						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 					}
 				});

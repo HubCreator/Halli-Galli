@@ -13,6 +13,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -385,10 +386,14 @@ public class WaitingRoom extends JFrame {
 							playRoom.appendText("Game starts!!");
 							if(playRoom.startBtnLabel != null)
 								playRoom.startBtnLabel.setVisible(false); // need to remove it later
+							playRoom.myDownCards = ingame.card;
 							for(Card acard: ingame.card) {
 								System.out.println(acard);
 							}
 							System.out.println("Size >> " + ingame.card.size());
+						} else if (ingame.getCode().matches("701")) {
+							playRoom.appendText("701!!");
+							playRoom.updatePlayers();
 						}
 					}
 				} catch (IOException e) {

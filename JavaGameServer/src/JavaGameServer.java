@@ -147,6 +147,7 @@ public class JavaGameServer extends JFrame {
 		textArea.append("password = " + room.getPassword() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
+
 	public void appendInGame(InGame ingame) {
 		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
 		textArea.append("code = " + ingame.getCode() + "\n");
@@ -154,7 +155,6 @@ public class JavaGameServer extends JFrame {
 		textArea.append("from_where = " + ingame.getFrom_where().getRoom_name() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
-	
 
 	public enum UserStatus {
 		WAITING, PLAYING, OBSERVING;
@@ -326,7 +326,7 @@ public class JavaGameServer extends JFrame {
 							for (String player : enteredRoom.players) {
 								if (user.userName.equals(player)) {
 									user.writeOneObject(enteredRoom);
-									System.out.println("send to.. "+user.userName);
+									System.out.println("send to.. " + user.userName);
 								}
 							}
 						}
@@ -336,44 +336,120 @@ public class JavaGameServer extends JFrame {
 				}
 			}
 		}
-		
+
 		public Vector<Card> cardGenerator() {
 			total_cards = new Vector<>();
-			
-			for (int i = 0; i < 4; i++) {
-				String tmp = "";
-				if(i == 0) tmp = "PLUM";
-				else if (i == 1) tmp = "PEAR";
-				else if (i == 2) tmp = "BANANA";
-				else if (i == 3) tmp = "BERRY";
-				else break;
-				
-				for (int j = 0; j < 5; j++) {
-					Card card1 = new Card(String.format("%s%d", tmp, 1), enteredRoom);
-					total_cards.addElement(card1);
-				}
-				for (int j = 0; j < 3; j++) {
-					Card card2 = new Card(String.format("%s%d", tmp, 2), enteredRoom);
-					total_cards.addElement(card2);
-				}
-				for (int j = 0; j < 3; j++) {
-					Card card3 = new Card(String.format("%s%d", tmp, 3), enteredRoom);
-					total_cards.addElement(card3);
-				}
-				for (int j = 0; j < 2; j++) {
-					Card card4 = new Card(String.format("%s%d", tmp, 4), enteredRoom);
-					total_cards.addElement(card4);
-				}
-				Card card5 = new Card(String.format("%s%d", tmp, 5), enteredRoom);
-				total_cards.addElement(card5);
+
+			for (int j = 0; j < 5; j++) {
+				Card card1 = new Card(CardConfig.PLUM1, enteredRoom);
+				total_cards.addElement(card1);
 			}
+			for (int j = 0; j < 3; j++) {
+				Card card2 = new Card(CardConfig.PLUM2, enteredRoom);
+				total_cards.addElement(card2);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card3 = new Card(CardConfig.PLUM3, enteredRoom);
+				total_cards.addElement(card3);
+			}
+			for (int j = 0; j < 2; j++) {
+				Card card4 = new Card(CardConfig.PLUM4, enteredRoom);
+				total_cards.addElement(card4);
+			}
+			total_cards.addElement(new Card(CardConfig.PLUM5, enteredRoom));
+
+			//
+
+			for (int j = 0; j < 5; j++) {
+				Card card1 = new Card(CardConfig.BERRY1, enteredRoom);
+				total_cards.addElement(card1);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card2 = new Card(CardConfig.BERRY2, enteredRoom);
+				total_cards.addElement(card2);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card3 = new Card(CardConfig.BERRY3, enteredRoom);
+				total_cards.addElement(card3);
+			}
+			for (int j = 0; j < 2; j++) {
+				Card card4 = new Card(CardConfig.BERRY4, enteredRoom);
+				total_cards.addElement(card4);
+			}
+			total_cards.addElement(new Card(CardConfig.BERRY5, enteredRoom));
+
+			//
 			
+			for (int j = 0; j < 5; j++) {
+				Card card1 = new Card(CardConfig.BANANA1, enteredRoom);
+				total_cards.addElement(card1);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card2 = new Card(CardConfig.BANANA2, enteredRoom);
+				total_cards.addElement(card2);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card3 = new Card(CardConfig.BANANA3, enteredRoom);
+				total_cards.addElement(card3);
+			}
+			for (int j = 0; j < 2; j++) {
+				Card card4 = new Card(CardConfig.BANANA4, enteredRoom);
+				total_cards.addElement(card4);
+			}
+			total_cards.addElement(new Card(CardConfig.BANANA5, enteredRoom));
 			
+//
+			
+			for (int j = 0; j < 5; j++) {
+				Card card1 = new Card(CardConfig.PEAR1, enteredRoom);
+				total_cards.addElement(card1);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card2 = new Card(CardConfig.PEAR2, enteredRoom);
+				total_cards.addElement(card2);
+			}
+			for (int j = 0; j < 3; j++) {
+				Card card3 = new Card(CardConfig.PEAR3, enteredRoom);
+				total_cards.addElement(card3);
+			}
+			for (int j = 0; j < 2; j++) {
+				Card card4 = new Card(CardConfig.PEAR4, enteredRoom);
+				total_cards.addElement(card4);
+			}
+			total_cards.addElement(new Card(CardConfig.PEAR5, enteredRoom));
+
 			Collections.shuffle(total_cards);
-			
+
 			return total_cards;
 		}
+		
+		public Vector<Vector> cardDistributor(Vector<Card> vec) {
+			Vector<Card> card1_vec = new Vector<Card>();
+			Vector<Card> card2_vec = new Vector<Card>();
+			Vector<Card> card3_vec = new Vector<Card>();
+			Vector<Card> card4_vec = new Vector<Card>();
 
+			for (int i = 0; i < vec.size(); i++) {
+				if (i % 4 == 0)
+					card1_vec.add(vec.get(i));
+				else if (i % 4 == 1)
+					card2_vec.add(vec.get(i));
+				else if (i % 4 == 2)
+					card3_vec.add(vec.get(i));
+				else if (i % 4 == 3)
+					card4_vec.add(vec.get(i));
+			}
+
+			Vector<Vector> result = new Vector<Vector>();
+			result.add(card1_vec);
+			result.add(card2_vec);
+			result.add(card3_vec);
+			result.add(card4_vec);
+			
+			return result;
+
+		}
+		
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -382,7 +458,7 @@ public class JavaGameServer extends JFrame {
 					ChatMsg chatmsg = null;
 					Room room = null;
 					InGame ingame = null;
-					
+
 					if (socket == null)
 						break;
 					// 메시지 수신
@@ -425,7 +501,7 @@ public class JavaGameServer extends JFrame {
 						} else if (chatmsg.code.matches("201")) {
 							for (int i = 0; i < user_vc.size(); i++) {
 								UserService user = (UserService) user_vc.elementAt(i);
-								if(user.userStatus.equals(UserStatus.PLAYING))
+								if (user.userStatus.equals(UserStatus.PLAYING))
 									user.writeOneObject(chatmsg);
 							}
 						} else if (chatmsg.code.matches("400")) { // logout message 처리
@@ -463,47 +539,36 @@ public class JavaGameServer extends JFrame {
 							sendRoomListToAll();
 						}
 					}
-					
-					if(ingame != null) {
+
+					if (ingame != null) {
 						if (ingame.getCode().matches("700")) { // Game start echo
 							System.out.println("start!!");
 							Vector<Card> total_cards = cardGenerator();
-							Vector<Card> card1_vec = new Vector<Card>();
-							Vector<Card> card2_vec = new Vector<Card>();
-							Vector<Card> card3_vec = new Vector<Card>();
-							Vector<Card> card4_vec = new Vector<Card>();
+							Vector<Vector> vec = cardDistributor(total_cards);
 							
-							for (int i = 0; i < total_cards.size(); i++) {
-								if (i % 4 == 0)
-									card1_vec.add(total_cards.get(i));
-								else if (i % 4 == 1)
-									card2_vec.add(total_cards.get(i));
-								else if (i % 4 == 2)
-									card3_vec.add(total_cards.get(i));
-								else if (i % 4 == 3)
-									card4_vec.add(total_cards.get(i));
-							}
-							
-							Vector<Vector> vec = new Vector<Vector>();
-							vec.add(card1_vec);
-							vec.add(card2_vec);
-							vec.add(card3_vec);
-							vec.add(card4_vec);
-							
-							for(int i = 0; i < ingame.getFrom_where().players.size(); i++) {
+
+							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
-									if(user.userStatus.equals(UserStatus.PLAYING) 
+									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
 										ingame.card = (Vector<Card>) vec.get(i);
 										user.writeOneObject(ingame);
 									}
 								}
 							}
-							
-							// TODO: card generate, card distribute, send them all
-						} else if(ingame.getCode().matches("701")) {
-							
+
+						} else if (ingame.getCode().matches("701")) {
+							System.out.println("got it");
+							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
+								for (int j = 0; j < user_vc.size(); j++) {
+									UserService user = (UserService) user_vc.elementAt(j);
+									if (user.userStatus.equals(UserStatus.PLAYING)
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+										user.writeOneObject(ingame);
+									}
+								}
+							}
 						}
 					}
 				} catch (IOException e) {
