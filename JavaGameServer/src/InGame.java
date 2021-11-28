@@ -2,6 +2,7 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 class InGame implements Serializable {
 	public static final long serialVersionUID = 1L;
@@ -12,6 +13,7 @@ class InGame implements Serializable {
 	private String masterUser;
 	public List<String> players = new ArrayList<>();
 	public List<String> observers = new ArrayList<>();
+	public Vector<Card> card = new Vector<Card>();
 
 	public InGame(String code, String from_whom, Room from_where) {
 		this.code = code;

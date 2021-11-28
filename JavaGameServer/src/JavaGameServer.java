@@ -337,8 +337,7 @@ public class JavaGameServer extends JFrame {
 			}
 		}
 		
-		public void cardGenerator() {
-			System.out.println("here haaa");
+		public Vector<Card> cardGenerator() {
 			total_cards = new Vector<>();
 			
 			for (int i = 0; i < 4; i++) {
@@ -369,13 +368,10 @@ public class JavaGameServer extends JFrame {
 				total_cards.addElement(card5);
 			}
 			
-			// shuffle cards
+			
 			Collections.shuffle(total_cards);
-
-			System.out.println("22222");
-			for(Card acard:(Vector<Card>)total_cards) {
-				System.out.println(acard.getCard_info());
-			}
+			
+			return total_cards;
 		}
 
 		public void run() {
@@ -471,19 +467,44 @@ public class JavaGameServer extends JFrame {
 					if(ingame != null) {
 						if (ingame.getCode().matches("700")) { // Game start echo
 							System.out.println("start!!");
-							for(String player : ingame.getFrom_where().players) {
-								System.out.println("player>>"+player);
-								for (int i = 0; i < user_vc.size(); i++) {
-									UserService user = (UserService) user_vc.elementAt(i);
+							Vector<Card> total_cards = cardGenerator();
+							Vector<Card> card1_vec = new Vector<Card>();
+							Vector<Card> card2_vec = new Vector<Card>();
+							Vector<Card> card3_vec = new Vector<Card>();
+							Vector<Card> card4_vec = new Vector<Card>();
+							
+							for (int i = 0; i < total_cards.size(); i++) {
+								if (i % 4 == 0)
+									card1_vec.add(total_cards.get(i));
+								else if (i % 4 == 1)
+									card2_vec.add(total_cards.get(i));
+								else if (i % 4 == 2)
+									card3_vec.add(total_cards.get(i));
+								else if (i % 4 == 3)
+									card4_vec.add(total_cards.get(i));
+							}
+							
+							Vector<Vector> vec = new Vector<Vector>();
+							vec.add(card1_vec);
+							vec.add(card2_vec);
+							vec.add(card3_vec);
+							vec.add(card4_vec);
+							
+							for(int i = 0; i < ingame.getFrom_where().players.size(); i++) {
+								for (int j = 0; j < user_vc.size(); j++) {
+									UserService user = (UserService) user_vc.elementAt(j);
 									if(user.userStatus.equals(UserStatus.PLAYING) 
-											&& player.equals(user.userName))
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+										ingame.card = (Vector<Card>) vec.get(i);
 										user.writeOneObject(ingame);
+									}
 								}
 							}
-							cardGenerator();
-							System.out.println("@@@@@@@@@@");
+							
 							// TODO: card generate, card distribute, send them all
-						} 
+						} else if(ingame.getCode().matches("701")) {
+							
+						}
 					}
 				} catch (IOException e) {
 					appendText("ois.readObject() error");

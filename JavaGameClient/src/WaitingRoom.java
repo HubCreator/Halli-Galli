@@ -382,9 +382,13 @@ public class WaitingRoom extends JFrame {
 						}
 					} else if(ingame != null) {
 						if (ingame.getCode().matches("700")) {
-							playRoom.appendText("GAME START!!");
+							playRoom.appendText("Game starts!!");
 							if(playRoom.startBtnLabel != null)
 								playRoom.startBtnLabel.setVisible(false); // need to remove it later
+							for(Card acard: ingame.card) {
+								System.out.println(acard);
+							}
+							System.out.println("Size >> " + ingame.card.size());
 						}
 					}
 				} catch (IOException e) {

@@ -58,6 +58,7 @@ public class PlayRoom extends JFrame {
 	public Player player2;
 	public Player player3;
 	public Player player4;
+//	public GameEngine2 engine;
 
 	// keyboard enter key 치면 서버로 전송
 	class TextSendAction implements ActionListener {
@@ -113,7 +114,6 @@ public class PlayRoom extends JFrame {
 
 	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
-		// view.net.interrupt();
 		players = current_entered_room.players; // getPlayers();
 		setVisible(true);
 		setResizable(false);
@@ -214,8 +214,8 @@ public class PlayRoom extends JFrame {
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
 
-			GameEngine2 engine = new GameEngine2();
-			engine.start();
+//			engine = new GameEngine2();
+			// engine.start();
 		} catch (NumberFormatException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -246,6 +246,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			System.out.println("1 entered");
+			player1 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -260,11 +261,14 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
 			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			
 			if (mainview.client_userName.equals(players.get(0))) {
-				palyer1_up.addMouseListener(new MouseAdapter() {
+				palyer1_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("1111111111111111111");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						mainview.sendObject(tmp);
 					}
 				});
 			}
@@ -286,6 +290,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			System.out.println("2 entered");
+			player2 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -301,10 +306,11 @@ public class PlayRoom extends JFrame {
 			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
 			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			if (mainview.client_userName.equals(players.get(1))) {
-				palyer2_up.addMouseListener(new MouseAdapter() {
+				palyer2_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("2222222222222");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 					}
 				});
 			}
@@ -324,6 +330,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			System.out.println("3 entered");
+			player3 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -339,10 +346,11 @@ public class PlayRoom extends JFrame {
 			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
 			palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			if (mainview.client_userName.equals(players.get(2))) {
-				palyer3_up.addMouseListener(new MouseAdapter() {
+				palyer3_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("33333333333333333");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 					}
 				});
 			}
@@ -362,6 +370,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			System.out.println("4 entered");
+			player4 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -377,10 +386,11 @@ public class PlayRoom extends JFrame {
 			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
 			palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			if (mainview.client_userName.equals(players.get(3))) {
-				palyer4_up.addMouseListener(new MouseAdapter() {
+				palyer4_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("4444444444444444444444");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 					}
 				});
 			}
@@ -409,6 +419,8 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("Start Btn Clicked");
 						InGame tmp = new InGame("700", mainview.client_userName, mainview.current_entered_room);
+						tmp.players = mainview.current_entered_room.players;
+						tmp.observers = mainview.current_entered_room.observers;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -417,10 +429,9 @@ public class PlayRoom extends JFrame {
 		}
 	}
 
-	class GameEngine2 extends Thread {
-		public void run() {
-			while (true) {
-			}
-		}
-	}
+	/*
+	 * class GameEngine2 extends Thread { public void run() { while (true) {
+	 * 
+	 * } } }
+	 */
 }

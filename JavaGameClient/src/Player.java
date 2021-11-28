@@ -11,6 +11,11 @@ class Player implements Serializable {
 	private Vector<Card> back;
 	private Vector<Card> front;
 	private String win_or_not;
+	
+	Player(String player_name, Room current_room) {
+		this.player_name = player_name;
+		this.current_room = current_room;
+	}
 
 	public String getCode() {
 		return code;
