@@ -378,18 +378,19 @@ public class WaitingRoom extends JFrame {
 							setVisible(false);
 							playRoom = new PlayRoom(view, current_entered_room);
 						}
-					} else if(ingame != null) {
+					} else if (ingame != null) {
 						if (ingame.getCode().matches("700")) {
 							playRoom.appendText("Game starts!!");
-							if(playRoom.startBtnLabel != null)
+							if (playRoom.startBtnLabel != null)
 								playRoom.startBtnLabel.setVisible(false); // need to remove it later
-							 playRoom.myDownCards = new Vector<Card>();
-							 playRoom.myDownCards = ingame.downCard;
+
+							playRoom.myDownCards = new Vector<Card>();
+							playRoom.players_inGame_info = ingame.players;
 							System.out.println("Size >> " + ingame.downCard.size());
 						} else if (ingame.getCode().matches("701")) {
 							playRoom.appendText("701!!");
-							if(!ingame.downCard.isEmpty())
-								System.out.println(ingame.downCard.get(ingame.downCard.size()-1));
+							if (!ingame.downCard.isEmpty())
+								System.out.println(ingame.downCard.get(ingame.downCard.size() - 1));
 							else
 								System.out.println("empty");
 							playRoom.updatePlayers();

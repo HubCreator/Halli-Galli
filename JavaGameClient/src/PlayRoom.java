@@ -59,7 +59,9 @@ public class PlayRoom extends JFrame {
 	public Player player3;
 	public Player player4;
 	public Vector<Card> myUpCards = new Vector<Card>();
-	public Vector<Card> myDownCards;
+	public Vector<Card> myDownCards = new Vector<Card>();
+	public Vector<Player> players_inGame_info = new Vector<Player>();
+	
 //	public GameEngine2 engine;
 
 	// keyboard enter key 치면 서버로 전송
@@ -247,7 +249,8 @@ public class PlayRoom extends JFrame {
 	public void updatePlayers() throws IOException {
 		gamePane.removeAll();
 		repaint();
-		if (players.size() >= 1 && !players.get(0).equals(null)) {
+		if (players.size() >= 1 && !players.get(0).equals(null)) { 
+			System.out.println("wait.. what?");
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			player1 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
@@ -275,10 +278,10 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("1111111111111111111");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						tmp.downCard = myDownCards;
-						tmp.upCard = myUpCards;
-						mainview.sendObject(tmp);
+						InGame result = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						//result.downCard = myDownCards;
+						//result.upCard = myUpCards;
+						mainview.sendObject(result);
 					}
 				});
 			}
@@ -325,8 +328,8 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("2222222222222");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						tmp.downCard = myDownCards;
-						tmp.upCard = myUpCards;
+						//tmp.downCard = myDownCards;
+						//tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -358,7 +361,9 @@ public class PlayRoom extends JFrame {
 			BufferedImage player3_up_image;
 			if(myUpCards.isEmpty()) 
 				player3_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P3_DEG);
-			else player3_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P3_DEG);
+			else  {
+				player3_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P3_DEG);
+			}
 			
 			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
@@ -370,8 +375,8 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("33333333333333333");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						tmp.downCard = myDownCards;
-						tmp.upCard = myUpCards;
+						//tmp.downCard = myDownCards;
+						//tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -404,7 +409,6 @@ public class PlayRoom extends JFrame {
 			if(myUpCards.isEmpty()) 
 				player4_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P4_DEG);
 			else player4_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P4_DEG);
-			
 			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
@@ -415,8 +419,8 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("4444444444444444444444");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						tmp.downCard = myDownCards;
-						tmp.upCard = myUpCards;
+						//tmp.downCard = myDownCards;
+						//tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -446,8 +450,8 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("Start Btn Clicked");
 						InGame tmp = new InGame("700", mainview.client_userName, mainview.current_entered_room);
-						tmp.players = mainview.current_entered_room.players;
-						tmp.observers = mainview.current_entered_room.observers;
+//						tmp.players = mainview.current_entered_room.players;
+//						tmp.observers = mainview.current_entered_room.observers;
 						mainview.sendObject(tmp);
 					}
 				});

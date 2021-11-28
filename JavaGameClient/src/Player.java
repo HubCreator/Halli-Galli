@@ -8,10 +8,10 @@ class Player implements Serializable {
 	private String code;
 	private String player_name;
 	private Room current_room;
-	private Vector<Card> back;
-	private Vector<Card> front;
+	public Vector<Card> back = new Vector<Card>();
+	public Vector<Card> front = new Vector<Card>();
 	private String win_or_not;
-	
+
 	Player(String player_name, Room current_room) {
 		this.player_name = player_name;
 		this.current_room = current_room;

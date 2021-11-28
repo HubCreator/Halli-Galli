@@ -11,14 +11,16 @@ class InGame implements Serializable {
 	private String from_whom;
 	private Room from_where;
 	private String masterUser;
-	public List<String> players = new ArrayList<>();
+	//public List<String> players = new ArrayList<>();
 	public List<String> observers = new ArrayList<>();
 //	public Vector<Card> totalCard = new Vector<Card>();
-	public List<Player> players222;
+	public Vector<Player> players = new Vector<Player>();
 	
 	public Vector<Card> upCard = new Vector<Card>();
 	public Vector<Card> downCard = new Vector<Card>();
 
+	public InGame() {	}
+	
 	public InGame(String code, String from_whom, Room from_where) {
 		this.code = code;
 		this.from_whom = from_whom;

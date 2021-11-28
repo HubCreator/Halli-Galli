@@ -32,6 +32,7 @@ public class JavaGameServer extends JFrame {
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
 	private ArrayList<Room> roomList_server = new ArrayList<>(); // 전체 룸의 리스트
+	private ArrayList<InGame> inGameList_server = new ArrayList<>(); // 실행중이 게임 정보
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
@@ -378,7 +379,7 @@ public class JavaGameServer extends JFrame {
 			total_cards.addElement(new Card(CardConfig.BERRY5, enteredRoom));
 
 			//
-			
+
 			for (int j = 0; j < 5; j++) {
 				Card card1 = new Card(CardConfig.BANANA1, enteredRoom);
 				total_cards.addElement(card1);
@@ -396,9 +397,9 @@ public class JavaGameServer extends JFrame {
 				total_cards.addElement(card4);
 			}
 			total_cards.addElement(new Card(CardConfig.BANANA5, enteredRoom));
-			
+
 //
-			
+
 			for (int j = 0; j < 5; j++) {
 				Card card1 = new Card(CardConfig.PEAR1, enteredRoom);
 				total_cards.addElement(card1);
@@ -421,7 +422,7 @@ public class JavaGameServer extends JFrame {
 
 			return total_cards;
 		}
-		
+
 		public Vector<Vector> cardDistributor(Vector<Card> vec) {
 			Vector<Card> card1_vec = new Vector<Card>();
 			Vector<Card> card2_vec = new Vector<Card>();
@@ -444,12 +445,11 @@ public class JavaGameServer extends JFrame {
 			result.add(card2_vec);
 			result.add(card3_vec);
 			result.add(card4_vec);
-			
+
 			return result;
 
 		}
-		
-		
+
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -546,18 +546,29 @@ public class JavaGameServer extends JFrame {
 							Vector<Card> total_cards = cardGenerator();
 							Vector<Vector> vec = cardDistributor(total_cards);
 
+							InGame aGame = new InGame();
+							aGame.setCode("700");
+							aGame.setFrom_where(ingame.getFrom_where()); // 현재 진행되는 룸
+							
+							Vector<Player> players = new Vector<Player>();
+							for(int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 룸 안에 있는 사람들끼리
+								// player 정보 생성
+								Player player = new Player(ingame.getFrom_where().players.get(i), ingame.getFrom_where());
+								player.back = (Vector<Card>) vec.get(i);
+								
+								players.add(player);
+							}
+							aGame.players = players;
+							
+							inGameList_server.add(aGame); // 전체 서버에서 관리하는 inGameList에 추가
+
+							// original
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										ingame.downCard = (Vector<Card>) vec.get(i);
-										/*
-										 * Player player = new Player(userName, enteredRoom); player.back =
-										 * (Vector<Card>) vec.get(i); ingame.players222.add(player);
-										 */										
-										myDownCards = (Vector<Card>) vec.get(i);
-										user.writeOneObject(ingame);
+										user.writeOneObject(aGame);
 									}
 								}
 							}
@@ -567,17 +578,20 @@ public class JavaGameServer extends JFrame {
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) { // 같은 방 안에 있는 사람들이라면
-										if(!myDownCards.isEmpty()) {
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) { // 같은 방 안에
+																												// 있는
+																												// 사람들이라면
+										if (!myDownCards.isEmpty()) {
 											myUpCards.add(myDownCards.remove(0)); // 플레이어의 카드를 뒤집음
-											
-											InGame tmp = new InGame("701", ingame.getFrom_whom(), ingame.getFrom_where());
-											tmp.upCard = myUpCards;	// 정보를 갱신
+
+											InGame tmp = new InGame("701", ingame.getFrom_whom(),
+													ingame.getFrom_where());
+											tmp.upCard = myUpCards; // 정보를 갱신
 											tmp.downCard = myDownCards;
 											user.writeOneObject(tmp);
-										}
-										else System.out.println("NO CARDS LEFT");
-										
+										} else
+											System.out.println("NO CARDS LEFT");
+
 									}
 								}
 							}

@@ -97,7 +97,7 @@ public class CreateNewRoom extends JFrame {
 		});
 
 		createBtn.setBounds(221, 204, 60, 39);
-		contentPane.add(createBtn);
+		contentPane.add(createBtn); 
 
 		JButton cancelBtn = new JButton("\uCDE8\uC18C");
 		cancelBtn.addActionListener(new ActionListener() {
