@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -29,7 +28,6 @@ public class JavaGameServer extends JFrame {
 	private JPanel contentPane;
 	private JTextArea textArea;
 	private JTextField txtPortNumber;
-
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
 	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
@@ -172,6 +170,8 @@ public class JavaGameServer extends JFrame {
 		public UserStatus userStatus = UserStatus.WAITING;
 		public Room enteredRoom = null;
 		public Vector<Card> total_cards;
+		public Vector<Card> myUpCards = new Vector<Card>();
+		public Vector<Card> myDownCards = new Vector<Card>();
 
 		public UserService(Socket client_socket) {
 			// 매개변수로 넘어온 자료 저장
@@ -326,7 +326,6 @@ public class JavaGameServer extends JFrame {
 							for (String player : enteredRoom.players) {
 								if (user.userName.equals(player)) {
 									user.writeOneObject(enteredRoom);
-									System.out.println("send to.. " + user.userName);
 								}
 							}
 						}
@@ -450,6 +449,7 @@ public class JavaGameServer extends JFrame {
 
 		}
 		
+		
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -545,27 +545,39 @@ public class JavaGameServer extends JFrame {
 							System.out.println("start!!");
 							Vector<Card> total_cards = cardGenerator();
 							Vector<Vector> vec = cardDistributor(total_cards);
-							
 
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										ingame.card = (Vector<Card>) vec.get(i);
+										ingame.downCard = (Vector<Card>) vec.get(i);
+										/*
+										 * Player player = new Player(userName, enteredRoom); player.back =
+										 * (Vector<Card>) vec.get(i); ingame.players222.add(player);
+										 */										
+										myDownCards = (Vector<Card>) vec.get(i);
 										user.writeOneObject(ingame);
 									}
 								}
 							}
-
 						} else if (ingame.getCode().matches("701")) {
-							System.out.println("got it");
+							System.out.println("my down cards size >> " + myDownCards.size());
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										user.writeOneObject(ingame);
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) { // 같은 방 안에 있는 사람들이라면
+										if(!myDownCards.isEmpty()) {
+											myUpCards.add(myDownCards.remove(0)); // 플레이어의 카드를 뒤집음
+											
+											InGame tmp = new InGame("701", ingame.getFrom_whom(), ingame.getFrom_where());
+											tmp.upCard = myUpCards;	// 정보를 갱신
+											tmp.downCard = myDownCards;
+											user.writeOneObject(tmp);
+										}
+										else System.out.println("NO CARDS LEFT");
+										
 									}
 								}
 							}

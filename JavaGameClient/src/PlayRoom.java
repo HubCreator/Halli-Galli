@@ -59,7 +59,7 @@ public class PlayRoom extends JFrame {
 	public Player player3;
 	public Player player4;
 	public Vector<Card> myUpCards = new Vector<Card>();
-	public Vector<Card> myDownCards = new Vector<Card>();
+	public Vector<Card> myDownCards;
 //	public GameEngine2 engine;
 
 	// keyboard enter key 치면 서버로 전송
@@ -249,7 +249,6 @@ public class PlayRoom extends JFrame {
 		repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			System.out.println("1 entered");
 			player1 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
@@ -259,15 +258,13 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_down);
 
+			
+			BufferedImage player1_up_image;
 			if(myUpCards.isEmpty()) 
-				myPicture = ImageIO.read(new File("images/blank.jpg"));
+				player1_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P1_DEG);
 			else  {
-				myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
-				System.out.println("!!!>> " + myUpCards.get(myUpCards.size()-1).getCard_info());
-			}
-			
-			
-			BufferedImage player1_up_image = rotate(myPicture, UserConfig.P1_DEG);
+				player1_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P1_DEG);
+			}			
 			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
@@ -278,10 +275,9 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("1111111111111111111");
-						if(!myDownCards.isEmpty()) {
-							myUpCards.addElement(myDownCards.remove(0));
-						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						tmp.downCard = myDownCards;
+						tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -303,7 +299,6 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			System.out.println("2 entered");
 			player2 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
@@ -313,10 +308,13 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer2_down);
 
+			BufferedImage player2_up_image;
 			if(myUpCards.isEmpty()) 
-				myPicture = ImageIO.read(new File("images/blank.jpg"));
-			else myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
-			BufferedImage player2_up_image = rotate(myPicture, UserConfig.P2_DEG);
+				player2_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P2_DEG);
+			else  {
+				player2_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P2_DEG);
+			}
+			
 			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
@@ -326,10 +324,10 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("2222222222222");
-						if(!myDownCards.isEmpty()) {
-							myUpCards.addElement(myDownCards.remove(0));
-						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						tmp.downCard = myDownCards;
+						tmp.upCard = myUpCards;
+						mainview.sendObject(tmp);
 					}
 				});
 			}
@@ -348,7 +346,6 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			System.out.println("3 entered");
 			player3 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
@@ -358,10 +355,11 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer3_down);
 
+			BufferedImage player3_up_image;
 			if(myUpCards.isEmpty()) 
-				myPicture = ImageIO.read(new File("images/blank.jpg"));
-			else myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
-			BufferedImage player3_up_image = rotate(myPicture, UserConfig.P3_DEG);
+				player3_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P3_DEG);
+			else player3_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P3_DEG);
+			
 			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
@@ -371,10 +369,10 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("33333333333333333");
-						if(!myDownCards.isEmpty()) {
-							myUpCards.addElement(myDownCards.remove(0));
-						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						tmp.downCard = myDownCards;
+						tmp.upCard = myUpCards;
+						mainview.sendObject(tmp);
 					}
 				});
 			}
@@ -393,7 +391,6 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			System.out.println("4 entered");
 			player4 = new Player(mainview.client_userName, mainview.current_entered_room);
 			BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
@@ -403,10 +400,11 @@ public class PlayRoom extends JFrame {
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer4_down);
 
+			BufferedImage player4_up_image;
 			if(myUpCards.isEmpty()) 
-				myPicture = ImageIO.read(new File("images/blank.jpg"));
-			else myPicture = ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info()));
-			BufferedImage player4_up_image = rotate(myPicture, UserConfig.P4_DEG);
+				player4_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P4_DEG);
+			else player4_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P4_DEG);
+			
 			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
@@ -416,10 +414,10 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("4444444444444444444444");
-						if(!myDownCards.isEmpty()) {
-							myUpCards.addElement(myDownCards.remove(0));
-						}
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						tmp.downCard = myDownCards;
+						tmp.upCard = myUpCards;
+						mainview.sendObject(tmp);
 					}
 				});
 			}

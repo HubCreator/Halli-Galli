@@ -372,9 +372,6 @@ public class WaitingRoom extends JFrame {
 								playRoom.players = room.players;
 								playRoom.updatePlayers();
 							}
-							for (String player : playRoom.players) {
-								System.out.println("player name >> " + player);
-							}
 						} else if (room.getCode().matches("609")) {
 							System.out.println("Observing allowed");
 							current_entered_room = room;
@@ -386,13 +383,15 @@ public class WaitingRoom extends JFrame {
 							playRoom.appendText("Game starts!!");
 							if(playRoom.startBtnLabel != null)
 								playRoom.startBtnLabel.setVisible(false); // need to remove it later
-							playRoom.myDownCards = ingame.card;
-							for(Card acard: ingame.card) {
-								System.out.println(acard);
-							}
-							System.out.println("Size >> " + ingame.card.size());
+							 playRoom.myDownCards = new Vector<Card>();
+							 playRoom.myDownCards = ingame.downCard;
+							System.out.println("Size >> " + ingame.downCard.size());
 						} else if (ingame.getCode().matches("701")) {
 							playRoom.appendText("701!!");
+							if(!ingame.downCard.isEmpty())
+								System.out.println(ingame.downCard.get(ingame.downCard.size()-1));
+							else
+								System.out.println("empty");
 							playRoom.updatePlayers();
 						}
 					}
