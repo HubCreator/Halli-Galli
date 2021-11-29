@@ -284,11 +284,6 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("1111111111111111111");
 						InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
-//						if(!player1.back.isEmpty())
-//							player1.front.add(player1.back.remove(0)); // 카드를 뒤집음
-
-						// result.downCard = myDownCards;
-						// result.upCard = myUpCards;
 						mainview.sendObject(result);
 					}
 				});
@@ -340,8 +335,6 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("2222222222222");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						// tmp.downCard = myDownCards;
-						// tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -362,7 +355,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			player3.setPlayer_name(mainview.client_userName);
-			player4.setCurrent_room(mainview.current_entered_room);
+			player3.setCurrent_room(mainview.current_entered_room);
 
 			BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
@@ -391,8 +384,6 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("33333333333333333");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						// tmp.downCard = myDownCards;
-						// tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -440,8 +431,6 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("4444444444444444444444");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						// tmp.downCard = myDownCards;
-						// tmp.upCard = myUpCards;
 						mainview.sendObject(tmp);
 					}
 				});
@@ -481,6 +470,230 @@ public class PlayRoom extends JFrame {
 		}
 	}
 
+	public void updateScreen() throws IOException {
+		gamePane.removeAll();
+		repaint();
+		if (players.size() >= 1 && !players.get(0).equals(null)) {
+			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+			if (!player1.back.isEmpty()) {
+				player1.setPlayer_name(mainview.client_userName);
+				player1.setCurrent_room(mainview.current_entered_room);
+				BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
+				Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				palyer1_down = new JLabel(new ImageIcon(player1_down_res));
+				palyer1_down.setBounds(UserConfig.P1_DOWNX, UserConfig.P1_DOWNY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
+				gamePane.add(palyer1_down);
+			}
+
+			BufferedImage player1_up_image;
+			if (player1.front.isEmpty())
+				player1_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P1_DEG);
+			else {
+				player1_up_image = rotate(
+						ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())),
+						UserConfig.P1_DEG);
+			}
+			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
+			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+
+			if (mainview.client_userName.equals(players.get(0)) && !players_inGame_info.isEmpty()) {
+				palyer1_down.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("1111111111111111111");
+						InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
+						mainview.sendObject(result);
+					}
+				});
+			}
+
+			gamePane.add(palyer1_up);
+
+			JLabel player1_name = new JLabel((String) null);
+			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player1_name.setFont(new Font("굴림", Font.BOLD, 14));
+			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player1_name.setText(players.get(0));
+			player1_name.setBackground(Color.WHITE);
+			player1_name.setBounds(12, 10, 84, 40);
+			gamePane.add(player1_name);
+
+			repaint();
+		}
+
+		if (players.size() >= 2 && !players.get(1).equals(null)) {
+			player2.setPlayer_name(mainview.client_userName);
+			player2.setCurrent_room(mainview.current_entered_room);
+			if (!player2.back.isEmpty()) {
+				BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+				BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
+				Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				palyer2_down = new JLabel(new ImageIcon(player2_down_res));
+				palyer2_down.setBounds(UserConfig.P2_DOWNX, UserConfig.P2_DOWNY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
+				gamePane.add(palyer2_down);
+			}
+
+			BufferedImage player2_up_image;
+			if (player2.front.isEmpty())
+				player2_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P2_DEG);
+			else {
+				player2_up_image = rotate(
+						ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())),
+						UserConfig.P2_DEG);
+			}
+
+			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
+			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(1))) {
+				palyer2_down.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("2222222222222");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						mainview.sendObject(tmp);
+					}
+				});
+			}
+			gamePane.add(palyer2_up);
+
+			JLabel player2_name = new JLabel((String) null);
+			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player2_name.setFont(new Font("굴림", Font.BOLD, 14));
+			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player2_name.setText(players.get(1));
+			player2_name.setBackground(Color.WHITE);
+			player2_name.setBounds(866 - 84, 10, 84, 40);
+			gamePane.add(player2_name);
+			repaint();
+		}
+
+		if (players.size() >= 3 && !players.get(2).equals(null)) {
+			player3.setPlayer_name(mainview.client_userName);
+			player3.setCurrent_room(mainview.current_entered_room);
+			if (!player3.back.isEmpty()) {
+				BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+				BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
+				Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				palyer3_down = new JLabel(new ImageIcon(player3_down_res));
+				palyer3_down.setBounds(UserConfig.P3_DOWNX, UserConfig.P3_DOWNY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
+				gamePane.add(palyer3_down);
+			}
+
+			BufferedImage player3_up_image;
+			if (player3.front.isEmpty())
+				player3_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P3_DEG);
+			else {
+				player3_up_image = rotate(
+						ImageIO.read(new File(player3.front.get(player3.front.size() - 1).getCard_info())),
+						UserConfig.P3_DEG);
+			}
+
+			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
+			palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(2))) {
+				palyer3_down.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("33333333333333333");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						mainview.sendObject(tmp);
+					}
+				});
+			}
+			gamePane.add(palyer3_up);
+
+			JLabel player4_name = new JLabel((String) null);
+			player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
+			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player4_name.setFont(new Font("굴림", Font.BOLD, 14));
+			player4_name.setText(players.get(2));
+			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player4_name.setBackground(Color.WHITE);
+			gamePane.add(player4_name);
+			repaint();
+		}
+
+		if (players.size() >= 4 && !players.get(3).equals(null)) {
+			player4.setPlayer_name(mainview.client_userName);
+			player4.setCurrent_room(mainview.current_entered_room);
+			if (!player4.back.isEmpty()) {
+				BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+				BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
+				Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				palyer4_down = new JLabel(new ImageIcon(player4_down_res));
+				palyer4_down.setBounds(UserConfig.P4_DOWNX, UserConfig.P4_DOWNY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
+				gamePane.add(palyer4_down);
+			}
+
+			BufferedImage player4_up_image;
+			if (player4.front.isEmpty())
+				player4_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P4_DEG);
+			else
+				player4_up_image = rotate(
+						ImageIO.read(new File(player4.front.get(player4.front.size() - 1).getCard_info())),
+						UserConfig.P4_DEG);
+			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+					Image.SCALE_DEFAULT);
+			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
+			palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+			if (mainview.client_userName.equals(players.get(3))) {
+				palyer4_down.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("4444444444444444444444");
+						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						mainview.sendObject(tmp);
+					}
+				});
+			}
+			gamePane.add(palyer4_up);
+
+			JLabel player3_name = new JLabel((String) null);
+			player3_name.setBounds(12, 703 - 40, 84, 40);
+			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player3_name.setFont(new Font("굴림", Font.BOLD, 14));
+			player3_name.setText(players.get(3));
+			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player3_name.setBackground(Color.WHITE);
+			gamePane.add(player3_name);
+
+			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
+				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
+				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
+				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
+				startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
+				gamePane.add(startBtnLabel);
+				startBtnLabel.setVisible(true);
+
+				startBtnLabel.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						System.out.println("Start Btn Clicked");
+						InGame tmp = new InGame("700", mainview.client_userName, mainview.current_entered_room);
+						// current_entered_room에는 플레이어 이름 정보 있음
+//						tmp.players = mainview.current_entered_room.players;
+//						tmp.observers = mainview.current_entered_room.observers;
+						mainview.sendObject(tmp);
+					}
+				});
+			}
+			repaint();
+		}
+	}
 	/*
 	 * class GameEngine2 extends Thread { public void run() { while (true) {
 	 * 

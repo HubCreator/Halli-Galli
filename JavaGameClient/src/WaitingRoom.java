@@ -401,7 +401,7 @@ public class WaitingRoom extends JFrame {
 							playRoom.player2 = ingame.players.get(1);
 							playRoom.player3 = ingame.players.get(2);
 							playRoom.player4 = ingame.players.get(3);
-							playRoom.updatePlayers();
+							playRoom.updateScreen();
 						}
 					}
 				} catch (IOException e) {
