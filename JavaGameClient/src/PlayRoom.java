@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.Format;
 import java.util.List;
 import java.util.Vector;
 
@@ -63,6 +64,7 @@ public class PlayRoom extends JFrame {
 	// 게임이 시작돼야 players_inGame_info 생성
 	public Vector<Player> players_inGame_info = new Vector<Player>();
 	int whose_turn = 0;
+	private JLabel total_up_cards_cnt;
 
 //	public GameEngine2 engine;
 
@@ -679,6 +681,13 @@ public class PlayRoom extends JFrame {
 					mainview.sendObject(tmp);		
 				}
 			});
+			int totalCnt = 0;
+			for(int i = 0; i < players_inGame_info.size(); i++) {
+				totalCnt += players_inGame_info.get(i).front.size();
+			}
+			total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
+			total_up_cards_cnt.setBounds(425, 279, 57, 15);
+			gamePane.add(total_up_cards_cnt);
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
 			
