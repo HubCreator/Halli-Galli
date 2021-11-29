@@ -592,7 +592,6 @@ public class JavaGameServer extends JFrame {
 										.equals(ingame.getFrom_where().getRoom_name()))
 									aGame = inGameList_server.get(i);
 							}
-							System.out.println("1");
 							System.out.println(aGame.players.get(0).getPlayer_name());
 							for(int i = 0; i < aGame.players.size(); i++) {
 								if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
@@ -604,9 +603,8 @@ public class JavaGameServer extends JFrame {
 										player.front.add(player.back.remove(0)); // 카드를 뒤집음
 									System.out.println(player.getPlayer_name() + 
 											" / card-back size : " + player.back.size());
-								}
+								} 
 							}
-							System.out.println("2");
 							aGame.setCode("701");
 							int current_turn = aGame.getWhose_turn();
 							current_turn++;
@@ -621,23 +619,8 @@ public class JavaGameServer extends JFrame {
 									}
 								}
 							}
+						} else if (ingame.getCode().matches("800")) { // bell hit
 							
-							// original
-							/*
-							 * for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { for (int j
-							 * = 0; j < user_vc.size(); j++) { UserService user = (UserService)
-							 * user_vc.elementAt(j); if (user.userStatus.equals(UserStatus.PLAYING) &&
-							 * ingame.getFrom_where().players.get(i).equals(user.userName)) { // 같은 방 안에 //
-							 * 있는 // 사람들이라면 if (!myDownCards.isEmpty()) {
-							 * myUpCards.add(myDownCards.remove(0)); // 플레이어의 카드를 뒤집음
-							 * 
-							 * InGame tmp = new InGame("701", ingame.getFrom_whom(),
-							 * ingame.getFrom_where()); tmp.upCard = myUpCards; // 정보를 갱신 tmp.downCard =
-							 * myDownCards; user.writeOneObject(tmp); } else
-							 * System.out.println("NO CARDS LEFT");
-							 * 
-							 * } } }
-							 */
 						}
 					}
 				} catch (IOException e) {

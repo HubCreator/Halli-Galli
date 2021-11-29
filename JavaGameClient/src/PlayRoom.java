@@ -262,9 +262,6 @@ public class PlayRoom extends JFrame {
 			palyer1_down.setBounds(UserConfig.P1_DOWNX, UserConfig.P1_DOWNY, CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT);
 			gamePane.add(palyer1_down);
-			/*
-			 * if(!player1.back.isEmpty()) { gamePane.remove(palyer1_down); }
-			 */
 
 			BufferedImage player1_up_image;
 			if (player1.front.isEmpty())
@@ -433,7 +430,6 @@ public class PlayRoom extends JFrame {
 	public void updateScreen() throws IOException {
 		gamePane.removeAll();
 		repaint();
-		System.out.println("whose turn now?? > " + whose_turn);
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			if (!player1.back.isEmpty()) {
@@ -632,7 +628,8 @@ public class PlayRoom extends JFrame {
 			player3_name.setBackground(Color.WHITE);
 			gamePane.add(player3_name);
 
-			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
+			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) 
+					&& players_inGame_info == null) {
 				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
 				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
@@ -652,6 +649,19 @@ public class PlayRoom extends JFrame {
 					}
 				});
 			}
+			
+			BufferedImage bellImage = ImageIO.read(new File("images/bell.png"));
+			JLabel picLabel = new JLabel(new ImageIcon(bellImage));
+			picLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("Yay you clicked me" + userName);
+					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
+				}
+			});
+			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
+			gamePane.add(picLabel);
+			
 			repaint();
 		}
 	}
