@@ -219,7 +219,7 @@ public class PlayRoom extends JFrame {
 			});
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
-
+			
 //			engine = new GameEngine2();
 			// engine.start();
 		} catch (NumberFormatException | IOException e1) {
@@ -478,7 +478,11 @@ public class PlayRoom extends JFrame {
 			player1_name.setBackground(Color.WHITE);
 			player1_name.setBounds(12, 10, 84, 40);
 			gamePane.add(player1_name);
-
+			
+			JLabel player1_down_cnt = new JLabel(Integer.toString(player1.back.size()));
+			player1_down_cnt.setBounds(115, 235, 66, 27);
+			gamePane.add(player1_down_cnt);
+			
 			repaint();
 		}
 
@@ -529,6 +533,11 @@ public class PlayRoom extends JFrame {
 			player2_name.setBackground(Color.WHITE);
 			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
+			
+			JLabel player2_down_cnt = new JLabel(Integer.toString(player2.back.size()));
+			player2_down_cnt.setBounds(755, 235, 66, 27);
+			gamePane.add(player2_down_cnt);
+			
 			repaint();
 		}
 
@@ -579,6 +588,11 @@ public class PlayRoom extends JFrame {
 			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player4_name.setBackground(Color.WHITE);
 			gamePane.add(player4_name);
+			
+			JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
+			player3_down_cnt.setBounds(755, 480, 66, 27);
+			gamePane.add(player3_down_cnt);
+			
 			repaint();
 		}
 
@@ -626,6 +640,11 @@ public class PlayRoom extends JFrame {
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
+			
+			JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
+			player4_down_cnt.setBounds(115, 480, 66, 27);
+			gamePane.add(player4_down_cnt);
+			
 			gamePane.add(player3_name);
 
 			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) 
@@ -665,9 +684,4 @@ public class PlayRoom extends JFrame {
 			repaint();
 		}
 	}
-	/*
-	 * class GameEngine2 extends Thread { public void run() { while (true) {
-	 * 
-	 * } } }
-	 */
 }
