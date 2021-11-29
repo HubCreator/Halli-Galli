@@ -6,12 +6,30 @@ class Card implements Serializable {
 	private String owner;
 	private Room current_room;
 	private String card_info;
+	private String card_type;
+	private int card_number;
 	
 	public Card(String card_info, Room current_room) {
 		this.card_info = card_info;
 		this.current_room = current_room;
 	}
 
+	public String getCard_type() {
+		return card_type;
+	}
+
+	public void setCard_type(String card_type) {
+		this.card_type = card_type;
+	}
+
+	public int getCard_number() {
+		return card_number;
+	}
+
+	public void setCard_number(int card_number) {
+		this.card_number = card_number;
+	}
+	
 	public String getOwner() {
 		return owner;
 	}

@@ -345,81 +345,136 @@ public class JavaGameServer extends JFrame {
 
 			for (int j = 0; j < 5; j++) {
 				Card card1 = new Card(CardConfig.PLUM1, enteredRoom);
+				card1.setCard_type(CardConfig.PLUM);
+				card1.setCard_number(1);
 				total_cards.addElement(card1);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card2 = new Card(CardConfig.PLUM2, enteredRoom);
+				card2.setCard_type(CardConfig.PLUM);
+				card2.setCard_number(2);
 				total_cards.addElement(card2);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card3 = new Card(CardConfig.PLUM3, enteredRoom);
+				card3.setCard_type(CardConfig.PLUM);
+				card3.setCard_number(3);
 				total_cards.addElement(card3);
 			}
 			for (int j = 0; j < 2; j++) {
 				Card card4 = new Card(CardConfig.PLUM4, enteredRoom);
+				card4.setCard_type(CardConfig.PLUM);
+				card4.setCard_number(4);
 				total_cards.addElement(card4);
 			}
-			total_cards.addElement(new Card(CardConfig.PLUM5, enteredRoom));
+			for (int j = 0; j < 1; j++) {
+				Card card5 = new Card(CardConfig.PLUM5, enteredRoom);
+				card5.setCard_type(CardConfig.PLUM);
+				card5.setCard_number(5);
+				total_cards.addElement(card5);
+			}
 
 			//
 
 			for (int j = 0; j < 5; j++) {
 				Card card1 = new Card(CardConfig.BERRY1, enteredRoom);
+				card1.setCard_type(CardConfig.BERRY);
+				card1.setCard_number(1);
 				total_cards.addElement(card1);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card2 = new Card(CardConfig.BERRY2, enteredRoom);
+				card2.setCard_type(CardConfig.BERRY);
+				card2.setCard_number(2);
 				total_cards.addElement(card2);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card3 = new Card(CardConfig.BERRY3, enteredRoom);
+				card3.setCard_type(CardConfig.BERRY);
+				card3.setCard_number(3);
 				total_cards.addElement(card3);
 			}
 			for (int j = 0; j < 2; j++) {
 				Card card4 = new Card(CardConfig.BERRY4, enteredRoom);
+				card4.setCard_type(CardConfig.BERRY);
+				card4.setCard_number(4);
 				total_cards.addElement(card4);
 			}
-			total_cards.addElement(new Card(CardConfig.BERRY5, enteredRoom));
+			for (int j = 0; j < 1; j++) {
+				Card card5 = new Card(CardConfig.BERRY5, enteredRoom);
+				card5.setCard_type(CardConfig.BERRY);
+				card5.setCard_number(5);
+				total_cards.addElement(card5);	
+			}
+			
 
 			//
 
 			for (int j = 0; j < 5; j++) {
 				Card card1 = new Card(CardConfig.BANANA1, enteredRoom);
+				card1.setCard_type(CardConfig.BANANA);
+				card1.setCard_number(1);
 				total_cards.addElement(card1);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card2 = new Card(CardConfig.BANANA2, enteredRoom);
+				card2.setCard_type(CardConfig.BANANA);
+				card2.setCard_number(2);
 				total_cards.addElement(card2);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card3 = new Card(CardConfig.BANANA3, enteredRoom);
+				card3.setCard_type(CardConfig.BANANA);
+				card3.setCard_number(3);
 				total_cards.addElement(card3);
 			}
 			for (int j = 0; j < 2; j++) {
 				Card card4 = new Card(CardConfig.BANANA4, enteredRoom);
+				card4.setCard_type(CardConfig.BANANA);
+				card4.setCard_number(4);
 				total_cards.addElement(card4);
 			}
-			total_cards.addElement(new Card(CardConfig.BANANA5, enteredRoom));
+			for (int j = 0; j < 1; j++) {
+				Card card5 = new Card(CardConfig.BANANA5, enteredRoom);
+				card5.setCard_type(CardConfig.BANANA);
+				card5.setCard_number(5);
+				total_cards.addElement(card5);
+			}
+			
 
 //
 
 			for (int j = 0; j < 5; j++) {
 				Card card1 = new Card(CardConfig.PEAR1, enteredRoom);
+				card1.setCard_type(CardConfig.PEAR);
+				card1.setCard_number(1);
 				total_cards.addElement(card1);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card2 = new Card(CardConfig.PEAR2, enteredRoom);
+				card2.setCard_type(CardConfig.PEAR);
+				card2.setCard_number(2);
 				total_cards.addElement(card2);
 			}
 			for (int j = 0; j < 3; j++) {
 				Card card3 = new Card(CardConfig.PEAR3, enteredRoom);
+				card3.setCard_type(CardConfig.PEAR);
+				card3.setCard_number(3);
 				total_cards.addElement(card3);
 			}
 			for (int j = 0; j < 2; j++) {
 				Card card4 = new Card(CardConfig.PEAR4, enteredRoom);
+				card4.setCard_type(CardConfig.PEAR);
+				card4.setCard_number(4);
 				total_cards.addElement(card4);
 			}
-			total_cards.addElement(new Card(CardConfig.PEAR5, enteredRoom));
+			for (int j = 0; j < 1; j++) {
+				Card card5 = new Card(CardConfig.PEAR5, enteredRoom);
+				card5.setCard_type(CardConfig.PEAR);
+				card5.setCard_number(5);
+				total_cards.addElement(card5);
+			}
+			
 
 			Collections.shuffle(total_cards);
 
@@ -620,7 +675,79 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 						} else if (ingame.getCode().matches("800")) { // bell hit
+							System.out.println("Got 800");
+							InGame aGame = new InGame();
+							aGame.setCode("800");
 							
+							for(int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
+								if(inGameList_server.get(i).getFrom_where().getRoom_name()
+										.equals(ingame.getFrom_where().getRoom_name()))
+									aGame = inGameList_server.get(i);
+							}
+							
+							Vector<Player> players;
+							Vector<Card> front_cards = new Vector<Card>();
+							players = aGame.players;
+							for(Player player : players) {
+								if(!player.front.isEmpty())
+									front_cards.add(player.front.get(player.front.size()-1)); // 각 플레이어들의 맨 앞 카드를 벡터에 저장
+							}
+							
+							int[] res = {0,0,0,0,0};
+							
+							// 제대로 bell을 쳤는지 판단
+							for(Card card : front_cards) {
+								if(card.getCard_type().equals(CardConfig.PEAR)) {
+									res[0] += card.getCard_number();
+								} else if(card.getCard_type().equals(CardConfig.BERRY)) {
+									res[1] += card.getCard_number();
+								}else if(card.getCard_type().equals(CardConfig.PLUM)) {
+									res[2] += card.getCard_number();
+								}else if(card.getCard_type().equals(CardConfig.BANANA)) {
+									res[3] += card.getCard_number();
+								}
+							}
+							
+							Vector<Card> getCards = new Vector<Card>();
+							int current_turn;
+							for(int i = 0; i < res.length; i++) {
+								if(res[i] == 5) { // 올바로 bell을 침
+									// 모든 플레이어들의 front card들을 가져옴
+									for(int j = 0; j < players.size(); j++) {
+										if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) {
+											current_turn = j;
+											aGame.setWhose_turn(current_turn);
+										}
+										for(Card card: players.get(j).front) {
+											getCards.add(card);
+										}
+										players.get(j).front.clear();
+									}
+									break;
+								}
+							}
+							
+							System.out.println("winning card size ?? " + getCards.size());
+							
+							for(int i = 0; i < aGame.players.size(); i++) {
+								if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
+										.equals(ingame.getFrom_whom())) {
+									Player player = aGame.players.get(i);
+									for(int j = 0; j < getCards.size(); j++) {
+										player.back.add(getCards.get(j)); // 카드를 추가
+									}
+								} 
+							}
+							
+							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
+								for (int j = 0; j < user_vc.size(); j++) {
+									UserService user = (UserService) user_vc.elementAt(j);
+									if (user.userStatus.equals(UserStatus.PLAYING)
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+										user.writeOneObject(aGame);
+									}
+								}
+							}
 						}
 					}
 				} catch (IOException e) {

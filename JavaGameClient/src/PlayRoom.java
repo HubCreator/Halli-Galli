@@ -674,8 +674,9 @@ public class PlayRoom extends JFrame {
 			picLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					System.out.println("Yay you clicked me" + userName);
+					System.out.println("Yay you clicked me " + userName);
 					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
+					mainview.sendObject(tmp);		
 				}
 			});
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);

@@ -27,25 +27,29 @@ class UserConfig {
 class CardConfig {
 	public static final int CARD_WIDTH = 170;
 	public static final int CARD_HEIGHT = 120;
-	
+
+	public static final String BANANA = "banana";
 	public static final String BANANA1 = "images/banana1.jpg";
 	public static final String BANANA2 = "images/banana2.jpg";
 	public static final String BANANA3 = "images/banana3.jpg";
 	public static final String BANANA4 = "images/banana4.jpg";
 	public static final String BANANA5 = "images/banana5.jpg";
-	
+
+	public static final String PEAR = "pear";
 	public static final String PEAR1 = "images/pear1.jpg";
 	public static final String PEAR2 = "images/pear2.jpg";
 	public static final String PEAR3 = "images/pear3.jpg";
 	public static final String PEAR4 = "images/pear4.jpg";
 	public static final String PEAR5 = "images/pear5.jpg";
-	
+
+	public static final String PLUM = "plum";
 	public static final String PLUM1 = "images/plum1.jpg";
 	public static final String PLUM2 = "images/plum2.jpg";
 	public static final String PLUM3 = "images/plum3.jpg";
 	public static final String PLUM4 = "images/plum4.jpg";
 	public static final String PLUM5 = "images/plum5.jpg";
-	
+
+	public static final String BERRY = "berry";
 	public static final String BERRY1 = "images/strawberry1.jpg";
 	public static final String BERRY2 = "images/strawberry2.jpg";
 	public static final String BERRY3 = "images/strawberry3.jpg";
