@@ -187,7 +187,7 @@ public class WaitingRoom extends JFrame {
 		roomListJPanel.repaint();
 		System.out.println("start " + list.size());
 		for (int i = 0; i < list.size(); i++) {
-			System.out.println("room name " + list.get(i).getRoom_name());
+			// System.out.println("room name " + list.get(i).getRoom_name());
 			JPanel roomEntry = new JPanel();
 			Border blackline = BorderFactory.createLineBorder(Color.black);
 			roomEntry.setBackground(Color.LIGHT_GRAY);
@@ -240,7 +240,7 @@ public class WaitingRoom extends JFrame {
 			JLabel room_player = new JLabel();
 			room_player.setBackground(Color.WHITE);
 			room_player.setBounds(514, 12, 116, 32);
-			System.out.println("1-1)players " + list.get(i).getPlayers().size());
+			// System.out.println("1-1)players " + list.get(i).getPlayers().size());
 			room_player.setText(Integer.toString(list.get(i).getPlayers().size()));
 			// room_player.repaint();
 			roomEntry.add(room_player);
@@ -286,7 +286,6 @@ public class WaitingRoom extends JFrame {
 			repaint();
 		}
 		repaint();
-		System.out.println("end");
 	}
 
 	// Server Message를 수신해서 화면에 표시
@@ -361,7 +360,7 @@ public class WaitingRoom extends JFrame {
 							current_entered_room = null;
 							setVisible(true);
 						} else if (room.getCode().matches("607")) {
-							System.out.println("Someone got entered");
+							System.out.println("Entering");
 							current_entered_room = null;
 							current_entered_room = room;
 							if (playRoom == null) {
@@ -369,7 +368,7 @@ public class WaitingRoom extends JFrame {
 								playRoom = new PlayRoom(view, current_entered_room);
 								playRoom.updatePlayers();
 							} else {
-								playRoom.players = room.players;
+								playRoom.players = room.players; // 이미 방에 들어가 있다면 플레이어 정보를 update
 								playRoom.updatePlayers();
 							}
 						} else if (room.getCode().matches("609")) {
@@ -381,18 +380,25 @@ public class WaitingRoom extends JFrame {
 					} else if (ingame != null) {
 						if (ingame.getCode().matches("700")) {
 							playRoom.appendText("Game starts!!");
+							System.out.println("Game starts!!");
 							if (playRoom.startBtnLabel != null)
-								playRoom.startBtnLabel.setVisible(false); // need to remove it later
-
-							playRoom.myDownCards = new Vector<Card>();
+								playRoom.startBtnLabel.setVisible(false);
+								//playRoom.startBtnLabel.removeAll(); // need to remove it later
+								
+							// 전체 player들의 정보(front, back, staus)
 							playRoom.players_inGame_info = ingame.players;
-							System.out.println("Size >> " + ingame.downCard.size());
+							playRoom.player1 = ingame.players.get(0);
+							playRoom.player2 = ingame.players.get(1);
+							playRoom.player3 = ingame.players.get(2);
+							playRoom.player4 = ingame.players.get(3);
+							playRoom.updatePlayers();
 						} else if (ingame.getCode().matches("701")) {
 							playRoom.appendText("701!!");
-							if (!ingame.downCard.isEmpty())
-								System.out.println(ingame.downCard.get(ingame.downCard.size() - 1));
-							else
-								System.out.println("empty");
+							playRoom.players_inGame_info = ingame.players;
+							playRoom.player1 = ingame.players.get(0);
+							playRoom.player2 = ingame.players.get(1);
+							playRoom.player3 = ingame.players.get(2);
+							playRoom.player4 = ingame.players.get(3);
 							playRoom.updatePlayers();
 						}
 					}
@@ -502,7 +508,6 @@ public class WaitingRoom extends JFrame {
 	public void sendMessage(String msg) {
 		try {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", client_userName).data(msg).build();
-			oos.reset();
 			oos.writeObject(obcm);
 			oos.reset();
 		} catch (IOException e) {
@@ -524,7 +529,6 @@ public class WaitingRoom extends JFrame {
 		try {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName).data(msg)
 					.room_dst(current_entered_room.getRoom_name()).build();
-			oos.reset();
 			oos.writeObject(obcm);
 			oos.reset();
 		} catch (IOException e) {
@@ -544,7 +548,6 @@ public class WaitingRoom extends JFrame {
 
 	public void sendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		try {
-			oos.reset();
 			oos.writeObject(ob);
 			oos.reset();
 		} catch (IOException e) {

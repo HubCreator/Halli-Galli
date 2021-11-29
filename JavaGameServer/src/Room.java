@@ -19,11 +19,6 @@ class Room implements Serializable {
 	public Room(String code, String masterUser) {
 		this.code = code;
 		this.masterUser = masterUser;
-//		this.players = new ArrayList<>() {
-//			private static final long serialVersionUID = 1L;
-//			{ add(masterUser); }
-//		};
-		// players.add(masterUser);
 		this.observers = new ArrayList<>();
 	}
 

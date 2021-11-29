@@ -16,6 +16,8 @@ class Player implements Serializable {
 		this.player_name = player_name;
 		this.current_room = current_room;
 	}
+	
+	Player() {	}
 
 	public String getCode() {
 		return code;

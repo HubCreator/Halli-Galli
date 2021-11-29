@@ -213,7 +213,7 @@ public class JavaGameServer extends JFrame {
 
 		public void writeOneObject(Object ob) {
 			try {
-				oos.reset();
+				//oos.reset();
 				oos.writeObject(ob);
 				oos.reset();
 			} catch (IOException e) {
@@ -257,6 +257,7 @@ public class JavaGameServer extends JFrame {
 				// ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
 				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", "SERVER").data(msg).build();
 				oos.writeObject(obcm);
+				oos.reset();
 			} catch (IOException e) {
 				appendText("dos.writeObject() error");
 				try {
@@ -311,25 +312,27 @@ public class JavaGameServer extends JFrame {
 
 		public void allowEnteringRoom(Room room) {
 			for (int i = 0; i < roomList_server.size(); i++) { // 조사한다
-				if (roomList_server.get(i).getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
-					enteredRoom = roomList_server.get(i);
+				if (roomList_server.get(i).getRoom_name()
+						.equals(room.getRoom_name())) { // 내가 찾는 방이 있음
+					enteredRoom = roomList_server.get(i); // 현재 들어간 방을 표시
 					userStatus = UserStatus.PLAYING;
 					// 방을 만든 사람이 나라면
-					if (room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
+					if (room.getMasterUser() != null 
+							&& room.getMasterUser().equals(userName)) {
 						enteredRoom.setCode("603");
-						enteredRoom.players.add(userName);
-						writeOneObject(enteredRoom);
+						enteredRoom.players.add(userName); // 플레이어 정보를 룸에 추가
+						writeOneObject(enteredRoom); // 입장한 사람에게만 send
 					} else { // 그 외 참가자
 						enteredRoom.setCode("607");
 						enteredRoom.players.add(room.getFrom_whom());
 						for (int j = 0; j < user_vc.size(); j++) {
 							UserService user = (UserService) user_vc.elementAt(j);
-							for (String player : enteredRoom.players) {
+							for (String player : enteredRoom.players) { 
 								if (user.userName.equals(player)) {
 									user.writeOneObject(enteredRoom);
 								}
 							}
-						}
+						} // 같은 방 player들에게 모두 send, 그래야 기존의 참가자도 guest를 인지
 					}
 				} else {
 					System.out.println("해당 방이 없습니다..");
@@ -517,7 +520,7 @@ public class JavaGameServer extends JFrame {
 							allowEnteringRoom(room);
 							sendRoomListToAll();
 						} else if (room.getCode().matches("606")) { // 방 입장 (Play)
-							System.out.println("Just entered here!!");
+							System.out.println("Guest entered here!!");
 							allowEnteringRoom(room);
 							sendRoomListToAll();
 						} else if (room.getCode().matches("605")) { // 방 퇴장 (Play)
@@ -559,8 +562,10 @@ public class JavaGameServer extends JFrame {
 								players.add(player);
 							}
 							aGame.players = players;
-							
 							inGameList_server.add(aGame); // 전체 서버에서 관리하는 inGameList에 추가
+							
+							// aGame에 있는 정보
+							// code, from_where(current_entered_room), players(player, 카드 정보)
 
 							// original
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
@@ -573,28 +578,57 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 						} else if (ingame.getCode().matches("701")) {
-							System.out.println("my down cards size >> " + myDownCards.size());
+							System.out.println("Got 701");
+							InGame aGame = new InGame();
+							
+							for(int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
+								if(inGameList_server.get(i).getFrom_where().getRoom_name()
+										.equals(ingame.getFrom_where().getRoom_name()))
+									aGame = inGameList_server.get(i);
+							}
+							System.out.println("1");
+							System.out.println(aGame.players.get(0).getPlayer_name());
+							for(int i = 0; i < aGame.players.size(); i++) {
+								if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
+										.equals(ingame.getFrom_whom())) {
+									Player player = aGame.players.get(i);
+									System.out.println(player.getPlayer_name() + 
+											" / card-back size : " + player.back.size());
+									if(!player.back.isEmpty())
+										player.front.add(player.back.remove(0)); // 카드를 뒤집음
+									System.out.println(player.getPlayer_name() + 
+											" / card-back size : " + player.back.size());
+								}
+							}
+							System.out.println("2");
+							aGame.setCode("701");
+							// update된 정보를 모든 player들에게 뿌림
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) { // 같은 방 안에
-																												// 있는
-																												// 사람들이라면
-										if (!myDownCards.isEmpty()) {
-											myUpCards.add(myDownCards.remove(0)); // 플레이어의 카드를 뒤집음
-
-											InGame tmp = new InGame("701", ingame.getFrom_whom(),
-													ingame.getFrom_where());
-											tmp.upCard = myUpCards; // 정보를 갱신
-											tmp.downCard = myDownCards;
-											user.writeOneObject(tmp);
-										} else
-											System.out.println("NO CARDS LEFT");
-
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+										user.writeOneObject(aGame);
 									}
 								}
 							}
+							
+							// original
+							/*
+							 * for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { for (int j
+							 * = 0; j < user_vc.size(); j++) { UserService user = (UserService)
+							 * user_vc.elementAt(j); if (user.userStatus.equals(UserStatus.PLAYING) &&
+							 * ingame.getFrom_where().players.get(i).equals(user.userName)) { // 같은 방 안에 //
+							 * 있는 // 사람들이라면 if (!myDownCards.isEmpty()) {
+							 * myUpCards.add(myDownCards.remove(0)); // 플레이어의 카드를 뒤집음
+							 * 
+							 * InGame tmp = new InGame("701", ingame.getFrom_whom(),
+							 * ingame.getFrom_where()); tmp.upCard = myUpCards; // 정보를 갱신 tmp.downCard =
+							 * myDownCards; user.writeOneObject(tmp); } else
+							 * System.out.println("NO CARDS LEFT");
+							 * 
+							 * } } }
+							 */
 						}
 					}
 				} catch (IOException e) {

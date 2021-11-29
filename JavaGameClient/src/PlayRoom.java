@@ -44,7 +44,7 @@ public class PlayRoom extends JFrame {
 	private JLabel user_name;
 	private JButton imgBtn;
 	List<String> players;
-	private JPanel gamePane;
+	protected JPanel gamePane;
 	private JLabel palyer1_up;
 	private JLabel palyer2_up;
 	private JLabel palyer3_up;
@@ -54,12 +54,13 @@ public class PlayRoom extends JFrame {
 	private JLabel palyer3_down;
 	private JLabel palyer4_down;
 	protected JLabel startBtnLabel;
-	public Player player1;
-	public Player player2;
-	public Player player3;
-	public Player player4;
+	public Player player1 = new Player();
+	public Player player2 = new Player();
+	public Player player3 = new Player();
+	public Player player4 = new Player();
 	public Vector<Card> myUpCards = new Vector<Card>();
 	public Vector<Card> myDownCards = new Vector<Card>();
+	// 게임이 시작돼야 players_inGame_info 생성
 	public Vector<Player> players_inGame_info = new Vector<Player>();
 	
 //	public GameEngine2 engine;
@@ -122,7 +123,7 @@ public class PlayRoom extends JFrame {
 		setVisible(true);
 		setResizable(false);
 		setBounds(100, 100, 1232, 772);
-		setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
+		// setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
 		contentPane = new ImagePanel(
@@ -249,10 +250,11 @@ public class PlayRoom extends JFrame {
 	public void updatePlayers() throws IOException {
 		gamePane.removeAll();
 		repaint();
+		
 		if (players.size() >= 1 && !players.get(0).equals(null)) { 
-			System.out.println("wait.. what?");
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			player1 = new Player(mainview.client_userName, mainview.current_entered_room);
+			player1.setPlayer_name(mainview.client_userName);
+			player1.setCurrent_room(mainview.current_entered_room);
 			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
 			Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -263,22 +265,27 @@ public class PlayRoom extends JFrame {
 
 			
 			BufferedImage player1_up_image;
-			if(myUpCards.isEmpty()) 
+			if(player1.front.isEmpty()) 
 				player1_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P1_DEG);
 			else  {
-				player1_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P1_DEG);
+				player1_up_image = rotate(ImageIO.read(new File(player1.front.get(player1.front.size()-1).getCard_info())), UserConfig.P1_DEG);
 			}			
 			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
 			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			
-			if (mainview.client_userName.equals(players.get(0))) {
+			
+			if (mainview.client_userName.equals(players.get(0))
+					&& !players_inGame_info.isEmpty()) {
 				palyer1_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("1111111111111111111");
-						InGame result = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+						InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
+//						if(!player1.back.isEmpty())
+//							player1.front.add(player1.back.remove(0)); // 카드를 뒤집음
+						
 						//result.downCard = myDownCards;
 						//result.upCard = myUpCards;
 						mainview.sendObject(result);
@@ -302,7 +309,9 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			player2 = new Player(mainview.client_userName, mainview.current_entered_room);
+			player2.setPlayer_name(mainview.client_userName);
+			player2.setCurrent_room(mainview.current_entered_room);
+			
 			BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -312,10 +321,10 @@ public class PlayRoom extends JFrame {
 			gamePane.add(palyer2_down);
 
 			BufferedImage player2_up_image;
-			if(myUpCards.isEmpty()) 
+			if(player2.front.isEmpty())
 				player2_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P2_DEG);
 			else  {
-				player2_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P2_DEG);
+				player2_up_image = rotate(ImageIO.read(new File(player2.front.get(player2.front.size()-1).getCard_info())), UserConfig.P2_DEG);
 			}
 			
 			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
@@ -349,7 +358,9 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			player3 = new Player(mainview.client_userName, mainview.current_entered_room);
+			player3.setPlayer_name(mainview.client_userName);
+			player4.setCurrent_room(mainview.current_entered_room);
+
 			BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
 			Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -359,10 +370,10 @@ public class PlayRoom extends JFrame {
 			gamePane.add(palyer3_down);
 
 			BufferedImage player3_up_image;
-			if(myUpCards.isEmpty()) 
+			if(player3.front.isEmpty()) 
 				player3_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P3_DEG);
 			else  {
-				player3_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P3_DEG);
+				player3_up_image = rotate(ImageIO.read(new File(player3.front.get(player3.front.size()-1).getCard_info())), UserConfig.P3_DEG);
 			}
 			
 			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
@@ -396,7 +407,9 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
-			player4 = new Player(mainview.client_userName, mainview.current_entered_room);
+			player4.setPlayer_name(mainview.client_userName);
+			player4.setCurrent_room(mainview.current_entered_room);
+
 			BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
 			Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -406,9 +419,9 @@ public class PlayRoom extends JFrame {
 			gamePane.add(palyer4_down);
 
 			BufferedImage player4_up_image;
-			if(myUpCards.isEmpty()) 
+			if(player4.front.isEmpty()) 
 				player4_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P4_DEG);
-			else player4_up_image = rotate(ImageIO.read(new File(myUpCards.get(myUpCards.size()-1).getCard_info())), UserConfig.P4_DEG);
+			else player4_up_image = rotate(ImageIO.read(new File(player4.front.get(player4.front.size()-1).getCard_info())), UserConfig.P4_DEG);
 			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
 					Image.SCALE_DEFAULT);
 			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
@@ -437,7 +450,6 @@ public class PlayRoom extends JFrame {
 			gamePane.add(player3_name);
 
 			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
-				System.out.println("PLAY BUTTON!!");
 				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
 				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
@@ -450,6 +462,7 @@ public class PlayRoom extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("Start Btn Clicked");
 						InGame tmp = new InGame("700", mainview.client_userName, mainview.current_entered_room);
+						// current_entered_room에는 플레이어 이름 정보 있음
 //						tmp.players = mainview.current_entered_room.players;
 //						tmp.observers = mainview.current_entered_room.observers;
 						mainview.sendObject(tmp);

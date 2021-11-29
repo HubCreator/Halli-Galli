@@ -31,7 +31,6 @@ public class CreateNewRoom extends JFrame {
 	JPanel panel;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	public String masterUser;
 	public Room room = null;
 
 	public String getRoom() {
@@ -45,7 +44,6 @@ public class CreateNewRoom extends JFrame {
 	 */
 	public CreateNewRoom(String username, WaitingRoom view) {
 		mainview = view;
-		this.masterUser = username;
 		setVisible(true);
 		setResizable(false);
 		setPreferredSize(new Dimension(400, 400 / 12 * 9));
@@ -81,14 +79,14 @@ public class CreateNewRoom extends JFrame {
 				for (int i = 0; i < mainview.roomList_client.size(); i++) {
 					Room room = (Room) mainview.roomList_client.get(i);
 					// System.out.println(mainview.roomList.get(i));
-					if (room.getMasterUser().equals(masterUser)) {
+					if (room.getMasterUser().equals(username)) {
 						JOptionPane.showMessageDialog(null, "이미 방을 만드셨습니다!"); // 다이얼로그 띄우기
 						setVisible(false);
 						return;
 					}
 				}
 				
-				room = new Room("600", masterUser);
+				room = new Room("600", username);
 				room.setRoom_name(textField.getText());
 				room.setPassword(passwordField.getPassword().toString());
 				mainview.sendObject(room);
