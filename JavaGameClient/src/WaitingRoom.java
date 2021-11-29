@@ -381,8 +381,11 @@ public class WaitingRoom extends JFrame {
 						if (ingame.getCode().matches("700")) {
 							playRoom.appendText("Game starts!!");
 							System.out.println("Game starts!!");
-							if (playRoom.startBtnLabel != null)
-								playRoom.startBtnLabel.setVisible(false);
+							if (playRoom.startBtnLabel != null) {
+								System.out.println("!!");
+								playRoom.gamePane.remove(playRoom.startBtnLabel);
+								playRoom.repaint();
+							}
 								//playRoom.startBtnLabel.removeAll(); // need to remove it later
 								
 							// 전체 player들의 정보(front, back, staus)
@@ -393,7 +396,6 @@ public class WaitingRoom extends JFrame {
 							playRoom.player4 = ingame.players.get(3);
 							playRoom.updatePlayers();
 						} else if (ingame.getCode().matches("701")) {
-							playRoom.appendText("701!!");
 							playRoom.players_inGame_info = ingame.players;
 							playRoom.player1 = ingame.players.get(0);
 							playRoom.player2 = ingame.players.get(1);

@@ -553,6 +553,12 @@ public class JavaGameServer extends JFrame {
 							aGame.setCode("700");
 							aGame.setFrom_where(ingame.getFrom_where()); // 현재 진행되는 룸
 							
+							for(Room aroom:roomList_server) {
+								if(aroom.getRoom_name().equals(ingame.getFrom_where().getRoom_name())) {
+									aroom.setStatus("게임중");
+								}
+							}
+							
 							Vector<Player> players = new Vector<Player>();
 							for(int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 룸 안에 있는 사람들끼리
 								// player 정보 생성
