@@ -539,12 +539,55 @@ public class JavaGameServer extends JFrame {
 						players.get(j).front.clear();
 					}
 					break;
-				} else { // bell을 치면 안되는데 침
-					// TODO: 자신 이외의 플레이어들에게 카드를 나눠줌 (나눠줄 카드 수가 3장 이하라면 랜덤하게 플레이어를 골라 줌)
 				}
 			}
-			
-			System.out.println("winning card size ?? " + getCards.size());
+			// TODO: 자신 이외의 플레이어들에게 카드를 나눠줌 (나눠줄 카드 수가 3장 이하라면 랜덤하게 플레이어를 골라 줌)
+			Vector<Card> fault_cards = new Vector<Card>(); 
+			if(getCards.isEmpty()) { // bell을 치면 안되는데 침 -> getCards에 들어간게 없음
+				System.out.println("Fault!!");
+				for(int j = 0; j < players.size(); j++) { // 4명
+					if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신
+						for(int k = 0; k < 3; k++) { // 세 장을 back에서 제거
+							if(!players.get(j).back.isEmpty())
+								fault_cards.add(players.get(j).back.remove(players.get(j).back.size()-1));
+						}
+					}
+				}
+				
+				if(fault_cards.size() == 3) { // 줄 카드가 세 장이라면
+					for(int j = 0; j < players.size(); j++) { // 4명
+						int cnt = 0;
+						if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신은 pass
+							continue;
+						}
+						players.get(j).back.add(fault_cards.get(cnt++));
+					}
+					for(int j = 0; j < players.size(); j++) {
+						System.out.println("player " + players.get(j).getPlayer_name() +" / " + players.get(j).back.size());
+					}
+				}
+				// 세 장 이하라면 랜덤하게 플레이어를 뽑아 카드를 지급
+				if(fault_cards.size() >= 1 && fault_cards.size() < 3) {
+					Vector<Integer> tmp = new Vector<Integer>();
+					while(true) {
+						int ran = (int) (Math.random() * fault_cards.size()); // 하나를 랜덤하게 뽑아서 검사
+						for(int i = 0; i < tmp.size(); i++) { // 이미 있는 숫자라면 다시 뽑음
+							if(tmp.get(i) == ran) continue;
+						}
+						if(players.get(ran).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신은 pass
+							continue; // pass
+						}
+						else tmp.add(ran);
+						
+						if(tmp.size() == fault_cards.size()) break;
+					}
+					
+					for(int i = 0; i < tmp.size(); i++) {
+						players.get(tmp.get(i)).back.add(fault_cards.get(tmp.get(i)));
+						System.out.println("who are lucky?" + players.get(tmp.get(i)).getPlayer_name());
+					}
+				}
+			}
 			
 			for(int i = 0; i < aGame.players.size(); i++) {
 				if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
@@ -741,7 +784,10 @@ public class JavaGameServer extends JFrame {
 								if(!player.front.isEmpty())
 									front_cards.add(player.front.get(player.front.size()-1)); // 각 플레이어들의 맨 앞 카드를 벡터에 저장
 							}
-							
+							// ingame : client로부터 전달받은 값
+							// aGame : server에서 새로 생성해서 관리하는 객체
+							// players : 모든 player들의 정보
+							// front_cards : 모든 player들의 앞면 카드
 							isHit(ingame, aGame, players, front_cards);
 							
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
