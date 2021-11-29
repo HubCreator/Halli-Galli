@@ -287,6 +287,15 @@ public class WaitingRoom extends JFrame {
 		}
 		repaint();
 	}
+	
+	public void reload(InGame ingame) throws IOException {
+		playRoom.players_inGame_info = ingame.players;
+		playRoom.player1 = ingame.players.get(0);
+		playRoom.player2 = ingame.players.get(1);
+		playRoom.player3 = ingame.players.get(2);
+		playRoom.player4 = ingame.players.get(3);
+		playRoom.updateScreen();
+	}
 
 	// Server Message를 수신해서 화면에 표시
 	class ListenNetwork extends Thread {
@@ -386,31 +395,13 @@ public class WaitingRoom extends JFrame {
 								playRoom.gamePane.remove(playRoom.startBtnLabel);
 								playRoom.repaint();
 							}
-								//playRoom.startBtnLabel.removeAll(); // need to remove it later
-								
-							// 전체 player들의 정보(front, back, staus)
-							playRoom.players_inGame_info = ingame.players;
-							playRoom.player1 = ingame.players.get(0);
-							playRoom.player2 = ingame.players.get(1);
-							playRoom.player3 = ingame.players.get(2);
-							playRoom.player4 = ingame.players.get(3);
-							playRoom.updateScreen();
+							reload(ingame);
 						} else if (ingame.getCode().matches("701")) {
-							playRoom.players_inGame_info = ingame.players;
-							playRoom.player1 = ingame.players.get(0);
-							playRoom.player2 = ingame.players.get(1);
-							playRoom.player3 = ingame.players.get(2);
-							playRoom.player4 = ingame.players.get(3);
 							playRoom.whose_turn = ingame.getWhose_turn();
-							playRoom.updateScreen();
+							reload(ingame);
 						}else if (ingame.getCode().matches("800")) {
-							playRoom.players_inGame_info = ingame.players;
-							playRoom.player1 = ingame.players.get(0);
-							playRoom.player2 = ingame.players.get(1);
-							playRoom.player3 = ingame.players.get(2);
-							playRoom.player4 = ingame.players.get(3);
 							playRoom.whose_turn = ingame.getWhose_turn();
-							playRoom.updateScreen();
+							reload(ingame);
 						}
 					}
 				} catch (IOException e) {

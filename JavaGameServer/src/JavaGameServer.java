@@ -505,7 +505,56 @@ public class JavaGameServer extends JFrame {
 			result.add(card4_vec);
 
 			return result;
-
+		}
+		
+		public void isHit(InGame ingame, InGame aGame, Vector<Player> players, Vector<Card> front_cards) {
+			int[] res = {0,0,0,0,0};
+			
+			// 제대로 bell을 쳤는지 판단
+			for(Card card : front_cards) {
+				if(card.getCard_type().equals(CardConfig.PEAR)) {
+					res[0] += card.getCard_number();
+				} else if(card.getCard_type().equals(CardConfig.BERRY)) {
+					res[1] += card.getCard_number();
+				}else if(card.getCard_type().equals(CardConfig.PLUM)) {
+					res[2] += card.getCard_number();
+				}else if(card.getCard_type().equals(CardConfig.BANANA)) {
+					res[3] += card.getCard_number();
+				}
+			}
+			
+			Vector<Card> getCards = new Vector<Card>();
+			int current_turn;
+			for(int i = 0; i < res.length; i++) {
+				if(res[i] == 5) { // 올바로 bell을 침
+					// 모든 플레이어들의 front card들을 가져옴
+					for(int j = 0; j < players.size(); j++) {
+						if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) {
+							current_turn = j;
+							aGame.setWhose_turn(current_turn);
+						}
+						for(Card card: players.get(j).front) {
+							getCards.add(card);
+						}
+						players.get(j).front.clear();
+					}
+					break;
+				} else { // bell을 치면 안되는데 침
+					// TODO: 자신 이외의 플레이어들에게 카드를 나눠줌 (나눠줄 카드 수가 3장 이하라면 랜덤하게 플레이어를 골라 줌)
+				}
+			}
+			
+			System.out.println("winning card size ?? " + getCards.size());
+			
+			for(int i = 0; i < aGame.players.size(); i++) {
+				if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
+						.equals(ingame.getFrom_whom())) {
+					Player player = aGame.players.get(i);
+					for(int j = 0; j < getCards.size(); j++) {
+						player.back.add(getCards.get(j)); // 카드를 추가
+					}
+				} 
+			}
 		}
 
 		public void run() {
@@ -693,51 +742,7 @@ public class JavaGameServer extends JFrame {
 									front_cards.add(player.front.get(player.front.size()-1)); // 각 플레이어들의 맨 앞 카드를 벡터에 저장
 							}
 							
-							int[] res = {0,0,0,0,0};
-							
-							// 제대로 bell을 쳤는지 판단
-							for(Card card : front_cards) {
-								if(card.getCard_type().equals(CardConfig.PEAR)) {
-									res[0] += card.getCard_number();
-								} else if(card.getCard_type().equals(CardConfig.BERRY)) {
-									res[1] += card.getCard_number();
-								}else if(card.getCard_type().equals(CardConfig.PLUM)) {
-									res[2] += card.getCard_number();
-								}else if(card.getCard_type().equals(CardConfig.BANANA)) {
-									res[3] += card.getCard_number();
-								}
-							}
-							
-							Vector<Card> getCards = new Vector<Card>();
-							int current_turn;
-							for(int i = 0; i < res.length; i++) {
-								if(res[i] == 5) { // 올바로 bell을 침
-									// 모든 플레이어들의 front card들을 가져옴
-									for(int j = 0; j < players.size(); j++) {
-										if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) {
-											current_turn = j;
-											aGame.setWhose_turn(current_turn);
-										}
-										for(Card card: players.get(j).front) {
-											getCards.add(card);
-										}
-										players.get(j).front.clear();
-									}
-									break;
-								}
-							}
-							
-							System.out.println("winning card size ?? " + getCards.size());
-							
-							for(int i = 0; i < aGame.players.size(); i++) {
-								if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
-										.equals(ingame.getFrom_whom())) {
-									Player player = aGame.players.get(i);
-									for(int j = 0; j < getCards.size(); j++) {
-										player.back.add(getCards.get(j)); // 카드를 추가
-									}
-								} 
-							}
+							isHit(ingame, aGame, players, front_cards);
 							
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
 								for (int j = 0; j < user_vc.size(); j++) {
