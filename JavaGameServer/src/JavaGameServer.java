@@ -608,6 +608,9 @@ public class JavaGameServer extends JFrame {
 							}
 							System.out.println("2");
 							aGame.setCode("701");
+							int current_turn = aGame.getWhose_turn();
+							current_turn++;
+							aGame.setWhose_turn(current_turn);
 							// update된 정보를 모든 player들에게 뿌림
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {

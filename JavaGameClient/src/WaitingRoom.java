@@ -394,13 +394,14 @@ public class WaitingRoom extends JFrame {
 							playRoom.player2 = ingame.players.get(1);
 							playRoom.player3 = ingame.players.get(2);
 							playRoom.player4 = ingame.players.get(3);
-							playRoom.updatePlayers();
+							playRoom.updateScreen();
 						} else if (ingame.getCode().matches("701")) {
 							playRoom.players_inGame_info = ingame.players;
 							playRoom.player1 = ingame.players.get(0);
 							playRoom.player2 = ingame.players.get(1);
 							playRoom.player3 = ingame.players.get(2);
 							playRoom.player4 = ingame.players.get(3);
+							playRoom.whose_turn = ingame.getWhose_turn();
 							playRoom.updateScreen();
 						}
 					}

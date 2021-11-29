@@ -62,6 +62,7 @@ public class PlayRoom extends JFrame {
 	public Vector<Card> myDownCards = new Vector<Card>();
 	// 게임이 시작돼야 players_inGame_info 생성
 	public Vector<Player> players_inGame_info = new Vector<Player>();
+	int whose_turn = 0;
 
 //	public GameEngine2 engine;
 
@@ -278,17 +279,6 @@ public class PlayRoom extends JFrame {
 			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
 			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 
-			if (mainview.client_userName.equals(players.get(0)) && !players_inGame_info.isEmpty()) {
-				palyer1_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("1111111111111111111");
-						InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
-						mainview.sendObject(result);
-					}
-				});
-			}
-
 			gamePane.add(palyer1_up);
 
 			JLabel player1_name = new JLabel((String) null);
@@ -329,16 +319,6 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
 			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(1))) {
-				palyer2_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("2222222222222");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						mainview.sendObject(tmp);
-					}
-				});
-			}
 			gamePane.add(palyer2_up);
 
 			JLabel player2_name = new JLabel((String) null);
@@ -378,16 +358,6 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
 			palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(2))) {
-				palyer3_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("33333333333333333");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						mainview.sendObject(tmp);
-					}
-				});
-			}
 			gamePane.add(palyer3_up);
 
 			JLabel player4_name = new JLabel((String) null);
@@ -425,16 +395,6 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
 			palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(3))) {
-				palyer4_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("4444444444444444444444");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						mainview.sendObject(tmp);
-					}
-				});
-			}
 			gamePane.add(palyer4_up);
 
 			JLabel player3_name = new JLabel((String) null);
@@ -473,6 +433,7 @@ public class PlayRoom extends JFrame {
 	public void updateScreen() throws IOException {
 		gamePane.removeAll();
 		repaint();
+		System.out.println("whose turn now?? > " + whose_turn);
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
 			if (!player1.back.isEmpty()) {
@@ -500,7 +461,7 @@ public class PlayRoom extends JFrame {
 			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
 			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 
-			if (mainview.client_userName.equals(players.get(0)) && !players_inGame_info.isEmpty()) {
+			if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
 				palyer1_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -552,7 +513,7 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
 			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(1))) {
+			if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
 				palyer2_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -602,7 +563,7 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
 			palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(2))) {
+			if (mainview.client_userName.equals(players.get(2)) && whose_turn % 4 == 2) {
 				palyer3_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -650,7 +611,7 @@ public class PlayRoom extends JFrame {
 					Image.SCALE_DEFAULT);
 			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
 			palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(3))) {
+			if (mainview.client_userName.equals(players.get(3)) && whose_turn % 4 == 3) {
 				palyer4_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
