@@ -150,7 +150,7 @@ public class PlayRoom extends JFrame {
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
 		contentPane = new ImagePanel(
-				new ImageIcon("C:\\network_programming\\Halli-Galli\\JavaGameClient\\images\\background3.jpg")
+				new ImageIcon("images/background3.jpg")
 						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -230,7 +230,10 @@ public class PlayRoom extends JFrame {
 		room_name.setText(current_entered_room.getRoom_name());
 		contentPane.add(room_name);
 
-		gamePane = new JPanel();
+		// gamePane = new JPanel(); asdfasdf
+		gamePane = new ImagePanel(
+				new ImageIcon("images/background.jpg")
+						.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
 		gamePane.setLayout(null);
@@ -265,7 +268,7 @@ public class PlayRoom extends JFrame {
 		BufferedImage boom = ImageIO.read(new File("images/boom.png"));
 		Image boom_res = boom.getScaledInstance(133, 88, Image.SCALE_DEFAULT);
 		JLabel hitted_image = new JLabel(new ImageIcon(boom_res));
-		hitted_image.setBounds(400, 236, 180, 150);
+		hitted_image.setBounds(350, 150, 180, 150);
 		gamePane.add(hitted_image);
 		repaint();
 		try {
@@ -300,7 +303,7 @@ public class PlayRoom extends JFrame {
 		gamePane.removeAll();
 		// repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 			player1.setPlayer_name(mainview.client_userName);
 			player1.setCurrent_room(mainview.current_entered_room);
 			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
@@ -340,7 +343,7 @@ public class PlayRoom extends JFrame {
 			player2.setPlayer_name(mainview.client_userName);
 			player2.setCurrent_room(mainview.current_entered_room);
 
-			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 			BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -375,7 +378,7 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 			player3.setPlayer_name(mainview.client_userName);
 			player3.setCurrent_room(mainview.current_entered_room);
 
@@ -413,7 +416,7 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 			player4.setPlayer_name(mainview.client_userName);
 			player4.setCurrent_room(mainview.current_entered_room);
 
@@ -474,7 +477,7 @@ public class PlayRoom extends JFrame {
 	public void updateScreen() throws IOException {
 		gamePane.removeAll();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 			if (!player1.back.isEmpty()) {
 				player1.setPlayer_name(mainview.client_userName);
 				player1.setCurrent_room(mainview.current_entered_room);
@@ -517,6 +520,7 @@ public class PlayRoom extends JFrame {
 			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
 			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 			player1_name.setText(players.get(0));
 			player1_name.setBackground(Color.WHITE);
 			player1_name.setBounds(12, 10, 84, 40);
@@ -531,7 +535,7 @@ public class PlayRoom extends JFrame {
 			player2.setPlayer_name(mainview.client_userName);
 			player2.setCurrent_room(mainview.current_entered_room);
 			if (!player2.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+				BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 				BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 				Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -584,7 +588,7 @@ public class PlayRoom extends JFrame {
 			player3.setPlayer_name(mainview.client_userName);
 			player3.setCurrent_room(mainview.current_entered_room);
 			if (!player3.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+				BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 				BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
 				Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -637,7 +641,7 @@ public class PlayRoom extends JFrame {
 			player4.setPlayer_name(mainview.client_userName);
 			player4.setCurrent_room(mainview.current_entered_room);
 			if (!player4.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File("images/back2.png"));
+				BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 				BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
 				Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -700,9 +704,12 @@ public class PlayRoom extends JFrame {
 			for (int i = 0; i < players_inGame_info.size(); i++) {
 				totalCnt += players_inGame_info.get(i).front.size();
 			}
-			total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
-			total_up_cards_cnt.setBounds(425, 279, 60, 30);
-			gamePane.add(total_up_cards_cnt);
+			if(totalCnt != 0) {
+				total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
+				total_up_cards_cnt.setBounds(425, 279, 60, 30);
+				gamePane.add(total_up_cards_cnt);
+			}
+			
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
 
