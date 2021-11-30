@@ -506,7 +506,7 @@ public class PlayRoom extends JFrame {
 			if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
 				palyer1_down.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
+					public void mouseReleased(MouseEvent e) {
 						System.out.println("1111111111111111111");
 						InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
 						mainview.sendObject(result);
@@ -561,7 +561,7 @@ public class PlayRoom extends JFrame {
 			if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
 				palyer2_down.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
+					public void mouseReleased(MouseEvent e) {
 						System.out.println("2222222222222");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 						mainview.sendObject(tmp);
@@ -614,7 +614,7 @@ public class PlayRoom extends JFrame {
 			if (mainview.client_userName.equals(players.get(2)) && whose_turn % 4 == 2) {
 				palyer3_down.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
+					public void mouseReleased(MouseEvent e) {
 						System.out.println("33333333333333333");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 						mainview.sendObject(tmp);
@@ -665,7 +665,7 @@ public class PlayRoom extends JFrame {
 			if (mainview.client_userName.equals(players.get(3)) && whose_turn % 4 == 3) {
 				palyer4_down.addMouseListener(new MouseAdapter() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
+					public void mouseReleased(MouseEvent e) {
 						System.out.println("4444444444444444444444");
 						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 						mainview.sendObject(tmp);
