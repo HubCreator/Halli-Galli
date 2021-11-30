@@ -769,7 +769,7 @@ public class JavaGameServer extends JFrame {
 						} else if (ingame.getCode().matches("800")) { // bell hit
 							System.out.println("Got 800");
 							InGame aGame = new InGame();
-							aGame.setCode("800");
+							
 							
 							for(int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
 								if(inGameList_server.get(i).getFrom_where().getRoom_name()
@@ -795,6 +795,7 @@ public class JavaGameServer extends JFrame {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+										aGame.setCode("800");
 										user.writeOneObject(aGame);
 									}
 								}

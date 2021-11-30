@@ -94,9 +94,14 @@ public class PlayRoom extends JFrame {
 			int keyCode = e.getKeyCode();
 
 			if (keyCode == 32) { // space를 누르면 ...
-				System.out.println("Yay you hitted ne " + userName);
-				InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
-				mainview.sendObject(tmp);
+				System.out.println("Yay you hitted me " + userName);
+				try {
+					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
+					mainview.sendObject(tmp);
+				} catch (Error e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
@@ -134,7 +139,7 @@ public class PlayRoom extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
 		players = current_entered_room.players; // getPlayers();
@@ -246,12 +251,28 @@ public class PlayRoom extends JFrame {
 			});
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
-
+			
 //			engine = new GameEngine2();
 			// engine.start();
 		} catch (NumberFormatException | IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+	}
+	
+	public void hitted() throws IOException {
+		System.out.println("hitted!!");
+		BufferedImage boom = ImageIO.read(new File("images/boom.png"));
+		Image boom_res = boom.getScaledInstance(133, 88, Image.SCALE_DEFAULT);
+		JLabel hitted_image = new JLabel(new ImageIcon(boom_res));
+		hitted_image.setBounds(400, 256, 150, 100);
+		gamePane.add(hitted_image);
+		repaint();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

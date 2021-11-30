@@ -391,15 +391,17 @@ public class WaitingRoom extends JFrame {
 							playRoom.appendText("Game starts!!");
 							System.out.println("Game starts!!");
 							if (playRoom.startBtnLabel != null) {
-								System.out.println("!!");
 								playRoom.gamePane.remove(playRoom.startBtnLabel);
 								playRoom.repaint();
 							}
 							reload(ingame);
 						} else if (ingame.getCode().matches("701")) {
+							System.out.println("701 here");
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
-						}else if (ingame.getCode().matches("800")) {
+						} else if (ingame.getCode().matches("800")) {
+							System.out.println("800 here");
+							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
 						}
