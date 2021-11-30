@@ -109,7 +109,7 @@ public class Welcome extends JFrame {
 	            "images/Enter_btnUp.jpg").getImage()
 	            .getScaledInstance(90, 45,
 	                    java.awt.Image.SCALE_SMOOTH)))));
-		btnConnect .setPressedIcon(new ImageIcon("images/Enter_btnDown.jpg"));  // 눌린 버튼의 이미지
+		btnConnect.setPressedIcon(new ImageIcon("images/Enter_btnDown.jpg"));  // 눌린 버튼의 이미지
 		
 		btnConnect.setBounds(440, 535, 88, 38);
 		contentPane.add(btnConnect);

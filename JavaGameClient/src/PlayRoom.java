@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -8,12 +9,13 @@ import java.awt.Image;
 import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.text.Format;
 import java.util.List;
 import java.util.Vector;
 
@@ -84,6 +86,19 @@ public class PlayRoom extends JFrame {
 					System.exit(0);
 			}
 		}
+
+	}
+
+	class MyKeyListener extends KeyAdapter {
+		public void keyPressed(KeyEvent e) {
+			int keyCode = e.getKeyCode();
+
+			if (keyCode == 32) { // space를 누르면 ...
+				System.out.println("Yay you hitted ne " + userName);
+				InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
+				mainview.sendObject(tmp);
+			}
+		}
 	}
 
 	// 화면에 출력
@@ -135,6 +150,16 @@ public class PlayRoom extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		contentPane.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				Component c = (Component) e.getSource(); // 마우스가 클릭된 컴포넌트
+				c.setFocusable(true);
+				c.requestFocus();
+			}
+		});
+		contentPane.addKeyListener(new MyKeyListener());
+		contentPane.setFocusable(true);
+		contentPane.requestFocus();
 		repaint();
 
 		JScrollPane scrollPane = new JScrollPane();
@@ -208,7 +233,7 @@ public class PlayRoom extends JFrame {
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
-		txtInput.requestFocus();
+		// txtInput.requestFocus();
 
 		try {
 			BufferedImage myPicture = ImageIO.read(new File("images/bell.png"));
@@ -221,7 +246,7 @@ public class PlayRoom extends JFrame {
 			});
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
-			
+
 //			engine = new GameEngine2();
 			// engine.start();
 		} catch (NumberFormatException | IOException e1) {
@@ -480,11 +505,11 @@ public class PlayRoom extends JFrame {
 			player1_name.setBackground(Color.WHITE);
 			player1_name.setBounds(12, 10, 84, 40);
 			gamePane.add(player1_name);
-			
+
 			JLabel player1_down_cnt = new JLabel(Integer.toString(player1.back.size()));
 			player1_down_cnt.setBounds(115, 235, 66, 27);
 			gamePane.add(player1_down_cnt);
-			
+
 			repaint();
 		}
 
@@ -535,11 +560,11 @@ public class PlayRoom extends JFrame {
 			player2_name.setBackground(Color.WHITE);
 			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
-			
+
 			JLabel player2_down_cnt = new JLabel(Integer.toString(player2.back.size()));
 			player2_down_cnt.setBounds(755, 235, 66, 27);
 			gamePane.add(player2_down_cnt);
-			
+
 			repaint();
 		}
 
@@ -590,11 +615,11 @@ public class PlayRoom extends JFrame {
 			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player4_name.setBackground(Color.WHITE);
 			gamePane.add(player4_name);
-			
+
 			JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
 			player3_down_cnt.setBounds(755, 480, 66, 27);
 			gamePane.add(player3_down_cnt);
-			
+
 			repaint();
 		}
 
@@ -642,14 +667,14 @@ public class PlayRoom extends JFrame {
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
-			
+
 			JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
 			player4_down_cnt.setBounds(115, 480, 66, 27);
 			gamePane.add(player4_down_cnt);
-			
+
 			gamePane.add(player3_name);
 
-			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) 
+			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
 					&& players_inGame_info == null) {
 				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
 				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
@@ -670,27 +695,19 @@ public class PlayRoom extends JFrame {
 					}
 				});
 			}
-			
+
 			BufferedImage bellImage = ImageIO.read(new File("images/bell.png"));
 			JLabel picLabel = new JLabel(new ImageIcon(bellImage));
-			picLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println("Yay you clicked me " + userName);
-					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
-					mainview.sendObject(tmp);		
-				}
-			});
 			int totalCnt = 0;
-			for(int i = 0; i < players_inGame_info.size(); i++) {
+			for (int i = 0; i < players_inGame_info.size(); i++) {
 				totalCnt += players_inGame_info.get(i).front.size();
 			}
 			total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
-			total_up_cards_cnt.setBounds(425, 279, 57, 15);
+			total_up_cards_cnt.setBounds(425, 279, 60, 30);
 			gamePane.add(total_up_cards_cnt);
 			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 			gamePane.add(picLabel);
-			
+
 			repaint();
 		}
 	}
