@@ -739,22 +739,25 @@ public class JavaGameServer extends JFrame {
 										.equals(ingame.getFrom_where().getRoom_name()))
 									aGame = inGameList_server.get(i);
 							}
-							System.out.println(aGame.players.get(0).getPlayer_name());
 							for(int i = 0; i < aGame.players.size(); i++) {
 								if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
 										.equals(ingame.getFrom_whom())) {
 									Player player = aGame.players.get(i);
-									System.out.println(player.getPlayer_name() + 
-											" / card-back size : " + player.back.size());
 									if(!player.back.isEmpty())
 										player.front.add(player.back.remove(0)); // 카드를 뒤집음
-									System.out.println(player.getPlayer_name() + 
-											" / card-back size : " + player.back.size());
 								} 
 							}
 							aGame.setCode("701");
 							int current_turn = aGame.getWhose_turn();
+							// TODO: player가 뒤집을 카드가 있는지 판단
 							current_turn++;
+							while(true) { // 다음 차례의 player가 뒤집을 카드가 없다면 턴을 바로 넘겨라
+								if(aGame.players.get((current_turn)%4).back.size() == 0) {
+									current_turn++;
+									continue;
+								}
+								else break;
+							}
 							aGame.setWhose_turn(current_turn);
 							// update된 정보를 모든 player들에게 뿌림
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
