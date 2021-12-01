@@ -24,11 +24,21 @@ class UserConfig {
 	public static final int P4_UPY = 415;
 }
 
+class BackgroundConfig {
+	public static final String BACKGROUND_PANEL = "images/background_panel.jpg"; 
+	public static final String BACKGROUND = "images/background.jpg";
+	
+	public static final String BACKGROUND_P1 = "images/background_p1.jpg";
+	public static final String BACKGROUND_P2 = "images/background_p2.jpg";
+	public static final String BACKGROUND_P3 = "images/background_p3.jpg";
+	public static final String BACKGROUND_P4 = "images/background_p4.jpg";
+}
+
 class CardConfig {
 	public static final int CARD_WIDTH = 180;
 	public static final int CARD_HEIGHT = 130;
 
-	public static final String BLANK = "images/blank1.png";
+	public static final String BLANK = "images/blank.png";
 	
 	public static final String BANANA = "banana";
 	public static final String BANANA1 = "images/banana1.png";

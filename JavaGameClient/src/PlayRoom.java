@@ -149,12 +149,16 @@ public class PlayRoom extends JFrame {
 		// setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
+//		contentPane = new ImagePanel(
+//				new ImageIcon(BackgroundConfig.BACKGROUND_PANEL)
+//						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane = new ImagePanel(
-				new ImageIcon("images/background3.jpg")
+				new ImageIcon("images/background_panel.jpg")
 						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		// repaint();
 		contentPane.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Component c = (Component) e.getSource(); // 마우스가 클릭된 컴포넌트
@@ -230,14 +234,16 @@ public class PlayRoom extends JFrame {
 		room_name.setText(current_entered_room.getRoom_name());
 		contentPane.add(room_name);
 
-		// gamePane = new JPanel(); asdfasdf
+//		gamePane = new ImagePanel(
+//				new ImageIcon(BackgroundConfig.BACKGROUND)
+//						.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane = new ImagePanel(
 				new ImageIcon("images/background.jpg")
 						.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
+		repaint();
 		gamePane.setLayout(null);
-		
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
@@ -504,6 +510,8 @@ public class PlayRoom extends JFrame {
 			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 
 			if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
+				//BufferedImage image = ImageIO.read(new File(BackgroundConfig.BACKGROUND_P1));
+				//gamePane.imageUpdate(image, 0, 12, 10, 878, 713);
 				palyer1_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -559,6 +567,8 @@ public class PlayRoom extends JFrame {
 			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
 			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
+				//BufferedImage image = ImageIO.read(new File(BackgroundConfig.BACKGROUND_P1));
+				//gamePane.imageUpdate(image, 0, 12, 10, 878, 713);
 				palyer2_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
