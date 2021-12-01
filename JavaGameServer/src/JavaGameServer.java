@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -531,7 +532,7 @@ public class JavaGameServer extends JFrame {
 					for(int j = 0; j < players.size(); j++) {
 						if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) {
 							current_turn = j;
-							aGame.setWhose_turn(current_turn);
+							aGame.setWhose_turn(current_turn); // 올바르게 bell을 친 사람에게 turn을 줌
 						}
 						for(Card card: players.get(j).front) {
 							getCards.add(card);
@@ -541,54 +542,6 @@ public class JavaGameServer extends JFrame {
 					break;
 				}
 			}
-			// TODO: 자신 이외의 플레이어들에게 카드를 나눠줌 (나눠줄 카드 수가 3장 이하라면 랜덤하게 플레이어를 골라 줌)
-			Vector<Card> fault_cards = new Vector<Card>(); 
-			if(getCards.isEmpty()) { // bell을 치면 안되는데 침 -> getCards에 들어간게 없음
-				System.out.println("Fault!!");
-				for(int j = 0; j < players.size(); j++) { // 4명
-					if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신
-						for(int k = 0; k < 3; k++) { // 세 장을 back에서 제거
-							if(!players.get(j).back.isEmpty())
-								fault_cards.add(players.get(j).back.remove(players.get(j).back.size()-1));
-						}
-					}
-				}
-				
-				if(fault_cards.size() == 3) { // 줄 카드가 세 장이라면
-					for(int j = 0; j < players.size(); j++) { // 4명
-						int cnt = 0;
-						if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신은 pass
-							continue;
-						}
-						players.get(j).back.add(fault_cards.get(cnt++));
-					}
-					for(int j = 0; j < players.size(); j++) {
-						System.out.println("player " + players.get(j).getPlayer_name() +" / " + players.get(j).back.size());
-					}
-				}
-				// 세 장 이하라면 랜덤하게 플레이어를 뽑아 카드를 지급
-				if(fault_cards.size() >= 1 && fault_cards.size() < 3) {
-					Vector<Integer> tmp = new Vector<Integer>();
-					while(true) {
-						int ran = (int) (Math.random() * fault_cards.size()); // 하나를 랜덤하게 뽑아서 검사
-						for(int i = 0; i < tmp.size(); i++) { // 이미 있는 숫자라면 다시 뽑음
-							if(tmp.get(i) == ran) continue;
-						}
-						if(players.get(ran).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신은 pass
-							continue; // pass
-						}
-						else tmp.add(ran);
-						
-						if(tmp.size() == fault_cards.size()) break;
-					}
-					
-					for(int i = 0; i < tmp.size(); i++) {
-						players.get(tmp.get(i)).back.add(fault_cards.get(tmp.get(i)));
-						System.out.println("who are lucky?" + players.get(tmp.get(i)).getPlayer_name());
-					}
-				}
-			}
-			
 			for(int i = 0; i < aGame.players.size(); i++) {
 				if(aGame.players.get(i).getPlayer_name()	// 메시지를 보낸 player를 찾아 update
 						.equals(ingame.getFrom_whom())) {
@@ -597,6 +550,89 @@ public class JavaGameServer extends JFrame {
 						player.back.add(getCards.get(j)); // 카드를 추가
 					}
 				} 
+			}
+		
+			// TODO: 자신 이외의 플레이어들에게 카드를 나눠줌 (나눠줄 카드 수가 3장 이하라면 랜덤하게 플레이어를 골라 줌)
+			Vector<Card> fault_cards = new Vector<Card>(); 
+			if(getCards.isEmpty()) { // bell을 치면 안되는데 침 -> getCards에 들어간게 없음
+				System.out.println("Fault!!");
+				// 살아있는 플레이어의 수 & 자신이 가지고 있는 카드의 수를 체크해야 함
+				int playerCnt = 0; // 살아있는 플레이어의 수
+				int cardCnt = 0;	// 실수로 종을 친 플레이어의 카드에서 압수한 카드 (playerCnt >= cardCnt)
+				
+				for(Player player : players) {
+					if(!player.getIsDead()) playerCnt++;
+				}
+				
+				for(int j = 0; j < players.size(); j++) { // 4명
+					if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신
+						for(int k = 0; k < playerCnt-1; k++) { // 살아 있는 사람의 수만큼, 카드를 back에서 제거
+							if(!players.get(j).back.isEmpty()) {
+								// 세 장 이하라면, 있는 만큼 제거
+								fault_cards.add(players.get(j).back.remove(players.get(j).back.size()-1));
+								cardCnt++;
+							}
+						}
+					}
+				}
+				
+				// TODO: 카드를 줄 때, 게임에서 이미 진 사람에겐 주면 안된다
+				if(cardCnt == playerCnt -1) { // 줄 수 있는 카드가 살아있는 사람의 수와 같다면
+					for(int j = 0; j < players.size(); j++) { // 4명
+						int index = 0;
+						if(players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 종을 친 자기 자신은 pass
+							continue;
+						}
+						if(!players.get(j).getIsDead()) // 죽지 않았다면 카드를 줌
+							players.get(j).back.add(fault_cards.get(index++));
+					}
+					for(int j = 0; j < players.size(); j++) {
+						System.out.println("player " + players.get(j).getPlayer_name() +" / " + players.get(j).back.size());
+					}
+				}
+				
+				if(cardCnt < playerCnt -1) { // 줄 수 있는 카드가 살아있는 사람의 수보다 적다면.. 살아있는 사람 중 랜덤하게 뽑아서 줘야 해
+					Vector<Integer> tmp = new Vector<Integer>();
+					while(true) {
+						int ran_index = (int) (Math.random() * players.size()); // 하나를 랜덤하게 뽑아서 검사
+						System.out.println("ran >> " + ran_index);
+						if(!tmp.isEmpty()) {
+							System.out.println("not empty");
+							for(int i = 0; i < tmp.size(); i++) { // 이미 있는 숫자라면 다시 뽑음
+								System.out.println("기존 > " + tmp.get(i) + ", ran > " + ran_index);
+								if(tmp.get(i) != null && tmp.get(i) == ran_index) continue;
+								else break;
+							}
+						}
+						if(players.get(ran_index).getPlayer_name().equals(ingame.getFrom_whom())
+								|| players.get(ran_index).getIsDead()) { // 종을 친 자기 자신이거나 이미 죽은 사람이면 pass
+							continue; // pass
+						}
+						else tmp.add(ran_index);
+						
+						if(tmp.size() == fault_cards.size()) break;
+					}
+					// fault_cards : 종을 잘못 친 플레이어로부터 뽑아온 카드 (1, 2, 3)
+					// tmp : 카드를 줄 플레이어의 ran_index (0, 1, 2, 3)
+					int cnt = 0;
+					for(int i = 0; i < tmp.size(); i++) {
+						players.get(tmp.get(i)).back.add(fault_cards.get(cnt));
+						System.out.println("who are lucky? " + players.get(tmp.get(i)).getPlayer_name() + ", ran " + tmp.get(i)) ;
+					}
+					
+					/*
+					 * for(int i = 0; i < tmp.size(); i++) {
+					 * players.get(tmp.get(i)).back.add(fault_cards.get(tmp.get(i))); // 랜덤하게 뽑힌
+					 * 살아있는 플레이어들에게 지급 }
+					 */
+				}
+			}
+			
+			for(Player player : players) {	// 죽은 player의 상태 처리
+				if(player.back.size() == 0 && player.front.size() == 0) {
+					player.setIsDead(true);
+					player.setWhenDead(new Date());
+				}
 			}
 		}
 

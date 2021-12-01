@@ -316,7 +316,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player1_up_image;
 			if (player1.front.isEmpty())
-				player1_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P1_DEG);
+				player1_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P1_DEG);
 			else {
 				player1_up_image = rotate(
 						ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())),
@@ -354,7 +354,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player2_up_image;
 			if (player2.front.isEmpty())
-				player2_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P2_DEG);
+				player2_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P2_DEG);
 			else {
 				player2_up_image = rotate(
 						ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())),
@@ -392,7 +392,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player3_up_image;
 			if (player3.front.isEmpty())
-				player3_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P3_DEG);
+				player3_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P3_DEG);
 			else {
 				player3_up_image = rotate(
 						ImageIO.read(new File(player3.front.get(player3.front.size() - 1).getCard_info())),
@@ -430,7 +430,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player4_up_image;
 			if (player4.front.isEmpty())
-				player4_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P4_DEG);
+				player4_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P4_DEG);
 			else
 				player4_up_image = rotate(
 						ImageIO.read(new File(player4.front.get(player4.front.size() - 1).getCard_info())),
@@ -492,7 +492,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player1_up_image;
 			if (player1.front.isEmpty())
-				player1_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P1_DEG);
+				player1_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P1_DEG);
 			else {
 				player1_up_image = rotate(
 						ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())),
@@ -547,7 +547,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player2_up_image;
 			if (player2.front.isEmpty())
-				player2_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P2_DEG);
+				player2_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P2_DEG);
 			else {
 				player2_up_image = rotate(
 						ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())),
@@ -600,7 +600,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player3_up_image;
 			if (player3.front.isEmpty())
-				player3_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P3_DEG);
+				player3_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P3_DEG);
 			else {
 				player3_up_image = rotate(
 						ImageIO.read(new File(player3.front.get(player3.front.size() - 1).getCard_info())),
@@ -653,7 +653,7 @@ public class PlayRoom extends JFrame {
 
 			BufferedImage player4_up_image;
 			if (player4.front.isEmpty())
-				player4_up_image = rotate(ImageIO.read(new File("images/blank.jpg")), UserConfig.P4_DEG);
+				player4_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P4_DEG);
 			else
 				player4_up_image = rotate(
 						ImageIO.read(new File(player4.front.get(player4.front.size() - 1).getCard_info())),

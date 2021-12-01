@@ -1,5 +1,6 @@
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Vector;
 
 class Player implements Serializable {
@@ -10,7 +11,9 @@ class Player implements Serializable {
 	private Room current_room;
 	public Vector<Card> back = new Vector<Card>();
 	public Vector<Card> front = new Vector<Card>();
-	private String win_or_not;
+	private String medal;
+	private Boolean isDead = false;
+	private Date whenDead;
 
 	Player(String player_name, Room current_room) {
 		this.player_name = player_name;
@@ -18,6 +21,14 @@ class Player implements Serializable {
 	}
 	
 	Player() {	}
+
+	public Boolean getIsDead() {
+		return isDead;
+	}
+
+	public void setIsDead(Boolean isDead) {
+		this.isDead = isDead;
+	}
 
 	public String getCode() {
 		return code;
@@ -60,10 +71,18 @@ class Player implements Serializable {
 	}
 
 	public String getWin_or_not() {
-		return win_or_not;
+		return medal;
 	}
 
 	public void setWin_or_not(String win_or_not) {
-		this.win_or_not = win_or_not;
+		this.medal = win_or_not;
+	}
+
+	public Date getWhenDead() {
+		return whenDead;
+	}
+
+	public void setWhenDead(Date whenDead) {
+		this.whenDead = whenDead;
 	}
 }
