@@ -2,18 +2,17 @@
 // JavaObjClientView.java ObjecStram 기반 Client
 //실질적인 채팅 창
 import java.awt.Color;
-import java.awt.FileDialog;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -59,12 +58,8 @@ public class WaitingRoom extends JFrame {
 	private JTextPane textArea;
 	// private JTextArea textArea;
 
-	private Frame frame;
-	private FileDialog fd;
-	private JButton imgBtn;
 
 	JPanel panel;
-	private JLabel lblMouseEvent;
 	// 그려진 Image를 보관하는 용도, paint() 함수에서 이용한다.
 	public JPanel roomListJPanel;
 	// public JPanel roomEntry;
@@ -113,12 +108,7 @@ public class WaitingRoom extends JFrame {
 		client_userName = username;
 		lblUserName.setText(username);
 
-		imgBtn = new JButton("+");
-		imgBtn.setFont(new Font("굴림", Font.PLAIN, 16));
-		imgBtn.setBounds(902, 683, 50, 40);
-		contentPane.add(imgBtn);
-
-		JButton btnNewButton = new JButton("\uC885\uB8CC");
+		JButton btnNewButton = new JButton("\uC885\uB8CC"); // 종료
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -132,10 +122,13 @@ public class WaitingRoom extends JFrame {
 
 		view = this;
 
-		JButton makeNewRoom = new JButton("\uBC29 \uB9CC\uB4E4\uAE30"); // 방 만들기 버튼
-		makeNewRoom.setFont(new Font("양재블럭체", Font.PLAIN, 15));
-		makeNewRoom.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JLabel makeNewRoom = new JLabel(new ImageIcon(((new ImageIcon(
+	            "images/room.png").getImage()
+	            .getScaledInstance(147, 90,
+	                    java.awt.Image.SCALE_SMOOTH)))));
+		makeNewRoom.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
 				createNewRoom = new CreateNewRoom(username, view);
 			}
 		});
@@ -173,8 +166,6 @@ public class WaitingRoom extends JFrame {
 			btnSend.addActionListener(action);
 			txtInput.addActionListener(action);
 			txtInput.requestFocus();
-			ImageSendAction action2 = new ImageSendAction();
-			imgBtn.addActionListener(action2);
 		} catch (NumberFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -442,36 +433,6 @@ public class WaitingRoom extends JFrame {
 					System.exit(0);
 			}
 		}
-	}
-
-	class ImageSendAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// 액션 이벤트가 sendBtn일때 또는 textField 에세 Enter key 치면
-			if (e.getSource() == imgBtn) {
-				frame = new Frame("이미지첨부");
-				fd = new FileDialog(frame, "이미지 선택", FileDialog.LOAD);
-				// frame.setVisible(true);
-				// fd.setDirectory(".\\");
-				fd.setVisible(true);
-				// System.out.println(fd.getDirectory() + fd.getFile());
-				if (fd.getDirectory().length() > 0 && fd.getFile().length() > 0) {
-					ChatMsg obcm = new ChatMsg.ChatMsgBuilder("300", client_userName).data("IMG").build();
-					ImageIcon img = new ImageIcon(fd.getDirectory() + fd.getFile());
-					obcm.img = img;
-					sendObject(obcm);
-				}
-			}
-		}
-	}
-
-	ImageIcon icon1 = new ImageIcon("src/icon1.jpg");
-
-	public void AppendIcon(ImageIcon icon) {
-		int len = textArea.getDocument().getLength();
-		// 끝으로 이동
-		textArea.setCaretPosition(len);
-		textArea.insertIcon(icon);
 	}
 
 	// 화면에 출력
