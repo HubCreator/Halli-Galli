@@ -149,16 +149,15 @@ public class PlayRoom extends JFrame {
 		// setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
-//		contentPane = new ImagePanel(
-//				new ImageIcon(BackgroundConfig.BACKGROUND_PANEL)
-//						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane = new ImagePanel(
-				new ImageIcon("images/background_panel.jpg")
+				new ImageIcon(BackgroundConfig.BACKGROUND_PANEL)
 						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
+//		contentPane = new ImagePanel(
+//				new ImageIcon("images/background_panel.jpg")
+//						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		// repaint();
 		contentPane.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Component c = (Component) e.getSource(); // 마우스가 클릭된 컴포넌트
@@ -218,7 +217,6 @@ public class PlayRoom extends JFrame {
 				view.current_entered_room = null;
 				view.sendObject(room);
 				setVisible(false);
-				// view.net.run();
 				// view.setVisible(true);
 			}
 		});
@@ -235,11 +233,11 @@ public class PlayRoom extends JFrame {
 		contentPane.add(room_name);
 
 //		gamePane = new ImagePanel(
-//				new ImageIcon(BackgroundConfig.BACKGROUND)
+//				new ImageIcon("images/background.jpg")
 //						.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane = new ImagePanel(
-				new ImageIcon("images/background.jpg")
-						.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+				new ImageIcon(BackgroundConfig.BACKGROUND)
+				.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
 		repaint();
@@ -481,7 +479,28 @@ public class PlayRoom extends JFrame {
 	}
 
 	public void updateScreen() throws IOException {
+//		gamePane.removeAll();
 		gamePane.removeAll();
+		contentPane.remove(gamePane);
+		if(whose_turn % 4 == 0)
+			gamePane = new ImagePanel(
+					new ImageIcon(BackgroundConfig.BACKGROUND_P1)
+					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+		else if(whose_turn % 4 == 1)
+			gamePane = new ImagePanel(
+					new ImageIcon(BackgroundConfig.BACKGROUND_P2)
+					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+		else if(whose_turn % 4 == 2)
+			gamePane = new ImagePanel(
+					new ImageIcon(BackgroundConfig.BACKGROUND_P3)
+					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+		else
+			gamePane = new ImagePanel(
+					new ImageIcon(BackgroundConfig.BACKGROUND_P4)
+					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+		gamePane.setBounds(12, 10, 878, 713);
+		contentPane.add(gamePane);
+		// repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
 			if (!player1.back.isEmpty()) {
@@ -510,8 +529,6 @@ public class PlayRoom extends JFrame {
 			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 
 			if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
-				//BufferedImage image = ImageIO.read(new File(BackgroundConfig.BACKGROUND_P1));
-				//gamePane.imageUpdate(image, 0, 12, 10, 878, 713);
 				palyer1_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
@@ -567,8 +584,6 @@ public class PlayRoom extends JFrame {
 			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
 			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
 			if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
-				//BufferedImage image = ImageIO.read(new File(BackgroundConfig.BACKGROUND_P1));
-				//gamePane.imageUpdate(image, 0, 12, 10, 878, 713);
 				palyer2_down.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseReleased(MouseEvent e) {
