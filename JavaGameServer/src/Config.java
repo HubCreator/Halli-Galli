@@ -39,6 +39,7 @@ class CardConfig {
 	public static final int CARD_HEIGHT = 130;
 
 	public static final String BLANK = "images/blank.png";
+	public static final String BACK = "images/back.png";
 	
 	public static final String BANANA = "banana";
 	public static final String BANANA1 = "images/banana1.png";

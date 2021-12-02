@@ -34,16 +34,11 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 public class WaitingRoom extends JFrame {
-	public enum CurrentStatus {
-		WAITING, PLAYING, OBSERVING
-	};
-
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtInput;
 	public String client_userName;
 	private JButton btnSend;
-	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 	public Socket socket; // 연결소켓
 
 	public ObjectInputStream ois;
@@ -56,13 +51,11 @@ public class WaitingRoom extends JFrame {
 
 	private JLabel lblUserName;
 	private JTextPane textArea;
-	// private JTextArea textArea;
 
 
 	JPanel panel;
 	// 그려진 Image를 보관하는 용도, paint() 함수에서 이용한다.
 	public JPanel roomListJPanel;
-	// public JPanel roomEntry;
 	public List<Room> roomList_client = new ArrayList<>();
 	ListenNetwork net;
 
@@ -231,9 +224,7 @@ public class WaitingRoom extends JFrame {
 			JLabel room_player = new JLabel();
 			room_player.setBackground(Color.WHITE);
 			room_player.setBounds(514, 12, 116, 32);
-			// System.out.println("1-1)players " + list.get(i).getPlayers().size());
 			room_player.setText(Integer.toString(list.get(i).getPlayers().size()));
-			// room_player.repaint();
 			roomEntry.add(room_player);
 
 			JLabel room_observer = new JLabel();
@@ -344,23 +335,19 @@ public class WaitingRoom extends JFrame {
 						}
 					} else if (room != null) {
 						if (room.getCode().matches("601")) {
-							System.out.println("Received Room List");
 							List<Room> list = room.getRoomList();
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();
 							showRoomList(list);
 						} else if (room.getCode().matches("603")) {
-							System.out.println("MasterUser entered");
 							current_entered_room = room; // current_entered_room : 전달 받은 Room의 정보
 							setVisible(false);
 							playRoom = new PlayRoom(view, room); // playRoom : client가 만든 새로운 룸
 							playRoom.updatePlayers();
 						} else if (room.getCode().matches("605")) {
-							System.out.println("EXIT!!");
 							current_entered_room = null;
 							setVisible(true);
 						} else if (room.getCode().matches("607")) {
-							System.out.println("Entering");
 							current_entered_room = null;
 							current_entered_room = room;
 							if (playRoom == null) {
@@ -379,19 +366,16 @@ public class WaitingRoom extends JFrame {
 						}
 					} else if (ingame != null) {
 						if (ingame.getCode().matches("700")) {
-							playRoom.appendText("Game starts!!");
-							System.out.println("Game starts!!");
+							playRoom.appendText("[SERVER] Game starts!!");
 							if (playRoom.startBtnLabel != null) {
 								playRoom.gamePane.remove(playRoom.startBtnLabel);
 								playRoom.repaint();
 							}
 							reload(ingame);
-						} else if (ingame.getCode().matches("701")) {
-							System.out.println("701 here");
+						} else if (ingame.getCode().matches("701")) { // 카드 뒤집기
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
-						} else if (ingame.getCode().matches("800")) {
-							System.out.println("800 here");
+						} else if (ingame.getCode().matches("800")) { // 종을 침
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
@@ -424,7 +408,6 @@ public class WaitingRoom extends JFrame {
 			// Send button을 누르거나 메시지 입력하고 Enter key 치면
 			if (e.getSource() == btnSend || e.getSource() == txtInput) {
 				String msg = null;
-				// msg = String.format("[%s] %s\n", UserName, txtInput.getText());
 				msg = txtInput.getText();
 				sendMessage(msg);
 				txtInput.setText(""); // 메세지를 보내고 나면 메세지 쓰는창을 비운다.
@@ -476,7 +459,6 @@ public class WaitingRoom extends JFrame {
 			oos.writeObject(obcm);
 			oos.reset();
 		} catch (IOException e) {
-			// appendText("dos.write() error");
 			appendText("oos.writeObject() error");
 			try {
 				ois.close();
@@ -497,7 +479,6 @@ public class WaitingRoom extends JFrame {
 			oos.writeObject(obcm);
 			oos.reset();
 		} catch (IOException e) {
-			// appendText("dos.write() error");
 			appendText("oos.writeObject() error");
 			try {
 				ois.close();

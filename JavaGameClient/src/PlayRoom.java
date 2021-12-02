@@ -94,7 +94,6 @@ public class PlayRoom extends JFrame {
 			int keyCode = e.getKeyCode();
 
 			if (keyCode == 32) { // space를 누르면 ...
-				System.out.println("Yay you hitted me " + userName);
 				try {
 					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
 					mainview.sendObject(tmp);
@@ -152,9 +151,6 @@ public class PlayRoom extends JFrame {
 		contentPane = new ImagePanel(
 				new ImageIcon(BackgroundConfig.BACKGROUND_PANEL)
 						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
-//		contentPane = new ImagePanel(
-//				new ImageIcon("images/background_panel.jpg")
-//						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -232,9 +228,6 @@ public class PlayRoom extends JFrame {
 		room_name.setText(current_entered_room.getRoom_name());
 		contentPane.add(room_name);
 
-//		gamePane = new ImagePanel(
-//				new ImageIcon("images/background.jpg")
-//						.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane = new ImagePanel(
 				new ImageIcon(BackgroundConfig.BACKGROUND)
 				.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
@@ -247,24 +240,6 @@ public class PlayRoom extends JFrame {
 		txtInput.addActionListener(action);
 		// txtInput.requestFocus();
 
-		try {
-			BufferedImage myPicture = ImageIO.read(new File("images/bell.png"));
-			JLabel picLabel = new JLabel(new ImageIcon(myPicture));
-			picLabel.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println("Yay you clicked me");
-				}
-			});
-			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
-			gamePane.add(picLabel);
-			
-//			engine = new GameEngine2();
-			// engine.start();
-		} catch (NumberFormatException | IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
 	}
 	
 	public void hitted() throws IOException {
@@ -305,9 +280,8 @@ public class PlayRoom extends JFrame {
 
 	public void updatePlayers() throws IOException {
 		gamePane.removeAll();
-		// repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 			player1.setPlayer_name(mainview.client_userName);
 			player1.setCurrent_room(mainview.current_entered_room);
 			BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
@@ -347,7 +321,7 @@ public class PlayRoom extends JFrame {
 			player2.setPlayer_name(mainview.client_userName);
 			player2.setCurrent_room(mainview.current_entered_room);
 
-			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 			BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 			Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 					CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -382,7 +356,7 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 			player3.setPlayer_name(mainview.client_userName);
 			player3.setCurrent_room(mainview.current_entered_room);
 
@@ -420,7 +394,7 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 			player4.setPlayer_name(mainview.client_userName);
 			player4.setCurrent_room(mainview.current_entered_room);
 
@@ -502,7 +476,7 @@ public class PlayRoom extends JFrame {
 		contentPane.add(gamePane);
 		// repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 			if (!player1.back.isEmpty()) {
 				player1.setPlayer_name(mainview.client_userName);
 				player1.setCurrent_room(mainview.current_entered_room);
@@ -560,7 +534,7 @@ public class PlayRoom extends JFrame {
 			player2.setPlayer_name(mainview.client_userName);
 			player2.setCurrent_room(mainview.current_entered_room);
 			if (!player2.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 				BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
 				Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -613,7 +587,7 @@ public class PlayRoom extends JFrame {
 			player3.setPlayer_name(mainview.client_userName);
 			player3.setCurrent_room(mainview.current_entered_room);
 			if (!player3.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 				BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
 				Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -666,7 +640,7 @@ public class PlayRoom extends JFrame {
 			player4.setPlayer_name(mainview.client_userName);
 			player4.setCurrent_room(mainview.current_entered_room);
 			if (!player4.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File("images/back3.png"));
+				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 				BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
 				Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
