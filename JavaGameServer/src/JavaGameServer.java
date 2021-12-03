@@ -31,7 +31,7 @@ public class JavaGameServer extends JFrame {
 	private JTextField txtPortNumber;
 	private ServerSocket socket; // 서버소켓
 	private Socket client_socket; // accept() 에서 생성된 client 소켓
-	private Vector UserVec = new Vector(); // 연결된 사용자를 저장할 벡터
+	private Vector<UserService> UserVec = new Vector<UserService>(); // 연결된 사용자를 저장할 벡터
 	private ArrayList<Room> roomList_server = new ArrayList<>(); // 전체 룸의 리스트
 	private ArrayList<InGame> inGameList_server = new ArrayList<>(); // 실행중이 게임 정보
 	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
@@ -127,13 +127,11 @@ public class JavaGameServer extends JFrame {
 	}
 
 	public void appendText(String str) {
-		// textArea.append("사용자로부터 들어온 메세지 : " + str+"\n");
 		textArea.append(str + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
 	public void appendMsg(ChatMsg msg) {
-		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
 		textArea.append("code = " + msg.code + "\n");
 		textArea.append("id = " + msg.userName + "\n");
 		textArea.append("data = " + msg.data + "\n");
@@ -141,7 +139,6 @@ public class JavaGameServer extends JFrame {
 	}
 
 	public void appendRoom(Room room) {
-		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
 		textArea.append("code = " + room.getCode() + "\n");
 		textArea.append("room_name = " + room.getRoom_name() + "\n");
 		textArea.append("password = " + room.getPassword() + "\n");
@@ -149,7 +146,6 @@ public class JavaGameServer extends JFrame {
 	}
 
 	public void appendInGame(InGame ingame) {
-		// textArea.append("사용자로부터 들어온 object : " + str+"\n");
 		textArea.append("code = " + ingame.getCode() + "\n");
 		textArea.append("from_whom = " + ingame.getFrom_whom() + "\n");
 		textArea.append("from_where = " + ingame.getFrom_where().getRoom_name() + "\n");
@@ -477,7 +473,7 @@ public class JavaGameServer extends JFrame {
 			}
 			
 
-			Collections.shuffle(total_cards);
+			Collections.shuffle(total_cards); // 셔플
 
 			return total_cards;
 		}
@@ -620,11 +616,6 @@ public class JavaGameServer extends JFrame {
 						System.out.println("who are lucky? " + players.get(tmp.get(i)).getPlayer_name() + ", ran " + tmp.get(i)) ;
 					}
 					
-					/*
-					 * for(int i = 0; i < tmp.size(); i++) {
-					 * players.get(tmp.get(i)).back.add(fault_cards.get(tmp.get(i))); // 랜덤하게 뽑힌
-					 * 살아있는 플레이어들에게 지급 }
-					 */
 				}
 			}
 			

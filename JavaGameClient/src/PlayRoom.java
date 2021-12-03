@@ -313,6 +313,8 @@ public class PlayRoom extends JFrame {
 			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player1_name.setText(players.get(0));
 			player1_name.setBackground(Color.WHITE);
+			if(players.get(0).equals(mainview.client_userName))
+				player1_name.setForeground(Color.BLUE);
 			player1_name.setBounds(12, 10, 84, 40);
 			gamePane.add(player1_name);
 		}
@@ -351,6 +353,8 @@ public class PlayRoom extends JFrame {
 			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player2_name.setText(players.get(1));
 			player2_name.setBackground(Color.WHITE);
+			if(players.get(1).equals(mainview.client_userName))
+				player2_name.setForeground(Color.BLUE);
 			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
 		}
@@ -390,6 +394,8 @@ public class PlayRoom extends JFrame {
 			player4_name.setText(players.get(2));
 			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player4_name.setBackground(Color.WHITE);
+			if(players.get(2).equals(mainview.client_userName))
+				player4_name.setForeground(Color.BLUE);
 			gamePane.add(player4_name);
 		}
 
@@ -426,6 +432,8 @@ public class PlayRoom extends JFrame {
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
+			if(players.get(3).equals(mainview.client_userName))
+				player3_name.setForeground(Color.BLUE);
 			gamePane.add(player3_name);
 
 			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
@@ -453,9 +461,9 @@ public class PlayRoom extends JFrame {
 	}
 
 	public void updateScreen() throws IOException {
-//		gamePane.removeAll();
 		gamePane.removeAll();
 		contentPane.remove(gamePane);
+		// 차례에 따른 배경 변화
 		if(whose_turn % 4 == 0)
 			gamePane = new ImagePanel(
 					new ImageIcon(BackgroundConfig.BACKGROUND_P1)
@@ -474,7 +482,6 @@ public class PlayRoom extends JFrame {
 					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
-		// repaint();
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 			if (!player1.back.isEmpty()) {
@@ -522,6 +529,8 @@ public class PlayRoom extends JFrame {
 			// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 			player1_name.setText(players.get(0));
 			player1_name.setBackground(Color.WHITE);
+			if(players.get(0).equals(mainview.client_userName))
+				player1_name.setForeground(Color.BLUE);
 			player1_name.setBounds(12, 10, 84, 40);
 			gamePane.add(player1_name);
 
@@ -575,6 +584,8 @@ public class PlayRoom extends JFrame {
 			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player2_name.setText(players.get(1));
 			player2_name.setBackground(Color.WHITE);
+			if(players.get(1).equals(mainview.client_userName))
+				player2_name.setForeground(Color.BLUE);
 			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
 
@@ -629,6 +640,8 @@ public class PlayRoom extends JFrame {
 			player4_name.setText(players.get(2));
 			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player4_name.setBackground(Color.WHITE);
+			if(players.get(2).equals(mainview.client_userName))
+				player4_name.setForeground(Color.BLUE);
 			gamePane.add(player4_name);
 
 			JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
@@ -680,6 +693,8 @@ public class PlayRoom extends JFrame {
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
+			if(players.get(3).equals(mainview.client_userName))
+				player3_name.setForeground(Color.BLUE);
 
 			JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
 			player4_down_cnt.setBounds(115, 480, 66, 27);
@@ -703,6 +718,7 @@ public class PlayRoom extends JFrame {
 			for (int i = 0; i < players_inGame_info.size(); i++) {
 				totalCnt += players_inGame_info.get(i).front.size();
 			}
+			
 			if(totalCnt != 0) {
 				total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
 				total_up_cards_cnt.setBounds(425, 279, 60, 30);
