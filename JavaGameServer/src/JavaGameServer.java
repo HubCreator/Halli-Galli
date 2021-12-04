@@ -499,10 +499,6 @@ public class JavaGameServer extends JFrame {
 			return result;
 		}
 
-		public void isHit(InGame ingame, InGame aGame, Vector<Player> players, Vector<Card> front_cards) {
-
-		}
-		
 		public InGame findRoom(String room_name) {
 			InGame aGame = new InGame();
 			for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
@@ -727,7 +723,6 @@ public class JavaGameServer extends JFrame {
 							Vector<Player> players;
 							Vector<Card> front_cards = new Vector<Card>();
 							int current_turn;
-//							String who_hitted_bell = null;
 							Vector<Card> getCards = new Vector<Card>();
 							Vector<Card> fault_cards = new Vector<Card>();
 							Player hitter = null;
@@ -735,38 +730,29 @@ public class JavaGameServer extends JFrame {
 							InGame aGame = new InGame();
 							
 							aGame = findRoom(ingame.getFrom_where().getRoom_name()); // 방을 서버의 ingame list에서 찾음
-							players = aGame.players;
+							players = aGame.players; // 게임을 진행하는 방 안에 있는 참가자들
 							front_cards = getFrontCards(players); // 앞면으로 올라와 있는 맨 앞의 카드를 모두 모아둠 (최대 총 4장)
 							hitter = whoIsHitter(players, ingame); // 종을 친 사람
 							
 							
 							// 제대로 bell을 쳤는지 판단
 							if(isHittedRight(front_cards)) { // 올바르게 침 
-								for (int j = 0; j < players.size(); j++) { // 방 안의 4명의 플레이어를 검사
-									if (players.get(j).getPlayer_name().equals(ingame.getFrom_whom())) { // 누가 벨을 쳤는지 check
-//										who_hitted_bell = ingame.getFrom_whom();
-										current_turn = j;
-										aGame.setWhose_turn(current_turn); // 올바르게 bell을 친 사람에게 turn을 줌
+								current_turn = players.indexOf(hitter);
+								aGame.setWhose_turn(current_turn); // 올바르게 bell을 친 사람에게 turn을 줌
+								
+								for(Player player : players) { // 모든 플레이어들의 모든 앞면 카드를 가져옴 
+									for(Card card : player.front) {
+										getCards.add(card);
 									}
-									for (Card card : players.get(j).front) {
-										getCards.add(card); // 원래 가지고 있는 카드를 getCards에 모두 옴겨 담음
-									}
-									players.get(j).front.clear(); // clear
+									player.front.clear();
 								}
 								
-								for (int j = 0; j < getCards.size(); j++) {
-									hitter.back.add(getCards.get(j)); // 종을 친 사람에게 카드를 추가
+								Collections.shuffle(getCards); // 셔플
+								
+								for (Card card : getCards) {
+									hitter.back.add(card); // 종을 친 사람에게 카드 추가
 								}
 								
-								for (int i = 0; i < players.size(); i++) { // 방 안의 4명의 플레이어를 검사
-									// 메시지를 보낸 player를 찾아 update
-									if (hitter.getPlayer_name() != null && players.get(i).getPlayer_name().equals(hitter.getPlayer_name())) {
-										Player player = players.get(i);
-										for (int j = 0; j < getCards.size(); j++) {
-											player.back.add(getCards.get(j)); // 카드를 추가
-										}
-									}
-								}
 							} else { // 잘못 침
 								System.out.println("Fault!!");
 								// 살아있는 플레이어의 수 & 자신이 가지고 있는 카드의 수를 체크해야 함
