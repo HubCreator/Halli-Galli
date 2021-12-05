@@ -12,12 +12,12 @@ class InGame implements Serializable {
 	private Room from_where;
 	private String masterUser;
 	public int whose_turn = 0;
-	//public List<String> players = new ArrayList<>();
 	public List<String> observers = new ArrayList<>();
-	//public Vector<Card> totalCard = new Vector<Card>();
 	public Vector<Player> players = new Vector<Player>();
+	public Vector<Player> ranking = new Vector<Player>();
 	public Vector<Card> upCard = new Vector<Card>();
 	public Vector<Card> downCard = new Vector<Card>();
+	
 
 	public InGame() {	}
 

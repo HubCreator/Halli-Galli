@@ -68,6 +68,7 @@ public class PlayRoom extends JFrame {
 	int whose_turn = 0;
 	private JLabel total_up_cards_cnt;
 	public boolean didOtherHIt = false;
+	public Vector<Player> ranking = new Vector<Player>();
 
 //	public GameEngine2 engine;
 
@@ -236,6 +237,7 @@ public class PlayRoom extends JFrame {
 		contentPane.add(gamePane);
 		repaint();
 		gamePane.setLayout(null);
+		
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
@@ -486,252 +488,284 @@ public class PlayRoom extends JFrame {
 					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
+		
+		
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
-			BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
-			if (!player1.back.isEmpty()) {
-				player1.setPlayer_name(mainview.client_userName);
-				player1.setCurrent_room(mainview.current_entered_room);
-				BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
-				Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-				palyer1_down = new JLabel(new ImageIcon(player1_down_res));
-				palyer1_down.setBounds(UserConfig.P1_DOWNX, UserConfig.P1_DOWNY, CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT);
-				gamePane.add(palyer1_down);
-			}
-
-			BufferedImage player1_up_image;
-			if (player1.front.isEmpty())
-				player1_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P1_DEG);
-			else {
-				player1_up_image = rotate(
-						ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())),
-						UserConfig.P1_DEG);
-			}
-			Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
-					Image.SCALE_DEFAULT);
-			palyer1_up = new JLabel(new ImageIcon(player1_up_result));
-			palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-
-			if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
-				palyer1_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						System.out.println("1111111111111111111");
-						InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
-						mainview.sendObject(result);
+			if(player1.getIsDead() == true) {
+				// player1 is dead
+				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				player1_dead.setBounds(113, 102, 168, 163);
+				for(Player player : ranking) {
+					if(player.equals(player1)) {
+						System.out.println("hi");
 					}
-				});
+				}
+				gamePane.add(player1_dead);
+			} else {
+				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
+				if (!player1.back.isEmpty()) {
+					player1.setPlayer_name(mainview.client_userName);
+					player1.setCurrent_room(mainview.current_entered_room);
+					BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
+					Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+					palyer1_down = new JLabel(new ImageIcon(player1_down_res));
+					palyer1_down.setBounds(UserConfig.P1_DOWNX, UserConfig.P1_DOWNY, CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT);
+					gamePane.add(palyer1_down);
+				}
+
+				BufferedImage player1_up_image;
+				
+				if (player1.front.isEmpty())
+					player1_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P1_DEG);
+				else {
+					player1_up_image = rotate(ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())), UserConfig.P1_DEG);
+				}
+				Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				palyer1_up = new JLabel(new ImageIcon(player1_up_result));
+				palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+
+				if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
+					palyer1_down.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							System.out.println("1111111111111111111");
+							InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
+							mainview.sendObject(result);
+						}
+					});
+				}
+
+				gamePane.add(palyer1_up);
+
+				JLabel player1_name = new JLabel((String) null);
+				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+				player1_name.setText(players.get(0));
+				player1_name.setBackground(Color.WHITE);
+				if(players.get(0).equals(mainview.client_userName))
+					player1_name.setForeground(Color.BLUE);
+				player1_name.setBounds(12, 10, 84, 40);
+				gamePane.add(player1_name);
+
+				JLabel player1_down_cnt = new JLabel(Integer.toString(player1.back.size()));
+				player1_down_cnt.setBounds(115, 235, 66, 27);
+				gamePane.add(player1_down_cnt);
 			}
-
-			gamePane.add(palyer1_up);
-
-			JLabel player1_name = new JLabel((String) null);
-			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-			// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
-			player1_name.setText(players.get(0));
-			player1_name.setBackground(Color.WHITE);
-			if(players.get(0).equals(mainview.client_userName))
-				player1_name.setForeground(Color.BLUE);
-			player1_name.setBounds(12, 10, 84, 40);
-			gamePane.add(player1_name);
-
-			JLabel player1_down_cnt = new JLabel(Integer.toString(player1.back.size()));
-			player1_down_cnt.setBounds(115, 235, 66, 27);
-			gamePane.add(player1_down_cnt);
 		}
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
-			player2.setPlayer_name(mainview.client_userName);
-			player2.setCurrent_room(mainview.current_entered_room);
-			if (!player2.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
-				BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
-				Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-				palyer2_down = new JLabel(new ImageIcon(player2_down_res));
-				palyer2_down.setBounds(UserConfig.P2_DOWNX, UserConfig.P2_DOWNY, CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT);
-				gamePane.add(palyer2_down);
+			if(player2.getIsDead() == true) {
+				// player2 is dead
+				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				player2_dead.setBounds(593, 102, 168, 163);
+				gamePane.add(player2_dead);
+				
+			} else {
+				player2.setPlayer_name(mainview.client_userName);
+				player2.setCurrent_room(mainview.current_entered_room);
+				if (!player2.back.isEmpty()) {
+					BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
+					BufferedImage player2_down_rotated = rotate(myPicture, UserConfig.P2_DEG);
+					Image player2_down_res = player2_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+					palyer2_down = new JLabel(new ImageIcon(player2_down_res));
+					palyer2_down.setBounds(UserConfig.P2_DOWNX, UserConfig.P2_DOWNY, CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT);
+					gamePane.add(palyer2_down);
+				}
+
+				BufferedImage player2_up_image;
+				if (player2.front.isEmpty())
+					player2_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P2_DEG);
+				else {
+					player2_up_image = rotate(ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())), UserConfig.P2_DEG);
+				}
+
+				Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				palyer2_up = new JLabel(new ImageIcon(player2_up_result));
+				palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
+					palyer2_down.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							System.out.println("2222222222222");
+							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+							mainview.sendObject(tmp);
+						}
+					});
+				}
+				gamePane.add(palyer2_up);
+
+				JLabel player2_name = new JLabel((String) null);
+				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				player2_name.setText(players.get(1));
+				player2_name.setBackground(Color.WHITE);
+				if(players.get(1).equals(mainview.client_userName))
+					player2_name.setForeground(Color.BLUE);
+				player2_name.setBounds(866 - 84, 10, 84, 40);
+				gamePane.add(player2_name);
+
+				JLabel player2_down_cnt = new JLabel(Integer.toString(player2.back.size()));
+				player2_down_cnt.setBounds(755, 235, 66, 27);
+				gamePane.add(player2_down_cnt);
 			}
-
-			BufferedImage player2_up_image;
-			if (player2.front.isEmpty())
-				player2_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P2_DEG);
-			else {
-				player2_up_image = rotate(
-						ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())),
-						UserConfig.P2_DEG);
-			}
-
-			Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
-					Image.SCALE_DEFAULT);
-			palyer2_up = new JLabel(new ImageIcon(player2_up_result));
-			palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
-				palyer2_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						System.out.println("2222222222222");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						mainview.sendObject(tmp);
-					}
-				});
-			}
-			gamePane.add(palyer2_up);
-
-			JLabel player2_name = new JLabel((String) null);
-			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-			player2_name.setText(players.get(1));
-			player2_name.setBackground(Color.WHITE);
-			if(players.get(1).equals(mainview.client_userName))
-				player2_name.setForeground(Color.BLUE);
-			player2_name.setBounds(866 - 84, 10, 84, 40);
-			gamePane.add(player2_name);
-
-			JLabel player2_down_cnt = new JLabel(Integer.toString(player2.back.size()));
-			player2_down_cnt.setBounds(755, 235, 66, 27);
-			gamePane.add(player2_down_cnt);
 		}
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
-			player3.setPlayer_name(mainview.client_userName);
-			player3.setCurrent_room(mainview.current_entered_room);
-			if (!player3.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
-				BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
-				Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-				palyer3_down = new JLabel(new ImageIcon(player3_down_res));
-				palyer3_down.setBounds(UserConfig.P3_DOWNX, UserConfig.P3_DOWNY, CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT);
-				gamePane.add(palyer3_down);
+			if(player3.getIsDead() == true) {
+				// player3 is dead
+				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				player3_dead.setBounds(593, 435, 168, 163);
+				gamePane.add(player3_dead);
+				
+			} else {
+				player3.setPlayer_name(mainview.client_userName);
+				player3.setCurrent_room(mainview.current_entered_room);
+				if (!player3.back.isEmpty()) {
+					BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
+					BufferedImage player3_down_rotated = rotate(myPicture, UserConfig.P3_DEG);
+					Image player3_down_res = player3_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+					palyer3_down = new JLabel(new ImageIcon(player3_down_res));
+					palyer3_down.setBounds(UserConfig.P3_DOWNX, UserConfig.P3_DOWNY, CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT);
+					gamePane.add(palyer3_down);
+				}
+
+				BufferedImage player3_up_image;
+				if (player3.front.isEmpty())
+					player3_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P3_DEG);
+				else {
+					player3_up_image = rotate(
+							ImageIO.read(new File(player3.front.get(player3.front.size() - 1).getCard_info())),
+							UserConfig.P3_DEG);
+				}
+
+				Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+						Image.SCALE_DEFAULT);
+				palyer3_up = new JLabel(new ImageIcon(player3_up_result));
+				palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				if (mainview.client_userName.equals(players.get(2)) && whose_turn % 4 == 2) {
+					palyer3_down.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							System.out.println("33333333333333333");
+							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+							mainview.sendObject(tmp);
+						}
+					});
+				}
+				gamePane.add(palyer3_up);
+
+				JLabel player4_name = new JLabel((String) null);
+				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
+				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player4_name.setText(players.get(2));
+				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				player4_name.setBackground(Color.WHITE);
+				if(players.get(2).equals(mainview.client_userName))
+					player4_name.setForeground(Color.BLUE);
+				gamePane.add(player4_name);
+
+				JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
+				player3_down_cnt.setBounds(755, 480, 66, 27);
+				gamePane.add(player3_down_cnt);
 			}
-
-			BufferedImage player3_up_image;
-			if (player3.front.isEmpty())
-				player3_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P3_DEG);
-			else {
-				player3_up_image = rotate(
-						ImageIO.read(new File(player3.front.get(player3.front.size() - 1).getCard_info())),
-						UserConfig.P3_DEG);
-			}
-
-			Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
-					Image.SCALE_DEFAULT);
-			palyer3_up = new JLabel(new ImageIcon(player3_up_result));
-			palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(2)) && whose_turn % 4 == 2) {
-				palyer3_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						System.out.println("33333333333333333");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						mainview.sendObject(tmp);
-					}
-				});
-			}
-			gamePane.add(palyer3_up);
-
-			JLabel player4_name = new JLabel((String) null);
-			player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
-			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-			player4_name.setText(players.get(2));
-			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-			player4_name.setBackground(Color.WHITE);
-			if(players.get(2).equals(mainview.client_userName))
-				player4_name.setForeground(Color.BLUE);
-			gamePane.add(player4_name);
-
-			JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
-			player3_down_cnt.setBounds(755, 480, 66, 27);
-			gamePane.add(player3_down_cnt);
 		}
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
-			player4.setPlayer_name(mainview.client_userName);
-			player4.setCurrent_room(mainview.current_entered_room);
-			if (!player4.back.isEmpty()) {
-				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
-				BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
-				Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
-				palyer4_down = new JLabel(new ImageIcon(player4_down_res));
-				palyer4_down.setBounds(UserConfig.P4_DOWNX, UserConfig.P4_DOWNY, CardConfig.CARD_WIDTH,
-						CardConfig.CARD_HEIGHT);
-				gamePane.add(palyer4_down);
-			}
+			if(player4.getIsDead() == true) {
+				// player4 is dead
+				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				player4_dead.setBounds(113, 435, 168, 163);
+				gamePane.add(player4_dead);
+			} else {
+				player4.setPlayer_name(mainview.client_userName);
+				player4.setCurrent_room(mainview.current_entered_room);
+				if (!player4.back.isEmpty()) {
+					BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
+					BufferedImage player4_down_rotated = rotate(myPicture, UserConfig.P4_DEG);
+					Image player4_down_res = player4_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+					palyer4_down = new JLabel(new ImageIcon(player4_down_res));
+					palyer4_down.setBounds(UserConfig.P4_DOWNX, UserConfig.P4_DOWNY, CardConfig.CARD_WIDTH,
+							CardConfig.CARD_HEIGHT);
+					gamePane.add(palyer4_down);
+				}
 
-			BufferedImage player4_up_image;
-			if (player4.front.isEmpty())
-				player4_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P4_DEG);
-			else
-				player4_up_image = rotate(
-						ImageIO.read(new File(player4.front.get(player4.front.size() - 1).getCard_info())),
-						UserConfig.P4_DEG);
-			Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
-					Image.SCALE_DEFAULT);
-			palyer4_up = new JLabel(new ImageIcon(player4_up_result));
-			palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
-			if (mainview.client_userName.equals(players.get(3)) && whose_turn % 4 == 3) {
-				palyer4_down.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseReleased(MouseEvent e) {
-						System.out.println("4444444444444444444444");
-						InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
-						mainview.sendObject(tmp);
-					}
-				});
-			}
-			gamePane.add(palyer4_up);
+				BufferedImage player4_up_image;
+				if (player4.front.isEmpty())
+					player4_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P4_DEG);
+				else
+					player4_up_image = rotate(
+							ImageIO.read(new File(player4.front.get(player4.front.size() - 1).getCard_info())),
+							UserConfig.P4_DEG);
+				Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
+						Image.SCALE_DEFAULT);
+				palyer4_up = new JLabel(new ImageIcon(player4_up_result));
+				palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				if (mainview.client_userName.equals(players.get(3)) && whose_turn % 4 == 3) {
+					palyer4_down.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							System.out.println("4444444444444444444444");
+							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+							mainview.sendObject(tmp);
+						}
+					});
+				}
+				gamePane.add(palyer4_up);
 
-			JLabel player3_name = new JLabel((String) null);
-			player3_name.setBounds(12, 703 - 40, 84, 40);
-			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
-			player3_name.setText(players.get(3));
-			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-			player3_name.setBackground(Color.WHITE);
-			if(players.get(3).equals(mainview.client_userName))
-				player3_name.setForeground(Color.BLUE);
+				JLabel player3_name = new JLabel((String) null);
+				player3_name.setBounds(12, 703 - 40, 84, 40);
+				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player3_name.setText(players.get(3));
+				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				player3_name.setBackground(Color.WHITE);
+				if(players.get(3).equals(mainview.client_userName))
+					player3_name.setForeground(Color.BLUE);
 
-			JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
-			player4_down_cnt.setBounds(115, 480, 66, 27);
-			gamePane.add(player4_down_cnt);
+				JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
+				player4_down_cnt.setBounds(115, 480, 66, 27);
+				gamePane.add(player4_down_cnt);
 
-			gamePane.add(player3_name);
+				gamePane.add(player3_name);
 
-			// master user¿¡°Ô start¹öÆ° show
-			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) && players_inGame_info == null) {
-				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
-				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
-				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
-				startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
-				gamePane.add(startBtnLabel);
-				startBtnLabel.setVisible(true);
-			}
+				// master user¿¡°Ô start¹öÆ° show
+				if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) && players_inGame_info == null) {
+					BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
+					Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
+					startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
+					startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
+					gamePane.add(startBtnLabel);
+					startBtnLabel.setVisible(true);
+				}
 
-			BufferedImage bellImage = ImageIO.read(new File("images/bell.png"));
-			JLabel picLabel = new JLabel(new ImageIcon(bellImage));
-			int totalCnt = 0;
-			for (int i = 0; i < players_inGame_info.size(); i++) {
-				totalCnt += players_inGame_info.get(i).front.size();
+				BufferedImage bellImage = ImageIO.read(new File("images/bell.png"));
+				JLabel picLabel = new JLabel(new ImageIcon(bellImage));
+				int totalCnt = 0;
+				for (int i = 0; i < players_inGame_info.size(); i++) {
+					totalCnt += players_inGame_info.get(i).front.size();
+				}
+				
+				if(totalCnt != 0) {
+					total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
+					total_up_cards_cnt.setBounds(425, 279, 60, 30);
+					gamePane.add(total_up_cards_cnt);
+				}
+				
+				picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
+				gamePane.add(picLabel);
 			}
 			
-			if(totalCnt != 0) {
-				total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
-				total_up_cards_cnt.setBounds(425, 279, 60, 30);
-				gamePane.add(total_up_cards_cnt);
-			}
-			
-			picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
-			gamePane.add(picLabel);
-
 			repaint();
 		}
 	}

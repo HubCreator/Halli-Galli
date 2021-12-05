@@ -115,10 +115,7 @@ public class WaitingRoom extends JFrame {
 
 		view = this;
 
-		JLabel makeNewRoom = new JLabel(new ImageIcon(((new ImageIcon(
-	            "images/room.png").getImage()
-	            .getScaledInstance(147, 90,
-	                    java.awt.Image.SCALE_SMOOTH)))));
+		JLabel makeNewRoom = new JLabel(new ImageIcon(((new ImageIcon("images/room.png").getImage().getScaledInstance(147, 90,java.awt.Image.SCALE_SMOOTH)))));
 		makeNewRoom.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -378,6 +375,8 @@ public class WaitingRoom extends JFrame {
 						} else if (ingame.getCode().matches("800")) { // Á¾À» Ä§
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
+							if(!ingame.ranking.isEmpty()) 
+								playRoom.ranking = ingame.ranking;
 							reload(ingame);
 						}
 					}

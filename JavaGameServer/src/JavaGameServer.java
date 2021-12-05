@@ -770,7 +770,6 @@ public class JavaGameServer extends JFrame {
 									for (int i = 0; i < livePlayerCnt; i++) { // 본인 제외 살아 있는 사람의 수만큼, 카드를 back에서 제거
 										// 세 장 이하라면, 있는 만큼 제거
 										fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
-										cardCnt++;
 									}
 									
 									for(Player player : players) {
@@ -785,16 +784,16 @@ public class JavaGameServer extends JFrame {
 								else if (!hitter.back.isEmpty() && hitter.back.size() < livePlayerCnt) { // 줄 수 있는 카드가 살아있는 사람의 수보다 적다면.. 살아있는 사람 중 랜덤하게 뽑아서 줘야 해
 									System.out.println("Not enough cards");
 									Vector<Integer> tmp = new Vector<Integer>();
-									for (int i = 0; i < hitter.back.size(); i++) { // 본인 제외 살아 있는 사람의 수만큼, 카드를 back에서 제거
+									cardCnt = hitter.back.size();
+									for (int i = 0; i < cardCnt; i++) { // 남아있는 카드의 수만큼
 										// 세 장 이하라면, 있는 만큼 제거
+										System.out.println(i + " fuck");
 										fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
-										cardCnt++;
 									}
-									int asdf = 0;
+									System.out.println("cardCnt > " + cardCnt);
 									while (true) {
 										int ran_index = (int) (Math.random() * players.size()); // 하나를 랜덤하게 뽑아서 검사
-										System.out.println(asdf + " / ran >> " + ran_index);
-										asdf++;
+										System.out.println("ran >> " + ran_index);
 										
 										if (players.get(ran_index).equals(hitter)) {
 											System.out.println("1");
@@ -820,6 +819,13 @@ public class JavaGameServer extends JFrame {
 								if (player.back.size() == 0 && player.front.size() == 0) {
 									player.setIsDead(true);
 									player.setWhenDead(new Date());
+								}
+							}
+							for (Player player : players) { // 순위 처리
+								if (player.getIsDead()) {
+									player.setIsDead(true);
+									player.setWhenDead(new Date());
+									aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
 								}
 							}
 

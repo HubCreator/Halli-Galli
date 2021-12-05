@@ -81,3 +81,10 @@ class ButtonsConfig {
 	public static final int STARTX = 400;
 	public static final int STARTY = 115;
 }
+
+class RankConfig {
+	public static final String GOLD = "images/gold.png";
+	public static final String SILVER = "images/silver.png";
+	public static final String BRONZE = "images/bronze.png";
+	public static final String LOOSER = "images/ghost.png";
+}
