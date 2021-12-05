@@ -11,9 +11,9 @@ class Player implements Serializable {
 	private Room current_room;
 	public Vector<Card> back = new Vector<Card>();
 	public Vector<Card> front = new Vector<Card>();
-	private String medal;
+	private String rank;
 	private Boolean isDead = false;
-	private Date whenDead;
+	private Boolean idDeadChecked = false;
 
 	Player(String player_name, Room current_room) {
 		this.player_name = player_name;
@@ -70,19 +70,19 @@ class Player implements Serializable {
 		this.front = front;
 	}
 
-	public String getWin_or_not() {
-		return medal;
+	public String getRank() {
+		return rank;
 	}
 
-	public void setWin_or_not(String win_or_not) {
-		this.medal = win_or_not;
+	public void setRank(String rank) {
+		this.rank = rank;
 	}
 
-	public Date getWhenDead() {
-		return whenDead;
+	public Boolean getIdDeadChecked() {
+		return idDeadChecked;
 	}
 
-	public void setWhenDead(Date whenDead) {
-		this.whenDead = whenDead;
+	public void setIdDeadChecked(Boolean idDeadChecked) {
+		this.idDeadChecked = idDeadChecked;
 	}
 }

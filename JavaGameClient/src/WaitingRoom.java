@@ -377,6 +377,13 @@ public class WaitingRoom extends JFrame {
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty()) 
 								playRoom.ranking = ingame.ranking;
+							for(Player player : ingame.ranking) {
+								if(player.getPlayer_name().equals(client_userName)) {
+									playRoom.amIdead = true;
+									break;
+								}
+									
+							}
 							reload(ingame);
 						}
 					}

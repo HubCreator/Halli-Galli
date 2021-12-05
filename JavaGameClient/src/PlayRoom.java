@@ -46,6 +46,7 @@ public class PlayRoom extends JFrame {
 	private JButton btnSend;
 	private JLabel user_name;
 	private JButton imgBtn;
+	MyKeyListener my_key_listener;
 	List<String> players;
 	protected JPanel gamePane;
 	private JLabel palyer1_up;
@@ -68,6 +69,7 @@ public class PlayRoom extends JFrame {
 	int whose_turn = 0;
 	private JLabel total_up_cards_cnt;
 	public boolean didOtherHIt = false;
+	public boolean amIdead = false;
 	public Vector<Player> ranking = new Vector<Player>();
 
 //	public GameEngine2 engine;
@@ -163,7 +165,9 @@ public class PlayRoom extends JFrame {
 				c.requestFocus();
 			}
 		});
-		contentPane.addKeyListener(new MyKeyListener());
+		
+		my_key_listener = new MyKeyListener();
+		contentPane.addKeyListener(my_key_listener);
 		contentPane.setFocusable(true);
 		contentPane.requestFocus();
 		repaint();
@@ -469,6 +473,9 @@ public class PlayRoom extends JFrame {
 	public void updateScreen() throws IOException {
 		gamePane.removeAll();
 		contentPane.remove(gamePane);
+		if(amIdead) {
+			contentPane.removeKeyListener(my_key_listener);
+		}
 		// 차례에 따른 배경 변화
 		if(whose_turn % 4 == 0)
 			gamePane = new ImagePanel(
@@ -493,13 +500,9 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			if(player1.getIsDead() == true) {
 				// player1 is dead
-				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon(player1.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player1_dead.setBounds(113, 102, 168, 163);
-				for(Player player : ranking) {
-					if(player.equals(player1)) {
-						System.out.println("hi");
-					}
-				}
+				
 				gamePane.add(player1_dead);
 			} else {
 				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
@@ -560,7 +563,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			if(player2.getIsDead() == true) {
 				// player2 is dead
-				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon(player2.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player2_dead.setBounds(593, 102, 168, 163);
 				gamePane.add(player2_dead);
 				
@@ -620,7 +623,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			if(player3.getIsDead() == true) {
 				// player3 is dead
-				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon(player3.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player3_dead.setBounds(593, 435, 168, 163);
 				gamePane.add(player3_dead);
 				
@@ -683,7 +686,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			if(player4.getIsDead() == true) {
 				// player4 is dead
-				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon("images/dead.png").getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon(player4.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player4_dead.setBounds(113, 435, 168, 163);
 				gamePane.add(player4_dead);
 			} else {

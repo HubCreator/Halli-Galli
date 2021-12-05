@@ -787,7 +787,6 @@ public class JavaGameServer extends JFrame {
 									cardCnt = hitter.back.size();
 									for (int i = 0; i < cardCnt; i++) { // 남아있는 카드의 수만큼
 										// 세 장 이하라면, 있는 만큼 제거
-										System.out.println(i + " fuck");
 										fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
 									}
 									System.out.println("cardCnt > " + cardCnt);
@@ -804,7 +803,6 @@ public class JavaGameServer extends JFrame {
 										}
 										
 										tmp.add(ran_index);
-										System.out.println("tmpSize > " + tmp.size());
 										if(tmp.size() != cardCnt) continue;
 										else {
 											for(int i = 0; i < tmp.size(); i++)
@@ -818,16 +816,35 @@ public class JavaGameServer extends JFrame {
 							for (Player player : players) { // 죽은 player의 상태 처리
 								if (player.back.size() == 0 && player.front.size() == 0) {
 									player.setIsDead(true);
-									player.setWhenDead(new Date());
 								}
 							}
-							for (Player player : players) { // 순위 처리
-								if (player.getIsDead()) {
-									player.setIsDead(true);
-									player.setWhenDead(new Date());
-									aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
-								}
+							
+							// 4명의 플레이어들에 대해 죽었는지 검사
+							for(int i = 0; i < players.size(); i++) {
+								if (players.get(i).getIsDead() && players.get(i).getIdDeadChecked() == false) {
+									players.get(i).setIsDead(true);
+									players.get(i).setIdDeadChecked(true);
+									int cnt = aGame.ranking.size();
+									if(cnt == 0) players.get(i).setRank(RankConfig.LOOSER);
+									else if(cnt == 1) players.get(i).setRank(RankConfig.BRONZE);
+									else if(cnt == 2) players.get(i).setRank(RankConfig.SILVER);
+									else if(cnt == 3) players.get(i).setRank(RankConfig.GOLD);
+									aGame.ranking.add(players.get(i)); // 방 정보에 랭킹값 집어 넣음
+								} else
+									continue;
 							}
+//							for (Player player : players) { // 순위 처리
+//								if (player.getIsDead()) {
+//									player.setIsDead(true);
+//									player.setWhenDead(new Date());
+//									int cnt = aGame.ranking.size();
+//									if(cnt == 0) player.setRank(RankConfig.LOOSER);
+//									else if(cnt == 1) player.setRank(RankConfig.BRONZE);
+//									else if(cnt == 2) player.setRank(RankConfig.SILVER);
+//									else if(cnt == 3) player.setRank(RankConfig.GOLD);
+//									aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
+//								}
+//							}
 
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
 								for (int j = 0; j < user_vc.size(); j++) {
