@@ -34,7 +34,6 @@ public class JavaGameServer extends JFrame {
 	private Vector<UserService> UserVec = new Vector<UserService>(); // 연결된 사용자를 저장할 벡터
 	private ArrayList<Room> roomList_server = new ArrayList<>(); // 전체 룸의 리스트
 	private ArrayList<InGame> inGameList_server = new ArrayList<>(); // 실행중이 게임 정보
-	private static final int BUF_LEN = 128; // Windows 처럼 BUF_LEN 을 정의
 
 	/**
 	 * Launch the application.
@@ -126,26 +125,26 @@ public class JavaGameServer extends JFrame {
 		}
 	}
 
-	public void appendText(String str) {
+	public synchronized void appendText(String str) {
 		textArea.append(str + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
-	public void appendMsg(ChatMsg msg) {
+	public synchronized void appendMsg(ChatMsg msg) {
 		textArea.append("code = " + msg.code + "\n");
 		textArea.append("id = " + msg.userName + "\n");
 		textArea.append("data = " + msg.data + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
-	public void appendRoom(Room room) {
+	public synchronized void appendRoom(Room room) {
 		textArea.append("code = " + room.getCode() + "\n");
 		textArea.append("room_name = " + room.getRoom_name() + "\n");
 		textArea.append("password = " + room.getPassword() + "\n");
 		textArea.setCaretPosition(textArea.getText().length());
 	}
 
-	public void appendInGame(InGame ingame) {
+	public synchronized void appendInGame(InGame ingame) {
 		textArea.append("code = " + ingame.getCode() + "\n");
 		textArea.append("from_whom = " + ingame.getFrom_whom() + "\n");
 		textArea.append("from_where = " + ingame.getFrom_where().getRoom_name() + "\n");
@@ -208,7 +207,7 @@ public class JavaGameServer extends JFrame {
 			}
 		}
 
-		public void writeOneObject(Object ob) {
+		public synchronized void writeOneObject(Object ob) {
 			try {
 				// oos.reset();
 				oos.writeObject(ob);
@@ -249,7 +248,7 @@ public class JavaGameServer extends JFrame {
 		}
 
 		// UserService Thread가 담당하는 Client 에게 1:1 전송
-		public void writeOne(String msg) {
+		public synchronized void writeOne(String msg) {
 			try {
 				// ChatMsg obcm = new ChatMsg("SERVER", "200", msg);
 				ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", "SERVER").data(msg).build();
@@ -518,7 +517,7 @@ public class JavaGameServer extends JFrame {
 			return front_cards;
 		}
 		
-		public boolean isHittedRight(Vector<Card> front_cards) {
+		public synchronized boolean isHittedRight(Vector<Card> front_cards) {
 			int[] res = { 0, 0, 0, 0, 0 };
 			
 			for (Card card : front_cards) {
@@ -654,14 +653,14 @@ public class JavaGameServer extends JFrame {
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(ingame.getFrom_where().getRoom_name())) {
 									aroom.setStatus("게임중");
+									sendRoomListToAll();
 								}
 							}
 
 							Vector<Player> players = new Vector<Player>();
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 룸 안에 있는 사람들끼리
 								// player 정보 생성
-								Player player = new Player(ingame.getFrom_where().players.get(i),
-										ingame.getFrom_where());
+								Player player = new Player(ingame.getFrom_where().players.get(i), ingame.getFrom_where());
 								player.back = (Vector<Card>) vec.get(i);
 
 								players.add(player);

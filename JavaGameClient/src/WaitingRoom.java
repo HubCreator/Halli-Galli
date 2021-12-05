@@ -419,7 +419,7 @@ public class WaitingRoom extends JFrame {
 	}
 
 	// 화면에 출력
-	public void appendText(String msg) {
+	public synchronized void appendText(String msg) {
 		// textArea.append(msg + "\n");
 		// AppendIcon(icon1);
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
@@ -437,7 +437,7 @@ public class WaitingRoom extends JFrame {
 	}
 
 	// 화면 우측에 출력
-	public void appendTextR(String msg) {
+	public synchronized void appendTextR(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
@@ -453,7 +453,7 @@ public class WaitingRoom extends JFrame {
 	}
 
 	// Server에게 network으로 전송
-	public void sendMessage(String msg) {
+	public synchronized void sendMessage(String msg) {
 		try {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", client_userName).data(msg).build();
 			oos.writeObject(obcm);
@@ -472,7 +472,7 @@ public class WaitingRoom extends JFrame {
 		}
 	}
 
-	public void sendMessageFromRoom(String msg) {
+	public synchronized void sendMessageFromRoom(String msg) {
 		try {
 			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName).data(msg)
 					.room_dst(current_entered_room.getRoom_name()).build();
@@ -492,7 +492,7 @@ public class WaitingRoom extends JFrame {
 		}
 	}
 
-	public void sendObject(Object ob) { // 서버로 메세지를 보내는 메소드
+	public synchronized void sendObject(Object ob) { // 서버로 메세지를 보내는 메소드
 		try {
 			oos.writeObject(ob);
 			oos.reset();

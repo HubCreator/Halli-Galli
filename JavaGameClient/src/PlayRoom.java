@@ -106,7 +106,7 @@ public class PlayRoom extends JFrame {
 	}
 
 	// 화면에 출력
-	public void appendText(String msg) {
+	public synchronized void appendText(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
 		int len = textArea.getDocument().getLength();
 		StyledDocument doc = textArea.getStyledDocument();
@@ -124,7 +124,7 @@ public class PlayRoom extends JFrame {
 	}
 
 	// 화면 우측에 출력
-	public void appendTextR(String msg) {
+	public synchronized void appendTextR(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
 		StyledDocument doc = textArea.getStyledDocument();
 		SimpleAttributeSet right = new SimpleAttributeSet();
@@ -251,6 +251,7 @@ public class PlayRoom extends JFrame {
 		gamePane.add(hitted_image);
 		repaint();
 		try {
+			// TODO :  벨을 치더라도 소용 없게 해야 함
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
