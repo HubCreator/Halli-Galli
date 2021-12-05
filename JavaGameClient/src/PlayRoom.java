@@ -67,6 +67,7 @@ public class PlayRoom extends JFrame {
 	public Vector<Player> players_inGame_info = new Vector<Player>();
 	int whose_turn = 0;
 	private JLabel total_up_cards_cnt;
+	public boolean didOtherHIt = false;
 
 //	public GameEngine2 engine;
 
@@ -93,7 +94,7 @@ public class PlayRoom extends JFrame {
 		public void keyPressed(KeyEvent e) {
 			int keyCode = e.getKeyCode();
 
-			if (keyCode == 32) { // space를 누르면 ...
+			if (keyCode == 32 && didOtherHIt == false) { // space를 누르면 ...
 				try {
 					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
 					mainview.sendObject(tmp);
@@ -252,7 +253,9 @@ public class PlayRoom extends JFrame {
 		repaint();
 		try {
 			// TODO :  벨을 치더라도 소용 없게 해야 함
+			didOtherHIt = true; // 1초 동안은 종을 못침
 			Thread.sleep(1000);
+			didOtherHIt = false;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -703,8 +706,8 @@ public class PlayRoom extends JFrame {
 
 			gamePane.add(player3_name);
 
-			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
-					&& players_inGame_info == null) {
+			// master user에게 start버튼 show
+			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) && players_inGame_info == null) {
 				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
 				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
