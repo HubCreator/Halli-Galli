@@ -377,7 +377,7 @@ public class WaitingRoom extends JFrame {
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
-								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "¥‘¿Ã ≈ª∂Ù«ﬂΩ¿¥œ¥Ÿ!!");
+								// playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "¥‘¿Ã ≈ª∂Ù«ﬂΩ¿¥œ¥Ÿ!!");
 							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {
@@ -392,6 +392,21 @@ public class WaitingRoom extends JFrame {
 								playRoom.ranking = ingame.ranking;
 								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "¥‘¿Ã ≈ª∂Ù«ﬂΩ¿¥œ¥Ÿ!!");
 								playRoom.appendText("[SERVER] ∞‘¿”¿ª ¡æ∑·«’¥œ¥Ÿ");
+							}
+							for(Player player : ingame.ranking) {
+								if(player.getPlayer_name().equals(client_userName)) {
+									playRoom.amIdead = true;
+									break;
+								}
+									
+							}
+							reload(ingame);
+						} else if (ingame.getCode().matches("901")) { // ¥©±∫∞°∞° ¡◊¿Ω
+							playRoom.hitted();
+							playRoom.whose_turn = ingame.getWhose_turn();
+							if(!ingame.ranking.isEmpty())  {
+								playRoom.ranking = ingame.ranking;
+								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "¥‘¿Ã ≈ª∂Ù«ﬂΩ¿¥œ¥Ÿ!!");
 							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {

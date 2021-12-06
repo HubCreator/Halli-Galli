@@ -731,6 +731,7 @@ public class JavaGameServer extends JFrame {
 							InGame aGame = new InGame();
 							
 							aGame = findRoom(ingame.getFrom_where().getRoom_name()); // 방을 서버의 ingame list에서 찾음
+							aGame.setCode("800");
 							players = aGame.players; // 게임을 진행하는 방 안에 있는 참가자들
 							front_cards = getFrontCards(players); // 앞면으로 올라와 있는 맨 앞의 카드를 모두 모아둠 (최대 총 4장)
 							hitter = whoIsHitter(players, ingame); // 종을 친 사람
@@ -769,6 +770,7 @@ public class JavaGameServer extends JFrame {
 										else if(cnt == 1) players.get(i).setRank(RankConfig.BRONZE);
 										else if(cnt == 2) players.get(i).setRank(RankConfig.SILVER);
 										aGame.ranking.add(players.get(i)); // 방 정보에 랭킹값 집어 넣음
+										aGame.setCode("901");
 									} else
 										continue;
 								}
@@ -849,7 +851,10 @@ public class JavaGameServer extends JFrame {
 												}
 											}
 											aGame.setCode("900");
-										} else aGame.setCode("800");
+										}
+										/*
+										 * else aGame.setCode("800");
+										 */
 										user.writeOneObject(aGame);
 									}
 								}
