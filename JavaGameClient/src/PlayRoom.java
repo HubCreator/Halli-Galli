@@ -499,7 +499,6 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			if(player1.getIsDead() == true) {
 				// player1 is dead
-				System.out.println("player1 dead");
 				JLabel player1_name = new JLabel((String) null);
 				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
 				player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
@@ -573,7 +572,6 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			if(player2.getIsDead() == true) {
-				System.out.println("player2 dead");
 				JLabel player2_name = new JLabel((String) null);
 				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
 				player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
@@ -644,7 +642,6 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			if(player3.getIsDead() == true) {
-				System.out.println("player3 dead");
 				JLabel player4_name = new JLabel((String) null);
 				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -718,7 +715,6 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			if(player4.getIsDead() == true) {
-				System.out.println("player4 dead");
 				JLabel player3_name = new JLabel((String) null);
 				player3_name.setBounds(12, 703 - 40, 84, 40);
 				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
