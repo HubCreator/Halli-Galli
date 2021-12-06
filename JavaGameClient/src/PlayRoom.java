@@ -250,7 +250,6 @@ public class PlayRoom extends JFrame {
 	}
 	
 	public void hitted() throws IOException {
-		System.out.println("hitted!!");
 		BufferedImage boom = ImageIO.read(new File("images/boom.png"));
 		Image boom_res = boom.getScaledInstance(133, 88, Image.SCALE_DEFAULT);
 		JLabel hitted_image = new JLabel(new ImageIcon(boom_res));
@@ -500,6 +499,18 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			if(player1.getIsDead() == true) {
 				// player1 is dead
+				JLabel player1_name = new JLabel((String) null);
+				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+				player1_name.setText(players.get(0));
+				player1_name.setBackground(Color.WHITE);
+				if(players.get(0).equals(mainview.client_userName))
+					player1_name.setForeground(Color.BLUE);
+				player1_name.setBounds(12, 10, 84, 40);
+				gamePane.add(player1_name);
+				
 				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon(player1.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player1_dead.setBounds(113, 102, 168, 163);
 				
@@ -562,6 +573,17 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			if(player2.getIsDead() == true) {
+				JLabel player2_name = new JLabel((String) null);
+				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				player2_name.setText(players.get(1));
+				player2_name.setBackground(Color.WHITE);
+				if(players.get(1).equals(mainview.client_userName))
+					player2_name.setForeground(Color.BLUE);
+				player2_name.setBounds(866 - 84, 10, 84, 40);
+				gamePane.add(player2_name);
+				
 				// player2 is dead
 				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon(player2.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player2_dead.setBounds(593, 102, 168, 163);
@@ -622,6 +644,17 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			if(player3.getIsDead() == true) {
+				JLabel player4_name = new JLabel((String) null);
+				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
+				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player4_name.setText(players.get(2));
+				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				player4_name.setBackground(Color.WHITE);
+				if(players.get(2).equals(mainview.client_userName))
+					player4_name.setForeground(Color.BLUE);
+				gamePane.add(player4_name);
+				
 				// player3 is dead
 				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon(player3.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player3_dead.setBounds(593, 435, 168, 163);
@@ -685,6 +718,17 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			if(player4.getIsDead() == true) {
+				JLabel player3_name = new JLabel((String) null);
+				player3_name.setBounds(12, 703 - 40, 84, 40);
+				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+				player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player3_name.setText(players.get(3));
+				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+				player3_name.setBackground(Color.WHITE);
+				if(players.get(3).equals(mainview.client_userName))
+					player3_name.setForeground(Color.BLUE);
+				gamePane.add(player3_name);
+				
 				// player4 is dead
 				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon(player4.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
 				player4_dead.setBounds(113, 435, 168, 163);
@@ -735,12 +779,12 @@ public class PlayRoom extends JFrame {
 				player3_name.setBackground(Color.WHITE);
 				if(players.get(3).equals(mainview.client_userName))
 					player3_name.setForeground(Color.BLUE);
-
+				gamePane.add(player3_name);
+				
 				JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
 				player4_down_cnt.setBounds(115, 480, 66, 27);
 				gamePane.add(player4_down_cnt);
 
-				gamePane.add(player3_name);
 
 				// master user¿¡°Ô start¹öÆ° show
 				if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) && players_inGame_info == null) {

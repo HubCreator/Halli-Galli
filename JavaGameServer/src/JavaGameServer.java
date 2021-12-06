@@ -833,18 +833,6 @@ public class JavaGameServer extends JFrame {
 								} else
 									continue;
 							}
-//							for (Player player : players) { // 순위 처리
-//								if (player.getIsDead()) {
-//									player.setIsDead(true);
-//									player.setWhenDead(new Date());
-//									int cnt = aGame.ranking.size();
-//									if(cnt == 0) player.setRank(RankConfig.LOOSER);
-//									else if(cnt == 1) player.setRank(RankConfig.BRONZE);
-//									else if(cnt == 2) player.setRank(RankConfig.SILVER);
-//									else if(cnt == 3) player.setRank(RankConfig.GOLD);
-//									aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
-//								}
-//							}
 
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
 								for (int j = 0; j < user_vc.size(); j++) {
