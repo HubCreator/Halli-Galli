@@ -499,6 +499,7 @@ public class PlayRoom extends JFrame {
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
 			if(player1.getIsDead() == true) {
 				// player1 is dead
+				System.out.println("player1 dead");
 				JLabel player1_name = new JLabel((String) null);
 				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
 				player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
@@ -516,10 +517,10 @@ public class PlayRoom extends JFrame {
 				
 				gamePane.add(player1_dead);
 			} else {
-				BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
+				player1.setPlayer_name(mainview.client_userName);
+				player1.setCurrent_room(mainview.current_entered_room);
 				if (!player1.back.isEmpty()) {
-					player1.setPlayer_name(mainview.client_userName);
-					player1.setCurrent_room(mainview.current_entered_room);
+					BufferedImage myPicture = ImageIO.read(new File(CardConfig.BACK));
 					BufferedImage player1_down_rotated = rotate(myPicture, UserConfig.P1_DEG);
 					Image player1_down_res = player1_down_rotated.getScaledInstance(CardConfig.CARD_WIDTH,
 							CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
@@ -544,7 +545,6 @@ public class PlayRoom extends JFrame {
 					palyer1_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							System.out.println("1111111111111111111");
 							InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
 							mainview.sendObject(result);
 						}
@@ -573,6 +573,7 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
 			if(player2.getIsDead() == true) {
+				System.out.println("player2 dead");
 				JLabel player2_name = new JLabel((String) null);
 				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
 				player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
@@ -617,7 +618,6 @@ public class PlayRoom extends JFrame {
 					palyer2_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							System.out.println("2222222222222");
 							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
@@ -644,6 +644,7 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
 			if(player3.getIsDead() == true) {
+				System.out.println("player3 dead");
 				JLabel player4_name = new JLabel((String) null);
 				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -691,7 +692,6 @@ public class PlayRoom extends JFrame {
 					palyer3_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							System.out.println("33333333333333333");
 							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
@@ -718,6 +718,7 @@ public class PlayRoom extends JFrame {
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
 			if(player4.getIsDead() == true) {
+				System.out.println("player4 dead");
 				JLabel player3_name = new JLabel((String) null);
 				player3_name.setBounds(12, 703 - 40, 84, 40);
 				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -762,7 +763,6 @@ public class PlayRoom extends JFrame {
 					palyer4_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							System.out.println("4444444444444444444444");
 							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}

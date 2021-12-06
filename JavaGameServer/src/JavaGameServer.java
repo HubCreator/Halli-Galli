@@ -754,92 +754,102 @@ public class JavaGameServer extends JFrame {
 									hitter.back.add(card); // 종을 친 사람에게 카드 추가
 								}
 								
+								for (Player player : players) { // 죽은 player의 상태 처리 - 올바르게 친 경우에만 회차가 종료되고, 진 사람을 판별할 수 있음
+									if (player.back.size() == 0 && player.front.size() == 0) {
+										player.setIsDead(true);
+									}
+								}
+								
+								// 4명의 플레이어들에 대해 죽었는지 검사
+								for(int i = 0; i < players.size(); i++) {
+									if (players.get(i).getIsDead() && players.get(i).getIdDeadChecked() == false) {
+										players.get(i).setIdDeadChecked(true);
+										int cnt = aGame.ranking.size();
+										if(cnt == 0) players.get(i).setRank(RankConfig.LOOSER);
+										else if(cnt == 1) players.get(i).setRank(RankConfig.BRONZE);
+										else if(cnt == 2) players.get(i).setRank(RankConfig.SILVER);
+										aGame.ranking.add(players.get(i)); // 방 정보에 랭킹값 집어 넣음
+									} else
+										continue;
+								}
 							} else { // 잘못 침
 								System.out.println("Fault!!");
-								if(hitter.back.isEmpty()) current_turn++;
-								// 살아있는 플레이어의 수 & 자신이 가지고 있는 카드의 수를 체크해야 함
-								for (Player player : players) { // 살아있는 player 숫자 check
-									if (!player.getIsDead())
-										livePlayerCnt++;
-								}
-								System.out.println("hitter.back.size() > " + hitter.back.size());
-								System.out.println("livePlayerCnt > " + livePlayerCnt);
-								
-								if(!hitter.back.isEmpty() && hitter.back.size() >= livePlayerCnt) {
-									System.out.println("Have enough cards");
-									for (int i = 0; i < livePlayerCnt; i++) { // 본인 제외 살아 있는 사람의 수만큼, 카드를 back에서 제거
-										// 세 장 이하라면, 있는 만큼 제거
-										fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
+								if(hitter.back.isEmpty()) aGame.setWhose_turn(aGame.getWhose_turn() + 1);
+								else {
+									// 살아있는 플레이어의 수 & 자신이 가지고 있는 카드의 수를 체크해야 함
+									for (Player player : players) { // 살아있는 player 숫자 check
+										if (!player.getIsDead())
+											livePlayerCnt++;
+									}
+									System.out.println("hitter.back.size() > " + hitter.back.size());
+									System.out.println("livePlayerCnt > " + livePlayerCnt);
+									
+									if(hitter.back.size() >= livePlayerCnt) {
+										System.out.println("Have enough cards");
+										for (int i = 0; i < livePlayerCnt; i++) { // 본인 제외 살아 있는 사람의 수만큼, 카드를 back에서 제거
+											// 세 장 이하라면, 있는 만큼 제거
+											fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
+										}
+										
+										for(Player player : players) {
+											int index = 0;
+											if(player.equals(hitter)) continue;
+											if(!player.getIsDead())
+												player.back.add(fault_cards.get(index++));
+										}
 									}
 									
-									for(Player player : players) {
-										int index = 0;
-										if(player.equals(hitter)) continue;
-										if(!player.getIsDead())
-											player.back.add(fault_cards.get(index++));
-									}
-								}
-								
 
-								else if (!hitter.back.isEmpty() && hitter.back.size() < livePlayerCnt) { // 줄 수 있는 카드가 살아있는 사람의 수보다 적다면.. 살아있는 사람 중 랜덤하게 뽑아서 줘야 해
-									System.out.println("Not enough cards");
-									Vector<Integer> tmp = new Vector<Integer>();
-									cardCnt = hitter.back.size();
-									for (int i = 0; i < cardCnt; i++) { // 남아있는 카드의 수만큼
-										// 세 장 이하라면, 있는 만큼 제거
-										fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
-									}
-									System.out.println("cardCnt > " + cardCnt);
-									while (true) {
-										int ran_index = (int) (Math.random() * players.size()); // 하나를 랜덤하게 뽑아서 검사
-										System.out.println("ran >> " + ran_index);
-										
-										if (players.get(ran_index).equals(hitter)) {
-											System.out.println("1");
-											continue;
-										} else if(players.get(ran_index).getIsDead()) {
-											System.out.println("2");
-											continue;
+									else if (hitter.back.size() < livePlayerCnt) { // 줄 수 있는 카드가 살아있는 사람의 수보다 적다면.. 살아있는 사람 중 랜덤하게 뽑아서 줘야 해
+										System.out.println("Not enough cards");
+										Vector<Integer> tmp = new Vector<Integer>();
+										cardCnt = hitter.back.size();
+										for (int i = 0; i < cardCnt; i++) { // 남아있는 카드의 수만큼
+											// 세 장 이하라면, 있는 만큼 제거
+											fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
 										}
-										
-										tmp.add(ran_index);
-										if(tmp.size() != cardCnt) continue;
-										else {
-											for(int i = 0; i < tmp.size(); i++)
-												players.get(tmp.get(i)).back.add(fault_cards.get(fault_cards.size()-1));
-											break;
+										System.out.println("cardCnt > " + cardCnt);
+										while (true) {
+											int ran_index = (int) (Math.random() * players.size()); // 하나를 랜덤하게 뽑아서 검사
+											System.out.println("ran >> " + ran_index);
+											
+											if (players.get(ran_index).equals(hitter)) {
+												System.out.println("1");
+												continue;
+											} else if(players.get(ran_index).getIsDead()) {
+												System.out.println("2");
+												continue;
+											}
+											
+											tmp.add(ran_index);
+											if(tmp.size() != cardCnt) continue;
+											else {
+												for(int i = 0; i < tmp.size(); i++)
+													players.get(tmp.get(i)).back.add(fault_cards.get(fault_cards.size()-1));
+												break;
+											}
 										}
 									}
-								}
-							}
-
-							for (Player player : players) { // 죽은 player의 상태 처리
-								if (player.back.size() == 0 && player.front.size() == 0) {
-									player.setIsDead(true);
+									if(hitter.back.isEmpty()) aGame.setWhose_turn(aGame.getWhose_turn() + 1);
 								}
 							}
 							
-							// 4명의 플레이어들에 대해 죽었는지 검사
-							for(int i = 0; i < players.size(); i++) {
-								if (players.get(i).getIsDead() && players.get(i).getIdDeadChecked() == false) {
-									players.get(i).setIsDead(true);
-									players.get(i).setIdDeadChecked(true);
-									int cnt = aGame.ranking.size();
-									if(cnt == 0) players.get(i).setRank(RankConfig.LOOSER);
-									else if(cnt == 1) players.get(i).setRank(RankConfig.BRONZE);
-									else if(cnt == 2) players.get(i).setRank(RankConfig.SILVER);
-									else if(cnt == 3) players.get(i).setRank(RankConfig.GOLD);
-									aGame.ranking.add(players.get(i)); // 방 정보에 랭킹값 집어 넣음
-								} else
-									continue;
-							}
-
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
 								for (int j = 0; j < user_vc.size(); j++) {
 									UserService user = (UserService) user_vc.elementAt(j);
 									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										aGame.setCode("800");
+										if(aGame.ranking.size() >= 3) {
+											for(Player player : players) {
+												if(player.getRank() == null) {
+													player.setRank(RankConfig.GOLD);
+													player.setIsDead(true);
+													player.setIdDeadChecked(true);
+													aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
+												}
+											}
+											aGame.setCode("900");
+										} else aGame.setCode("800");
 										user.writeOneObject(aGame);
 									}
 								}

@@ -17,6 +17,7 @@ class InGame implements Serializable {
 	public Vector<Player> ranking = new Vector<Player>();
 	public Vector<Card> upCard = new Vector<Card>();
 	public Vector<Card> downCard = new Vector<Card>();
+	private boolean timeToGetLooser = false;
 	
 
 	public InGame() {	}
@@ -66,5 +67,13 @@ class InGame implements Serializable {
 
 	public void setFrom_where(Room from_where) {
 		this.from_where = from_where;
+	}
+
+	public boolean isTimeToGetLooser() {
+		return timeToGetLooser;
+	}
+
+	public void setTimeToGetLooser(boolean timeToGetLooser) {
+		this.timeToGetLooser = timeToGetLooser;
 	}
 }

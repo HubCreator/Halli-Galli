@@ -375,8 +375,24 @@ public class WaitingRoom extends JFrame {
 						} else if (ingame.getCode().matches("800")) { // 종을 침
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
-							if(!ingame.ranking.isEmpty()) 
+							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
+								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 탈락했습니다!!");
+							}
+							for(Player player : ingame.ranking) {
+								if(player.getPlayer_name().equals(client_userName)) {
+									playRoom.amIdead = true;
+									break;
+								}
+									
+							}
+							reload(ingame);
+						} else if (ingame.getCode().matches("900")) { // 게임 종료
+							if(!ingame.ranking.isEmpty())  {
+								playRoom.ranking = ingame.ranking;
+								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "님이 탈락했습니다!!");
+								playRoom.appendText("[SERVER] 게임을 종료합니다");
+							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {
 									playRoom.amIdead = true;
