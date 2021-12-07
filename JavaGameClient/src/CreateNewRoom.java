@@ -86,7 +86,7 @@ public class CreateNewRoom extends JFrame {
 					}
 				}
 				
-				room = new Room("600", username);
+				room = new Room(Protocol.CREATE_NEW_ROOM, username);
 				room.setRoom_name(textField.getText());
 				room.setPassword(passwordField.getPassword().toString());
 				mainview.sendObject(room);

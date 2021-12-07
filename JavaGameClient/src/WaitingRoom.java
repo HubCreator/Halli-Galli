@@ -105,7 +105,7 @@ public class WaitingRoom extends JFrame {
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 12));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ChatMsg msg = new ChatMsg.ChatMsgBuilder("400", client_userName).build();
+				ChatMsg msg = new ChatMsg.ChatMsgBuilder(Protocol.LOGOUT, client_userName).build();
 				sendObject(msg);
 				System.exit(0);
 			}
@@ -147,7 +147,7 @@ public class WaitingRoom extends JFrame {
 			oos.flush();
 			ois = new ObjectInputStream(socket.getInputStream());
 
-			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("100", client_userName).data("Hello").build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder(Protocol.LOGIN, client_userName).data("Hello").build();
 			sendObject(obcm);
 
 			net = new ListenNetwork();
@@ -241,7 +241,7 @@ public class WaitingRoom extends JFrame {
 			playBtn.setBounds(697, 16, 74, 28);
 			playBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Room room = new Room("606");
+					Room room = new Room(Protocol.ENTER_ROOM);
 					room.setRoom_name(room_name.getText());
 					room.setFrom_whom(client_userName);
 					sendObject(room);
@@ -307,13 +307,13 @@ public class WaitingRoom extends JFrame {
 
 					if (cm != null) {
 						switch (cm.code) {
-						case "200": // chat message
+						case Protocol.MSG_WAITING: // chat message
 							if (cm.userName.equals(client_userName))
 								appendTextR(msg); // 내 메세지는 우측에
 							else
 								appendText(msg);
 							break;
-						case "201": // chat message from room
+						case Protocol.MSG_ROOM: // chat message from room
 							if (current_entered_room != null
 									&& cm.room_dst.equals(current_entered_room.getRoom_name())) {
 								if (cm.userName.equals(client_userName))
@@ -322,29 +322,22 @@ public class WaitingRoom extends JFrame {
 									playRoom.appendText(msg);
 							}
 							break;
-						case "300": // Image 첨부
-							if (cm.userName.equals(client_userName))
-								appendTextR("[" + cm.userName + "]");
-							else
-								appendText("[" + cm.userName + "]");
-							// AppendImage(cm.img);
-							break;
 						}
 					} else if (room != null) {
-						if (room.getCode().matches("601")) {
+						if (room.getCode().matches(Protocol.ROOM_LIST)) {
 							List<Room> list = room.getRoomList();
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();
 							showRoomList(list);
-						} else if (room.getCode().matches("603")) {
+						} else if (room.getCode().matches(Protocol.ENTERING_MASTER)) {
 							current_entered_room = room; // current_entered_room : 전달 받은 Room의 정보
 							setVisible(false);
 							playRoom = new PlayRoom(view, room); // playRoom : client가 만든 새로운 룸
 							playRoom.updatePlayers();
-						} else if (room.getCode().matches("605")) {
+						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) {
 							current_entered_room = null;
 							setVisible(true);
-						} else if (room.getCode().matches("607")) {
+						} else if (room.getCode().matches(Protocol.ENTER_ROOM)) {
 							current_entered_room = null;
 							current_entered_room = room;
 							if (playRoom == null) {
@@ -362,51 +355,49 @@ public class WaitingRoom extends JFrame {
 							playRoom = new PlayRoom(view, current_entered_room);
 						}
 					} else if (ingame != null) {
-						if (ingame.getCode().matches("700")) {
+						if (ingame.getCode().matches(Protocol.GAME_START)) {
 							playRoom.appendText("[SERVER] Game starts!!");
 							if (playRoom.startBtnLabel != null) {
 								playRoom.gamePane.remove(playRoom.startBtnLabel);
 								playRoom.repaint();
 							}
 							reload(ingame);
-						} else if (ingame.getCode().matches("701")) { // 카드 뒤집기
+						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) { // 카드 뒤집기
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
-						} else if (ingame.getCode().matches("800")) { // 종을 침
+						} else if (ingame.getCode().matches(Protocol.BELL_HIT)) { // 종을 침
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
-								// playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 탈락했습니다!!");
 							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {
 									playRoom.amIdead = true;
 									break;
 								}
-									
 							}
 							reload(ingame);
-						} else if (ingame.getCode().matches("900")) { // 게임 종료
-							if(!ingame.ranking.isEmpty())  {
-								playRoom.ranking = ingame.ranking;
-								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "님이 탈락했습니다!!");
-								playRoom.appendText("[SERVER] 게임을 종료합니다");
-							}
-							for(Player player : ingame.ranking) {
-								if(player.getPlayer_name().equals(client_userName)) {
-									playRoom.amIdead = true;
-									break;
-								}
-									
-							}
-							reload(ingame);
-						} else if (ingame.getCode().matches("901")) { // 누군가가 죽음
+						}  else if (ingame.getCode().matches(Protocol.PLAYER_DEAD)) { // 누군가가 죽음
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
 								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 탈락했습니다!!");
+							}
+							for(Player player : ingame.ranking) {
+								if(player.getPlayer_name().equals(client_userName)) {
+									playRoom.amIdead = true;
+									break;
+								}
+									
+							}
+							reload(ingame);
+						} else if (ingame.getCode().matches(Protocol.GAME_OVER)) { // 게임 종료
+							if(!ingame.ranking.isEmpty())  {
+								playRoom.ranking = ingame.ranking;
+								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "님이 탈락했습니다!!");
+								playRoom.appendText("[SERVER] 게임을 종료합니다");
 							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {
@@ -492,7 +483,7 @@ public class WaitingRoom extends JFrame {
 	// Server에게 network으로 전송
 	public synchronized void sendMessage(String msg) {
 		try {
-			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("200", client_userName).data(msg).build();
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder(Protocol.MSG_WAITING, client_userName).data(msg).build();
 			oos.writeObject(obcm);
 			oos.reset();
 		} catch (IOException e) {
@@ -511,7 +502,7 @@ public class WaitingRoom extends JFrame {
 
 	public synchronized void sendMessageFromRoom(String msg) {
 		try {
-			ChatMsg obcm = new ChatMsg.ChatMsgBuilder("201", client_userName).data(msg)
+			ChatMsg obcm = new ChatMsg.ChatMsgBuilder(Protocol.MSG_ROOM, client_userName).data(msg)
 					.room_dst(current_entered_room.getRoom_name()).build();
 			oos.writeObject(obcm);
 			oos.reset();

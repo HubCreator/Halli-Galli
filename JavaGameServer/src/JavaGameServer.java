@@ -272,7 +272,7 @@ public class JavaGameServer extends JFrame {
 		}
 
 		public void sendRoomListToAll() {
-			Room room = new Room("601");
+			Room room = new Room(Protocol.ROOM_LIST);
 			room.setRoomList(roomList_server);
 			writeAllObject(room);
 		}
@@ -313,11 +313,11 @@ public class JavaGameServer extends JFrame {
 					userStatus = UserStatus.PLAYING;
 					// 방을 만든 사람이 나라면
 					if (room.getMasterUser() != null && room.getMasterUser().equals(userName)) {
-						enteredRoom.setCode("603");
+						enteredRoom.setCode(Protocol.ENTERING_MASTER);
 						enteredRoom.players.add(userName); // 플레이어 정보를 룸에 추가
 						writeOneObject(enteredRoom); // 입장한 사람에게만 send
 					} else { // 그 외 참가자
-						enteredRoom.setCode("607");
+						enteredRoom.setCode(Protocol.ENTER_ROOM);
 						enteredRoom.players.add(room.getFrom_whom());
 						for (int j = 0; j < user_vc.size(); j++) {
 							UserService user = (UserService) user_vc.elementAt(j);
@@ -588,39 +588,38 @@ public class JavaGameServer extends JFrame {
 
 					// 프로토콜 체크
 					if (chatmsg != null) {
-						if (chatmsg.code.matches("100")) {
+						if (chatmsg.code.matches(Protocol.LOGIN)) {
 							userName = chatmsg.userName;
 							userStatus = UserStatus.WAITING;
 							if (roomList_server.size() > 0)
 								sendRoomListToAll();
 							login();
-						} else if (chatmsg.code.matches("200")) {
+						} else if (chatmsg.code.matches(Protocol.MSG_WAITING)) {
 							msg = String.format("[%s] %s", chatmsg.userName, chatmsg.data);
 							appendText(msg); // server 화면에 출력
 							writeAllObject(chatmsg);
-						} else if (chatmsg.code.matches("201")) {
+						} else if (chatmsg.code.matches(Protocol.MSG_ROOM)) {
 							for (int i = 0; i < user_vc.size(); i++) {
 								UserService user = (UserService) user_vc.elementAt(i);
 								if (user.userStatus.equals(UserStatus.PLAYING))
 									user.writeOneObject(chatmsg);
 							}
-						} else if (chatmsg.code.matches("400")) { // logout message 처리
+						} else if (chatmsg.code.matches(Protocol.LOGOUT)) { // logout message 처리
 							logout();
 							break;
 						}
 					}
 					if (room != null) {
-						if (room.getCode().matches("600")) { // create new room
-							System.out.println("Room Created");
+						if (room.getCode().matches(Protocol.CREATE_NEW_ROOM)) { // create new room
 							// room에는 masterUser, room_name, password 들어있음
 							roomList_server.add(room);
 							allowEnteringRoom(room);
 							sendRoomListToAll();
-						} else if (room.getCode().matches("606")) { // 방 입장 (Play)
+						} else if (room.getCode().matches(Protocol.ENTER_ROOM)) { // 방 입장 (Play)
 							System.out.println("Guest entered here!!");
 							allowEnteringRoom(room);
 							sendRoomListToAll();
-						} else if (room.getCode().matches("605")) { // 방 퇴장 (Play)
+						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
 							enteredRoom = null;
 							userStatus = UserStatus.WAITING;
@@ -641,13 +640,13 @@ public class JavaGameServer extends JFrame {
 					}
 
 					if (ingame != null) {
-						if (ingame.getCode().matches("700")) { // Game start echo
+						if (ingame.getCode().matches(Protocol.GAME_START)) { // Game start echo
 							System.out.println("start!!");
 							Vector<Card> total_cards = cardGenerator();
 							Vector<Vector> vec = cardDistributor(total_cards);
 
 							InGame aGame = new InGame();
-							aGame.setCode("700");
+							aGame.setCode(Protocol.GAME_START);
 							aGame.setFrom_where(ingame.getFrom_where()); // 현재 진행되는 룸
 
 							for (Room aroom : roomList_server) {
@@ -717,8 +716,7 @@ public class JavaGameServer extends JFrame {
 									}
 								}
 							}
-						} else if (ingame.getCode().matches("800")) { // bell hit
-							System.out.println("Got 800");
+						} else if (ingame.getCode().matches(Protocol.BELL_HIT)) { // bell hit
 							Vector<Player> players;
 							Vector<Card> front_cards = new Vector<Card>();
 							int current_turn = 0;
@@ -731,11 +729,10 @@ public class JavaGameServer extends JFrame {
 							InGame aGame = new InGame();
 							
 							aGame = findRoom(ingame.getFrom_where().getRoom_name()); // 방을 서버의 ingame list에서 찾음
-							aGame.setCode("800");
+							aGame.setCode(Protocol.BELL_HIT);
 							players = aGame.players; // 게임을 진행하는 방 안에 있는 참가자들
 							front_cards = getFrontCards(players); // 앞면으로 올라와 있는 맨 앞의 카드를 모두 모아둠 (최대 총 4장)
 							hitter = whoIsHitter(players, ingame); // 종을 친 사람
-							
 							
 							// 제대로 bell을 쳤는지 판단
 							if(isHittedRight(front_cards)) { // 올바르게 침 
@@ -770,13 +767,14 @@ public class JavaGameServer extends JFrame {
 										else if(cnt == 1) players.get(i).setRank(RankConfig.BRONZE);
 										else if(cnt == 2) players.get(i).setRank(RankConfig.SILVER);
 										aGame.ranking.add(players.get(i)); // 방 정보에 랭킹값 집어 넣음
-										aGame.setCode("901");
+										aGame.setCode(Protocol.PLAYER_DEAD);
 									} else
 										continue;
 								}
 							} else { // 잘못 침
 								System.out.println("Fault!!");
-								if(hitter.back.isEmpty()) aGame.setWhose_turn(aGame.getWhose_turn() + 1);
+								if(hitter.back.isEmpty() && current_turn % 4 == players.indexOf(hitter))
+									aGame.setWhose_turn(aGame.getWhose_turn() + 1);
 								else {
 									// 살아있는 플레이어의 수 & 자신이 가지고 있는 카드의 수를 체크해야 함
 									for (Player player : players) { // 살아있는 player 숫자 check
@@ -850,11 +848,8 @@ public class JavaGameServer extends JFrame {
 													aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
 												}
 											}
-											aGame.setCode("900");
+											aGame.setCode(Protocol.GAME_OVER);
 										}
-										/*
-										 * else aGame.setCode("800");
-										 */
 										user.writeOneObject(aGame);
 									}
 								}

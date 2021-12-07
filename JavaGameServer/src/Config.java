@@ -1,4 +1,3 @@
-
 class UserConfig {
 	public static final double P1_DEG = -45.0;
 	public static final double P2_DEG = 45.0;
@@ -87,4 +86,33 @@ class RankConfig {
 	public static final String SILVER = "images/silver.png";
 	public static final String BRONZE = "images/bronze.png";
 	public static final String LOOSER = "images/ghost.png";
+}
+
+
+class Protocol {
+	public static final String LOGIN = "100";
+	public static final String MSG_WAITING = "200";
+	public static final String MSG_ROOM = "201";
+	public static final String LOGOUT = "400";
+	public static final String CREATE_NEW_ROOM = "600";
+	public static final String ROOM_LIST = "601";
+	public static final String ENTERING_MASTER = "603";
+	public static final String EXIT_ROOM = "604";
+	public static final String ENTER_ROOM = "606";
+	
+	public static final String GAME_START = "700";
+	public static final String CARD_CLICKED = "701";
+	public static final String BELL_HIT = "800";
+	public static final String PLAYER_DEAD = "801";
+	
+	public static final String GAME_OVER = "900";
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

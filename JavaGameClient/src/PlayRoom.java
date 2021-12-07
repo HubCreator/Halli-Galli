@@ -99,7 +99,7 @@ public class PlayRoom extends JFrame {
 
 			if (keyCode == 32 && didOtherHIt == false) { // space를 누르면 ...
 				try {
-					InGame tmp = new InGame("800", mainview.client_userName, mainview.current_entered_room);
+					InGame tmp = new InGame(Protocol.BELL_HIT, mainview.client_userName, mainview.current_entered_room);
 					mainview.sendObject(tmp);
 				} catch (Error e1) {
 					// TODO Auto-generated catch block
@@ -213,7 +213,7 @@ public class PlayRoom extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// exit room
-				Room room = new Room("604");
+				Room room = new Room(Protocol.EXIT_ROOM);
 				room.setFrom_whom(userName);
 				room.setRoom_name(current_entered_room.getRoom_name());
 				view.current_entered_room = null;
@@ -457,7 +457,7 @@ public class PlayRoom extends JFrame {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						System.out.println("Start Btn Clicked");
-						InGame tmp = new InGame("700", mainview.client_userName, mainview.current_entered_room);
+						InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName, mainview.current_entered_room);
 						// current_entered_room에는 플레이어 이름 정보 있음
 //						tmp.players = mainview.current_entered_room.players;
 //						tmp.observers = mainview.current_entered_room.observers;
@@ -544,7 +544,7 @@ public class PlayRoom extends JFrame {
 					palyer1_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame result = new InGame("701", player1.getPlayer_name(), player1.getCurrent_room());
+							InGame result = new InGame(Protocol.CARD_CLICKED, player1.getPlayer_name(), player1.getCurrent_room());
 							mainview.sendObject(result);
 						}
 					});
@@ -616,7 +616,7 @@ public class PlayRoom extends JFrame {
 					palyer2_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName, mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
 					});
@@ -689,7 +689,7 @@ public class PlayRoom extends JFrame {
 					palyer3_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName, mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
 					});
@@ -759,7 +759,7 @@ public class PlayRoom extends JFrame {
 					palyer4_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame tmp = new InGame("701", mainview.client_userName, mainview.current_entered_room);
+							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName, mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
 					});
