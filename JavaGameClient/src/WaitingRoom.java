@@ -335,8 +335,9 @@ public class WaitingRoom extends JFrame {
 							playRoom = new PlayRoom(view, room); // playRoom : client가 만든 새로운 룸
 							playRoom.updatePlayers();
 						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) {
-							current_entered_room = null;
-							setVisible(true);
+							current_entered_room = room;
+							System.out.println("Got someone's out");
+							playRoom.updatePlayers();
 						} else if (room.getCode().matches(Protocol.ENTER_ROOM)) {
 							current_entered_room = null;
 							current_entered_room = room;
@@ -407,6 +408,7 @@ public class WaitingRoom extends JFrame {
 									
 							}
 							reload(ingame);
+							// TODO : 게임 다시 시작 버튼
 						}
 					}
 				} catch (IOException e) {

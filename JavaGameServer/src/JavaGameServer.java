@@ -621,16 +621,28 @@ public class JavaGameServer extends JFrame {
 							sendRoomListToAll();
 						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
-							enteredRoom = null;
-							userStatus = UserStatus.WAITING;
+							Room tmp = new Room(Protocol.EXIT_ROOM);
 							for (Room aroom : roomList_server) {
-								if (aroom.getRoom_name().equals(room.getRoom_name())) {
+								if (aroom.equals(enteredRoom)) {
 									List<String> players = new ArrayList<>();
 									players = aroom.getPlayers();
 									players.remove(room.getFrom_whom());
+									tmp = aroom;
 									break;
 								}
 							}
+							for(int i = 0; i < user_vc.size(); i++) {
+								UserService user = (UserService) user_vc.elementAt(i);
+								for(String player : tmp.players) {
+									if (user.userName.equals(player)) {
+										user.writeOneObject(tmp);
+									}
+								}
+							}
+							
+							//enteredRoom = null;
+							//userStatus = UserStatus.WAITING;
+							
 							sendRoomListToAll();
 						} else if (room.getCode().matches("608")) { // 방 입장 (Observe)
 							System.out.println("Observer In");

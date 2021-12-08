@@ -108,6 +108,10 @@ public class PlayRoom extends JFrame {
 			}
 		}
 	}
+	
+	public void exit() {
+		
+	}
 
 	// 화면에 출력
 	public synchronized void appendText(String msg) {
@@ -198,7 +202,6 @@ public class PlayRoom extends JFrame {
 		user_name.setHorizontalAlignment(SwingConstants.CENTER);
 		user_name.setBounds(1018, 37, 84, 40);
 		contentPane.add(user_name);
-		setVisible(true);
 
 		userName = view.client_userName;
 		user_name.setText(view.client_userName);
@@ -219,7 +222,7 @@ public class PlayRoom extends JFrame {
 				view.current_entered_room = null;
 				view.sendObject(room);
 				setVisible(false);
-				// view.setVisible(true);
+				view.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(1096, 683, 69, 40);
