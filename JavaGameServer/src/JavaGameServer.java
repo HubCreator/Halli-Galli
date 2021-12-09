@@ -640,9 +640,6 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 							
-							//enteredRoom = null;
-							//userStatus = UserStatus.WAITING;
-							
 							sendRoomListToAll();
 						} else if (room.getCode().matches("608")) { // πÊ ¿‘¿Â (Observe)
 							System.out.println("Observer In");

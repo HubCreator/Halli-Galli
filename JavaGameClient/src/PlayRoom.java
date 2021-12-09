@@ -289,6 +289,13 @@ public class PlayRoom extends JFrame {
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		return gd.getDefaultConfiguration();
 	}
+	
+	public void removeStartButton() {
+		if (startBtnLabel != null) {
+			gamePane.remove(startBtnLabel);
+			repaint();
+		}
+	}
 
 	public void updatePlayers() throws IOException {
 		gamePane.removeAll();

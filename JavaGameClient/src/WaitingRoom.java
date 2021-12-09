@@ -358,10 +358,7 @@ public class WaitingRoom extends JFrame {
 					} else if (ingame != null) {
 						if (ingame.getCode().matches(Protocol.GAME_START)) {
 							playRoom.appendText("[SERVER] Game starts!!");
-							if (playRoom.startBtnLabel != null) {
-								playRoom.gamePane.remove(playRoom.startBtnLabel);
-								playRoom.repaint();
-							}
+							playRoom.removeStartButton();
 							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) { // 카드 뒤집기
 							playRoom.whose_turn = ingame.getWhose_turn();
