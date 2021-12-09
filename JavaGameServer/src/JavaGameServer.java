@@ -690,7 +690,7 @@ public class JavaGameServer extends JFrame {
 									}
 								}
 							}
-						} else if (ingame.getCode().matches("701")) {
+						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) {
 							InGame aGame = new InGame();
 
 							for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
@@ -706,7 +706,7 @@ public class JavaGameServer extends JFrame {
 										player.front.add(player.back.remove(0)); // 카드를 뒤집음
 								}
 							}
-							aGame.setCode("701");
+							aGame.setCode(Protocol.CARD_CLICKED);
 							int current_turn = aGame.getWhose_turn();
 							// TODO: player가 뒤집을 카드가 있는지 판단
 							current_turn++;
