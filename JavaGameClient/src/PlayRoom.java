@@ -290,6 +290,29 @@ public class PlayRoom extends JFrame {
 		return gd.getDefaultConfiguration();
 	}
 	
+	public void showStartButton() throws IOException {
+		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
+			BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
+			Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
+			startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
+			startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
+			gamePane.add(startBtnLabel);
+			startBtnLabel.setVisible(true);
+
+			startBtnLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("Start Btn Clicked");
+					InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName, mainview.current_entered_room);
+					// current_entered_room에는 플레이어 이름 정보 있음
+//					tmp.players = mainview.current_entered_room.players;
+//					tmp.observers = mainview.current_entered_room.observers;
+					mainview.sendObject(tmp);
+				}
+			});
+		}
+	}
+	
 	public void removeStartButton() {
 		if (startBtnLabel != null) {
 			gamePane.remove(startBtnLabel);
@@ -455,26 +478,7 @@ public class PlayRoom extends JFrame {
 				player3_name.setForeground(Color.BLUE);
 			gamePane.add(player3_name);
 
-			if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
-				BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
-				Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
-				startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
-				startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
-				gamePane.add(startBtnLabel);
-				startBtnLabel.setVisible(true);
-
-				startBtnLabel.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						System.out.println("Start Btn Clicked");
-						InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName, mainview.current_entered_room);
-						// current_entered_room에는 플레이어 이름 정보 있음
-//						tmp.players = mainview.current_entered_room.players;
-//						tmp.observers = mainview.current_entered_room.observers;
-						mainview.sendObject(tmp);
-					}
-				});
-			}
+			showStartButton();
 		}
 		repaint();
 	}
