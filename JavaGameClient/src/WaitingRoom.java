@@ -405,6 +405,7 @@ public class WaitingRoom extends JFrame {
 									
 							}
 							reload(ingame);
+							playRoom.setCurrentStatusEnd();
 							// TODO : 게임 다시 시작 버튼
 						}
 					}

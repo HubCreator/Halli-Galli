@@ -71,6 +71,8 @@ public class PlayRoom extends JFrame {
 	public boolean didOtherHIt = false;
 	public boolean amIdead = false;
 	public Vector<Player> ranking = new Vector<Player>();
+	public enum Status {WAITING, PLAYING, END};
+	public Status current_status = Status.WAITING;
 
 //	public GameEngine2 engine;
 
@@ -291,8 +293,39 @@ public class PlayRoom extends JFrame {
 	}
 	
 	public void showStartButton() throws IOException {
-		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())) {
+		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
+				&& current_status.equals(Status.WAITING)) {
 			BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
+			Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
+			startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
+			startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
+			gamePane.add(startBtnLabel);
+			startBtnLabel.setVisible(true);
+
+			startBtnLabel.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					System.out.println("Start Btn Clicked");
+					current_status = Status.PLAYING;
+					InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName, mainview.current_entered_room);
+					// current_entered_room에는 플레이어 이름 정보 있음
+//					tmp.players = mainview.current_entered_room.players;
+//					tmp.observers = mainview.current_entered_room.observers;
+					mainview.sendObject(tmp);
+				}
+			});
+		}
+	}
+	
+	public void setCurrentStatusEnd() throws IOException {
+		current_status = Status.END;
+		showRestartButton();
+	}
+	
+	public void showRestartButton() throws IOException {
+		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
+				&& current_status.equals(Status.END)) {
+			BufferedImage startBtn = ImageIO.read(new File("images/restart.png"));
 			Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 			startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
 			startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
@@ -311,6 +344,7 @@ public class PlayRoom extends JFrame {
 				}
 			});
 		}
+		repaint();
 	}
 	
 	public void removeStartButton() {
@@ -806,7 +840,7 @@ public class PlayRoom extends JFrame {
 					startBtnLabel.setVisible(true);
 				}
 
-				BufferedImage bellImage = ImageIO.read(new File("images/bell.png"));
+				BufferedImage bellImage = ImageIO.read(new File(BellConfig.BELL));
 				JLabel picLabel = new JLabel(new ImageIcon(bellImage));
 				int totalCnt = 0;
 				for (int i = 0; i < players_inGame_info.size(); i++) {

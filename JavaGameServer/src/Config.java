@@ -70,6 +70,7 @@ class CardConfig {
 }
 
 class BellConfig {
+	public static final String BELL = "images/bell.png";
 	public static final int BELL_WIDTH = 232;
 	public static final int BELL_HEIGHT = 195;
 	public static final int BELLX = 336;
