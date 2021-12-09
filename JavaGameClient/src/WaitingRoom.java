@@ -360,6 +360,13 @@ public class WaitingRoom extends JFrame {
 							playRoom.appendText("[SERVER] Game starts!!");
 							playRoom.removeStartButton();
 							reload(ingame);
+						} else if (ingame.getCode().matches(Protocol.GAME_RESTART)) {
+							playRoom.appendText("[SERVER] Game re-starts!!");
+							playRoom.whose_turn = ingame.getWinner_index();
+							playRoom.reStart();
+							playRoom.removeStartButton();
+							
+							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) { // 카드 뒤집기
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
@@ -395,6 +402,8 @@ public class WaitingRoom extends JFrame {
 							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
 								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "님이 탈락했습니다!!");
+								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 1등입니다!!");
+								playRoom.winner_index = ingame.players.indexOf(ingame.ranking.get(ingame.ranking.size()-1));
 								playRoom.appendText("[SERVER] 게임을 종료합니다");
 							}
 							for(Player player : ingame.ranking) {

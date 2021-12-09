@@ -73,6 +73,7 @@ public class PlayRoom extends JFrame {
 	public Vector<Player> ranking = new Vector<Player>();
 	public enum Status {WAITING, PLAYING, END};
 	public Status current_status = Status.WAITING;
+	public int winner_index = 0;
 
 //	public GameEngine2 engine;
 
@@ -111,10 +112,6 @@ public class PlayRoom extends JFrame {
 		}
 	}
 	
-	public void exit() {
-		
-	}
-
 	// 화면에 출력
 	public synchronized void appendText(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
@@ -292,10 +289,16 @@ public class PlayRoom extends JFrame {
 		return gd.getDefaultConfiguration();
 	}
 	
+
+	public void setCurrentStatusEnd() throws IOException {
+		current_status = Status.END;
+		showRestartButton();
+	}
+	
 	public void showStartButton() throws IOException {
 		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
 				&& current_status.equals(Status.WAITING)) {
-			BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
+			BufferedImage startBtn = ImageIO.read(new File(ButtonsConfig.START_IMAGE));
 			Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 			startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
 			startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
@@ -317,26 +320,21 @@ public class PlayRoom extends JFrame {
 		}
 	}
 	
-	public void setCurrentStatusEnd() throws IOException {
-		current_status = Status.END;
-		showRestartButton();
-	}
-	
 	public void showRestartButton() throws IOException {
 		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
 				&& current_status.equals(Status.END)) {
-			BufferedImage startBtn = ImageIO.read(new File("images/restart.png"));
+			BufferedImage startBtn = ImageIO.read(new File(ButtonsConfig.RESTART_IMAGE));
 			Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 			startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
 			startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
 			gamePane.add(startBtnLabel);
 			startBtnLabel.setVisible(true);
-
+			
 			startBtnLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					System.out.println("Start Btn Clicked");
-					InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName, mainview.current_entered_room);
+					InGame tmp = new InGame(Protocol.GAME_RESTART, mainview.client_userName, mainview.current_entered_room);
 					// current_entered_room에는 플레이어 이름 정보 있음
 //					tmp.players = mainview.current_entered_room.players;
 //					tmp.observers = mainview.current_entered_room.observers;
@@ -352,6 +350,14 @@ public class PlayRoom extends JFrame {
 			gamePane.remove(startBtnLabel);
 			repaint();
 		}
+	}
+	
+	public void reStart() {
+		System.out.println("asdfasdfasdfsafd");
+		MyKeyListener my_key_listener = new MyKeyListener();
+		contentPane.addKeyListener(my_key_listener);
+		contentPane.setFocusable(true);
+		contentPane.requestFocus();
 	}
 
 	public void updatePlayers() throws IOException {
@@ -522,7 +528,7 @@ public class PlayRoom extends JFrame {
 		contentPane.remove(gamePane);
 		if(amIdead) {
 			contentPane.removeKeyListener(my_key_listener);
-		}
+		} 
 		// 차례에 따른 배경 변화
 		if(whose_turn % 4 == 0)
 			gamePane = new ImagePanel(

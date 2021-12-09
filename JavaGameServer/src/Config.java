@@ -78,6 +78,9 @@ class BellConfig {
 }
 
 class ButtonsConfig {
+	public static final String START_IMAGE = "images/start-button.png";
+	public static final String RESTART_IMAGE = "images/restart.png";
+	
 	public static final int STARTX = 400;
 	public static final int STARTY = 115;
 }
@@ -102,11 +105,11 @@ class Protocol {
 	public static final String ENTER_ROOM = "606";
 	
 	public static final String GAME_START = "700";
-	public static final String CARD_CLICKED = "701";
-	public static final String BELL_HIT = "800";
-	public static final String PLAYER_DEAD = "801";
-	
-	public static final String GAME_OVER = "900";
+	public static final String GAME_RESTART = "701";
+	public static final String CARD_CLICKED = "702";
+	public static final String BELL_HIT = "703";
+	public static final String PLAYER_DEAD = "704";
+	public static final String GAME_OVER = "705";
 	
 	
 	

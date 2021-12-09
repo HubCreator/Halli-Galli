@@ -18,6 +18,7 @@ class InGame implements Serializable {
 	public Vector<Card> upCard = new Vector<Card>();
 	public Vector<Card> downCard = new Vector<Card>();
 	private boolean timeToGetLooser = false;
+	private int winner_index = -1;
 	
 
 	public InGame() {	}
@@ -75,5 +76,13 @@ class InGame implements Serializable {
 
 	public void setTimeToGetLooser(boolean timeToGetLooser) {
 		this.timeToGetLooser = timeToGetLooser;
+	}
+
+	public int getWinner_index() {
+		return winner_index;
+	}
+
+	public void setWinner_index(int winner_index) {
+		this.winner_index = winner_index;
 	}
 }

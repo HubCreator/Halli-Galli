@@ -687,6 +687,43 @@ public class JavaGameServer extends JFrame {
 									}
 								}
 							}
+						} else if (ingame.getCode().matches(Protocol.GAME_RESTART)) { // Game RESTART echo
+							System.out.println("RESTART!");
+							Vector<Card> total_cards = cardGenerator();
+							Vector<Vector> vec = cardDistributor(total_cards);
+
+							InGame aGame = new InGame();
+
+							for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
+								if (inGameList_server.get(i).getFrom_where().getRoom_name()
+										.equals(ingame.getFrom_where().getRoom_name()))
+									aGame = inGameList_server.get(i);
+							}
+							aGame.ranking.clear();
+							aGame.setTimeToGetLooser(false);
+							aGame.setCode(Protocol.GAME_RESTART);
+							
+							for(int i = 0; i < aGame.players.size(); i++) { // 카드 초기화 후 다시 나눠줌
+								Player player = aGame.players.get(i); 
+								player.back.clear();
+								player.front.clear();
+								player.setIsDead(false);
+								player.setIdDeadChecked(false);
+								player.setRank(null);
+								player.back = (Vector<Card>) vec.get(i);
+							}
+
+							// aGame에 있는 정보
+							// code, from_where(current_entered_room), players(player, 카드 정보)
+							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
+								for (int j = 0; j < user_vc.size(); j++) {
+									UserService user = (UserService) user_vc.elementAt(j);
+									if (user.userStatus.equals(UserStatus.PLAYING)
+											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+										user.writeOneObject(aGame);
+									}
+								}
+							}
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) {
 							InGame aGame = new InGame();
 
@@ -851,6 +888,7 @@ public class JavaGameServer extends JFrame {
 										if(aGame.ranking.size() >= 3) {
 											for(Player player : players) {
 												if(player.getRank() == null) {
+													aGame.setWinner_index(players.indexOf(player));
 													player.setRank(RankConfig.GOLD);
 													player.setIsDead(true);
 													player.setIdDeadChecked(true);
