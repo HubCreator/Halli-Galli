@@ -357,11 +357,11 @@ public class WaitingRoom extends JFrame {
 						}
 					} else if (ingame != null) {
 						if (ingame.getCode().matches(Protocol.GAME_START)) {
-							playRoom.appendText("[SERVER] Game starts!!");
+							playRoom.appendTextFromServer("[SERVER] Game starts!!");
 							playRoom.removeStartButton();
 							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.GAME_RESTART)) {
-							playRoom.appendText("[SERVER] Game re-starts!!");
+							playRoom.appendTextFromServer("[SERVER] Game re-starts!!");
 							playRoom.whose_turn = ingame.getWinner_index();
 							playRoom.reStart();
 							playRoom.removeStartButton();
@@ -388,7 +388,7 @@ public class WaitingRoom extends JFrame {
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
-								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 탈락했습니다!!");
+								playRoom.appendTextFromServer("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 탈락했습니다!!");
 							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {
@@ -401,10 +401,10 @@ public class WaitingRoom extends JFrame {
 						} else if (ingame.getCode().matches(Protocol.GAME_OVER)) { // 게임 종료
 							if(!ingame.ranking.isEmpty())  {
 								playRoom.ranking = ingame.ranking;
-								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "님이 탈락했습니다!!");
-								playRoom.appendText("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 1등입니다!!");
+								playRoom.appendTextFromServer("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-2).getPlayer_name() + "님이 탈락했습니다!!");
+								playRoom.appendTextFromServer("[SERVER] " + ingame.ranking.get(ingame.ranking.size()-1).getPlayer_name() + "님이 1등입니다!!");
 								playRoom.winner_index = ingame.players.indexOf(ingame.ranking.get(ingame.ranking.size()-1));
-								playRoom.appendText("[SERVER] 게임을 종료합니다");
+								playRoom.appendTextFromServer("[SERVER] 게임을 종료합니다");
 							}
 							for(Player player : ingame.ranking) {
 								if(player.getPlayer_name().equals(client_userName)) {

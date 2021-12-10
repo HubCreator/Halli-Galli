@@ -71,7 +71,11 @@ public class PlayRoom extends JFrame {
 	public boolean didOtherHIt = false;
 	public boolean amIdead = false;
 	public Vector<Player> ranking = new Vector<Player>();
-	public enum Status {WAITING, PLAYING, END};
+
+	public enum Status {
+		WAITING, PLAYING, END
+	};
+
 	public Status current_status = Status.WAITING;
 	public int winner_index = 0;
 
@@ -111,7 +115,7 @@ public class PlayRoom extends JFrame {
 			}
 		}
 	}
-	
+
 	// 화면에 출력
 	public synchronized void appendText(String msg) {
 		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
@@ -145,7 +149,23 @@ public class PlayRoom extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
+	// 화면 우측에 출력
+	public synchronized void appendTextFromServer(String msg) {
+		msg = msg.trim(); // 앞뒤 blank와 \n을 제거한다.
+		StyledDocument doc = textArea.getStyledDocument();
+		SimpleAttributeSet right = new SimpleAttributeSet();
+		StyleConstants.setAlignment(right, StyleConstants.ALIGN_CENTER);
+		StyleConstants.setForeground(right, Color.RED);
+		doc.setParagraphAttributes(doc.getLength(), 1, right, false);
+		try {
+			doc.insertString(doc.getLength(), msg + "\n", right);
+		} catch (BadLocationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public PlayRoom(WaitingRoom view, Room current_entered_room) {
 		mainview = view;
 		players = current_entered_room.players; // getPlayers();
@@ -155,9 +175,8 @@ public class PlayRoom extends JFrame {
 		// setLocationRelativeTo(null); // 자동으로 가운데에서 창을 open
 		setResizable(false);
 		setBounds(100, 100, 1193, 772);
-		contentPane = new ImagePanel(
-				new ImageIcon(BackgroundConfig.BACKGROUND_PANEL)
-						.getImage().getScaledInstance(1193, 772, DEFAULT_CURSOR));
+		contentPane = new ImagePanel(new ImageIcon(BackgroundConfig.BACKGROUND_PANEL).getImage().getScaledInstance(1193,
+				772, DEFAULT_CURSOR));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -168,7 +187,7 @@ public class PlayRoom extends JFrame {
 				c.requestFocus();
 			}
 		});
-		
+
 		my_key_listener = new MyKeyListener();
 		contentPane.addKeyListener(my_key_listener);
 		contentPane.setFocusable(true);
@@ -237,20 +256,19 @@ public class PlayRoom extends JFrame {
 		contentPane.add(room_name);
 
 		gamePane = new ImagePanel(
-				new ImageIcon(BackgroundConfig.BACKGROUND)
-				.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+				new ImageIcon(BackgroundConfig.BACKGROUND).getImage().getScaledInstance(878, 713, DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
 		repaint();
 		gamePane.setLayout(null);
-		
+
 		TextSendAction action = new TextSendAction();
 		btnSend.addActionListener(action);
 		txtInput.addActionListener(action);
 		// txtInput.requestFocus();
 
 	}
-	
+
 	public void hitted() throws IOException {
 		BufferedImage boom = ImageIO.read(new File("images/boom.png"));
 		Image boom_res = boom.getScaledInstance(133, 88, Image.SCALE_DEFAULT);
@@ -259,7 +277,7 @@ public class PlayRoom extends JFrame {
 		gamePane.add(hitted_image);
 		repaint();
 		try {
-			// TODO :  벨을 치더라도 소용 없게 해야 함
+			// TODO : 벨을 치더라도 소용 없게 해야 함
 			didOtherHIt = true; // 1초 동안은 종을 못침
 			Thread.sleep(1000);
 			didOtherHIt = false;
@@ -288,13 +306,12 @@ public class PlayRoom extends JFrame {
 		GraphicsDevice gd = ge.getDefaultScreenDevice();
 		return gd.getDefaultConfiguration();
 	}
-	
 
 	public void setCurrentStatusEnd() throws IOException {
 		current_status = Status.END;
 		showRestartButton();
 	}
-	
+
 	public void showStartButton() throws IOException {
 		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
 				&& current_status.equals(Status.WAITING)) {
@@ -310,7 +327,8 @@ public class PlayRoom extends JFrame {
 				public void mouseClicked(MouseEvent e) {
 					System.out.println("Start Btn Clicked");
 					current_status = Status.PLAYING;
-					InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName, mainview.current_entered_room);
+					InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName,
+							mainview.current_entered_room);
 					// current_entered_room에는 플레이어 이름 정보 있음
 //					tmp.players = mainview.current_entered_room.players;
 //					tmp.observers = mainview.current_entered_room.observers;
@@ -319,7 +337,7 @@ public class PlayRoom extends JFrame {
 			});
 		}
 	}
-	
+
 	public void showRestartButton() throws IOException {
 		if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
 				&& current_status.equals(Status.END)) {
@@ -329,12 +347,13 @@ public class PlayRoom extends JFrame {
 			startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
 			gamePane.add(startBtnLabel);
 			startBtnLabel.setVisible(true);
-			
+
 			startBtnLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					System.out.println("Start Btn Clicked");
-					InGame tmp = new InGame(Protocol.GAME_RESTART, mainview.client_userName, mainview.current_entered_room);
+					InGame tmp = new InGame(Protocol.GAME_RESTART, mainview.client_userName,
+							mainview.current_entered_room);
 					// current_entered_room에는 플레이어 이름 정보 있음
 //					tmp.players = mainview.current_entered_room.players;
 //					tmp.observers = mainview.current_entered_room.observers;
@@ -344,14 +363,14 @@ public class PlayRoom extends JFrame {
 		}
 		repaint();
 	}
-	
+
 	public void removeStartButton() {
 		if (startBtnLabel != null) {
 			gamePane.remove(startBtnLabel);
 			repaint();
 		}
 	}
-	
+
 	public void reStart() {
 		System.out.println("asdfasdfasdfsafd");
 		MyKeyListener my_key_listener = new MyKeyListener();
@@ -395,7 +414,7 @@ public class PlayRoom extends JFrame {
 			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player1_name.setText(players.get(0));
 			player1_name.setBackground(Color.WHITE);
-			if(players.get(0).equals(mainview.client_userName))
+			if (players.get(0).equals(mainview.client_userName))
 				player1_name.setForeground(Color.BLUE);
 			player1_name.setBounds(12, 10, 84, 40);
 			gamePane.add(player1_name);
@@ -435,7 +454,7 @@ public class PlayRoom extends JFrame {
 			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player2_name.setText(players.get(1));
 			player2_name.setBackground(Color.WHITE);
-			if(players.get(1).equals(mainview.client_userName))
+			if (players.get(1).equals(mainview.client_userName))
 				player2_name.setForeground(Color.BLUE);
 			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
@@ -476,7 +495,7 @@ public class PlayRoom extends JFrame {
 			player4_name.setText(players.get(2));
 			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player4_name.setBackground(Color.WHITE);
-			if(players.get(2).equals(mainview.client_userName))
+			if (players.get(2).equals(mainview.client_userName))
 				player4_name.setForeground(Color.BLUE);
 			gamePane.add(player4_name);
 		}
@@ -514,7 +533,7 @@ public class PlayRoom extends JFrame {
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
-			if(players.get(3).equals(mainview.client_userName))
+			if (players.get(3).equals(mainview.client_userName))
 				player3_name.setForeground(Color.BLUE);
 			gamePane.add(player3_name);
 
@@ -526,32 +545,27 @@ public class PlayRoom extends JFrame {
 	public void updateScreen() throws IOException {
 		gamePane.removeAll();
 		contentPane.remove(gamePane);
-		if(amIdead) {
+		if (amIdead) {
 			contentPane.removeKeyListener(my_key_listener);
-		} 
+		}
 		// 차례에 따른 배경 변화
-		if(whose_turn % 4 == 0)
-			gamePane = new ImagePanel(
-					new ImageIcon(BackgroundConfig.BACKGROUND_P1)
-					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
-		else if(whose_turn % 4 == 1)
-			gamePane = new ImagePanel(
-					new ImageIcon(BackgroundConfig.BACKGROUND_P2)
-					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
-		else if(whose_turn % 4 == 2)
-			gamePane = new ImagePanel(
-					new ImageIcon(BackgroundConfig.BACKGROUND_P3)
-					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+		if (whose_turn % 4 == 0)
+			gamePane = new ImagePanel(new ImageIcon(BackgroundConfig.BACKGROUND_P1).getImage().getScaledInstance(878,
+					713, DEFAULT_CURSOR));
+		else if (whose_turn % 4 == 1)
+			gamePane = new ImagePanel(new ImageIcon(BackgroundConfig.BACKGROUND_P2).getImage().getScaledInstance(878,
+					713, DEFAULT_CURSOR));
+		else if (whose_turn % 4 == 2)
+			gamePane = new ImagePanel(new ImageIcon(BackgroundConfig.BACKGROUND_P3).getImage().getScaledInstance(878,
+					713, DEFAULT_CURSOR));
 		else
-			gamePane = new ImagePanel(
-					new ImageIcon(BackgroundConfig.BACKGROUND_P4)
-					.getImage().getScaledInstance(878, 713 , DEFAULT_CURSOR));
+			gamePane = new ImagePanel(new ImageIcon(BackgroundConfig.BACKGROUND_P4).getImage().getScaledInstance(878,
+					713, DEFAULT_CURSOR));
 		gamePane.setBounds(12, 10, 878, 713);
 		contentPane.add(gamePane);
-		
-		
+
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
-			if(player1.getIsDead() == true) {
+			if (player1.getIsDead() == true) {
 				// player1 is dead
 				JLabel player1_name = new JLabel((String) null);
 				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -560,14 +574,15 @@ public class PlayRoom extends JFrame {
 				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 				player1_name.setText(players.get(0));
 				player1_name.setBackground(Color.WHITE);
-				if(players.get(0).equals(mainview.client_userName))
+				if (players.get(0).equals(mainview.client_userName))
 					player1_name.setForeground(Color.BLUE);
 				player1_name.setBounds(12, 10, 84, 40);
 				gamePane.add(player1_name);
-				
-				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon(player1.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+
+				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon(player1.getRank()).getImage()
+						.getScaledInstance(168, 163, java.awt.Image.SCALE_SMOOTH)))));
 				player1_dead.setBounds(113, 102, 168, 163);
-				
+
 				gamePane.add(player1_dead);
 			} else {
 				player1.setPlayer_name(mainview.client_userName);
@@ -584,21 +599,26 @@ public class PlayRoom extends JFrame {
 				}
 
 				BufferedImage player1_up_image;
-				
+
 				if (player1.front.isEmpty())
 					player1_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P1_DEG);
 				else {
-					player1_up_image = rotate(ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())), UserConfig.P1_DEG);
+					player1_up_image = rotate(
+							ImageIO.read(new File(player1.front.get(player1.front.size() - 1).getCard_info())),
+							UserConfig.P1_DEG);
 				}
-				Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				Image player1_up_result = player1_up_image.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
 				palyer1_up = new JLabel(new ImageIcon(player1_up_result));
-				palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				palyer1_up.setBounds(UserConfig.P1_UPX, UserConfig.P1_UPY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
 
 				if (mainview.client_userName.equals(players.get(0)) && whose_turn % 4 == 0) {
 					palyer1_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame result = new InGame(Protocol.CARD_CLICKED, player1.getPlayer_name(), player1.getCurrent_room());
+							InGame result = new InGame(Protocol.CARD_CLICKED, player1.getPlayer_name(),
+									player1.getCurrent_room());
 							mainview.sendObject(result);
 						}
 					});
@@ -613,7 +633,7 @@ public class PlayRoom extends JFrame {
 				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 				player1_name.setText(players.get(0));
 				player1_name.setBackground(Color.WHITE);
-				if(players.get(0).equals(mainview.client_userName))
+				if (players.get(0).equals(mainview.client_userName))
 					player1_name.setForeground(Color.BLUE);
 				player1_name.setBounds(12, 10, 84, 40);
 				gamePane.add(player1_name);
@@ -625,23 +645,24 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
-			if(player2.getIsDead() == true) {
+			if (player2.getIsDead() == true) {
 				JLabel player2_name = new JLabel((String) null);
 				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
 				player2_name.setFont(new Font("굴림", Font.BOLD, 14));
 				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player2_name.setText(players.get(1));
 				player2_name.setBackground(Color.WHITE);
-				if(players.get(1).equals(mainview.client_userName))
+				if (players.get(1).equals(mainview.client_userName))
 					player2_name.setForeground(Color.BLUE);
 				player2_name.setBounds(866 - 84, 10, 84, 40);
 				gamePane.add(player2_name);
-				
+
 				// player2 is dead
-				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon(player2.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon(player2.getRank()).getImage()
+						.getScaledInstance(168, 163, java.awt.Image.SCALE_SMOOTH)))));
 				player2_dead.setBounds(593, 102, 168, 163);
 				gamePane.add(player2_dead);
-				
+
 			} else {
 				player2.setPlayer_name(mainview.client_userName);
 				player2.setCurrent_room(mainview.current_entered_room);
@@ -660,17 +681,22 @@ public class PlayRoom extends JFrame {
 				if (player2.front.isEmpty())
 					player2_up_image = rotate(ImageIO.read(new File(CardConfig.BLANK)), UserConfig.P2_DEG);
 				else {
-					player2_up_image = rotate(ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())), UserConfig.P2_DEG);
+					player2_up_image = rotate(
+							ImageIO.read(new File(player2.front.get(player2.front.size() - 1).getCard_info())),
+							UserConfig.P2_DEG);
 				}
 
-				Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
+				Image player2_up_result = player2_up_image.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
 				palyer2_up = new JLabel(new ImageIcon(player2_up_result));
-				palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				palyer2_up.setBounds(UserConfig.P2_UPX, UserConfig.P2_UPY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
 				if (mainview.client_userName.equals(players.get(1)) && whose_turn % 4 == 1) {
 					palyer2_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName, mainview.current_entered_room);
+							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName,
+									mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
 					});
@@ -683,7 +709,7 @@ public class PlayRoom extends JFrame {
 				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player2_name.setText(players.get(1));
 				player2_name.setBackground(Color.WHITE);
-				if(players.get(1).equals(mainview.client_userName))
+				if (players.get(1).equals(mainview.client_userName))
 					player2_name.setForeground(Color.BLUE);
 				player2_name.setBounds(866 - 84, 10, 84, 40);
 				gamePane.add(player2_name);
@@ -695,7 +721,7 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
-			if(player3.getIsDead() == true) {
+			if (player3.getIsDead() == true) {
 				JLabel player4_name = new JLabel((String) null);
 				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -703,15 +729,16 @@ public class PlayRoom extends JFrame {
 				player4_name.setText(players.get(2));
 				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player4_name.setBackground(Color.WHITE);
-				if(players.get(2).equals(mainview.client_userName))
+				if (players.get(2).equals(mainview.client_userName))
 					player4_name.setForeground(Color.BLUE);
 				gamePane.add(player4_name);
-				
+
 				// player3 is dead
-				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon(player3.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon(player3.getRank()).getImage()
+						.getScaledInstance(168, 163, java.awt.Image.SCALE_SMOOTH)))));
 				player3_dead.setBounds(593, 435, 168, 163);
 				gamePane.add(player3_dead);
-				
+
 			} else {
 				player3.setPlayer_name(mainview.client_userName);
 				player3.setCurrent_room(mainview.current_entered_room);
@@ -735,15 +762,17 @@ public class PlayRoom extends JFrame {
 							UserConfig.P3_DEG);
 				}
 
-				Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
-						Image.SCALE_DEFAULT);
+				Image player3_up_result = player3_up_image.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
 				palyer3_up = new JLabel(new ImageIcon(player3_up_result));
-				palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				palyer3_up.setBounds(UserConfig.P3_UPX, UserConfig.P3_UPY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
 				if (mainview.client_userName.equals(players.get(2)) && whose_turn % 4 == 2) {
 					palyer3_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName, mainview.current_entered_room);
+							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName,
+									mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
 					});
@@ -757,7 +786,7 @@ public class PlayRoom extends JFrame {
 				player4_name.setText(players.get(2));
 				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player4_name.setBackground(Color.WHITE);
-				if(players.get(2).equals(mainview.client_userName))
+				if (players.get(2).equals(mainview.client_userName))
 					player4_name.setForeground(Color.BLUE);
 				gamePane.add(player4_name);
 
@@ -768,7 +797,7 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
-			if(player4.getIsDead() == true) {
+			if (player4.getIsDead() == true) {
 				JLabel player3_name = new JLabel((String) null);
 				player3_name.setBounds(12, 703 - 40, 84, 40);
 				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
@@ -776,12 +805,13 @@ public class PlayRoom extends JFrame {
 				player3_name.setText(players.get(3));
 				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player3_name.setBackground(Color.WHITE);
-				if(players.get(3).equals(mainview.client_userName))
+				if (players.get(3).equals(mainview.client_userName))
 					player3_name.setForeground(Color.BLUE);
 				gamePane.add(player3_name);
-				
+
 				// player4 is dead
-				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon(player4.getRank()).getImage().getScaledInstance(168, 163,java.awt.Image.SCALE_SMOOTH)))));
+				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon(player4.getRank()).getImage()
+						.getScaledInstance(168, 163, java.awt.Image.SCALE_SMOOTH)))));
 				player4_dead.setBounds(113, 435, 168, 163);
 				gamePane.add(player4_dead);
 			} else {
@@ -805,15 +835,17 @@ public class PlayRoom extends JFrame {
 					player4_up_image = rotate(
 							ImageIO.read(new File(player4.front.get(player4.front.size() - 1).getCard_info())),
 							UserConfig.P4_DEG);
-				Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT,
-						Image.SCALE_DEFAULT);
+				Image player4_up_result = player4_up_image.getScaledInstance(CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT, Image.SCALE_DEFAULT);
 				palyer4_up = new JLabel(new ImageIcon(player4_up_result));
-				palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH, CardConfig.CARD_HEIGHT);
+				palyer4_up.setBounds(UserConfig.P4_UPX, UserConfig.P4_UPY, CardConfig.CARD_WIDTH,
+						CardConfig.CARD_HEIGHT);
 				if (mainview.client_userName.equals(players.get(3)) && whose_turn % 4 == 3) {
 					palyer4_down.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseReleased(MouseEvent e) {
-							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName, mainview.current_entered_room);
+							InGame tmp = new InGame(Protocol.CARD_CLICKED, mainview.client_userName,
+									mainview.current_entered_room);
 							mainview.sendObject(tmp);
 						}
 					});
@@ -827,17 +859,17 @@ public class PlayRoom extends JFrame {
 				player3_name.setText(players.get(3));
 				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player3_name.setBackground(Color.WHITE);
-				if(players.get(3).equals(mainview.client_userName))
+				if (players.get(3).equals(mainview.client_userName))
 					player3_name.setForeground(Color.BLUE);
 				gamePane.add(player3_name);
-				
+
 				JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
 				player4_down_cnt.setBounds(115, 480, 66, 27);
 				gamePane.add(player4_down_cnt);
 
-
 				// master user에게 start버튼 show
-				if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser()) && players_inGame_info == null) {
+				if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
+						&& players_inGame_info == null) {
 					BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
 					Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 					startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
@@ -852,17 +884,17 @@ public class PlayRoom extends JFrame {
 				for (int i = 0; i < players_inGame_info.size(); i++) {
 					totalCnt += players_inGame_info.get(i).front.size();
 				}
-				
-				if(totalCnt != 0) {
+
+				if (totalCnt != 0) {
 					total_up_cards_cnt = new JLabel(String.format("Total : %d !!", totalCnt));
 					total_up_cards_cnt.setBounds(425, 279, 60, 30);
 					gamePane.add(total_up_cards_cnt);
 				}
-				
+
 				picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 				gamePane.add(picLabel);
 			}
-			
+
 			repaint();
 		}
 	}
