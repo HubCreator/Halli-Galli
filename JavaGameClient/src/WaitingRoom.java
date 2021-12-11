@@ -371,6 +371,7 @@ public class WaitingRoom extends JFrame {
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.BELL_HIT)) { // Á¾À» Ä§
+							System.out.println("GOTGOTGOT");
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty())  {

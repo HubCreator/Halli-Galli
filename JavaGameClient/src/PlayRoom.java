@@ -372,7 +372,6 @@ public class PlayRoom extends JFrame {
 	}
 
 	public void reStart() {
-		System.out.println("asdfasdfasdfsafd");
 		MyKeyListener my_key_listener = new MyKeyListener();
 		contentPane.addKeyListener(my_key_listener);
 		contentPane.setFocusable(true);

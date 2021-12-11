@@ -550,6 +550,26 @@ public class JavaGameServer extends JFrame {
 			return player;
 		}
 		
+		public int nextTurn(InGame aGame) {
+			int turn = aGame.getWhose_turn();
+			turn++;
+			// 턴을 넘길 때, 다음 사람이 죽었냐, 뒤집을 카드가 없느냐 판단 해야 함
+			while (true) {
+				if(aGame.players.get((turn)%4).back.size() == 0) { // 다음 사람이 뒤집을 카드가 없느냐
+					turn++;
+					continue;
+				}
+				if(aGame.players.get(turn%4).getIsDead()) {			// 다음 사람이 죽었느냐
+					turn++; 
+					continue;
+				}
+				
+				break;
+			}
+			
+			return turn%4;
+		}
+		
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -726,7 +746,7 @@ public class JavaGameServer extends JFrame {
 							}
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) {
 							InGame aGame = new InGame();
-
+							//int current_turn = aGame.getWhose_turn();
 							for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
 								if (inGameList_server.get(i).getFrom_where().getRoom_name()
 										.equals(ingame.getFrom_where().getRoom_name()))
@@ -741,17 +761,17 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 							aGame.setCode(Protocol.CARD_CLICKED);
-							int current_turn = aGame.getWhose_turn();
+							
 							// TODO: player가 뒤집을 카드가 있는지 판단
-							current_turn++;
-							while (true) { // 다음 차례의 player가 뒤집을 카드가 없다면 턴을 바로 넘겨라
-								if (aGame.players.get((current_turn) % 4).back.size() == 0) {
-									current_turn++;
-									continue;
-								} else
-									break;
-							}
-							aGame.setWhose_turn(current_turn);
+//							current_turn++;
+//							while (true) { // 다음 차례의 player가 뒤집을 카드가 없다면 턴을 바로 넘겨라
+//								if (aGame.players.get((current_turn) % 4).back.size() == 0) {
+//									current_turn++;
+//									continue;
+//								} else
+//									break;
+//							}
+							aGame.setWhose_turn(nextTurn(aGame));
 							// update된 정보를 모든 player들에게 뿌림
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
 								for (int j = 0; j < user_vc.size(); j++) {
@@ -769,7 +789,7 @@ public class JavaGameServer extends JFrame {
 							Vector<Card> getCards = new Vector<Card>();
 							Vector<Card> fault_cards = new Vector<Card>();
 							Player hitter = null;
-							int livePlayerCnt = -1; // 살아있는 플레이어의 수
+							int livePlayerCnt = -1; // 살아있는 플레이어의 수 (자신 제외)
 							int cardCnt = 0; // 실수로 종을 친 플레이어의 카드에서 압수한 카드 (livePlayerCnt >= cardCnt)
 							
 							InGame aGame = new InGame();
@@ -823,7 +843,7 @@ public class JavaGameServer extends JFrame {
 									if (aGame.getWhose_turn() == players.indexOf(hitter)) {
 										System.out.println("current_turn : " + aGame.getWhose_turn());
 										System.out.println("player index : " + players.indexOf(hitter));
-										aGame.setWhose_turn(aGame.getWhose_turn() + 1);
+										aGame.setWhose_turn(nextTurn(aGame));
 										System.out.println("helloo thererre");
 									}
 								}
@@ -833,8 +853,6 @@ public class JavaGameServer extends JFrame {
 										if (!player.getIsDead())
 											livePlayerCnt++;
 									}
-									System.out.println("hitter.back.size() > " + hitter.back.size());
-									System.out.println("livePlayerCnt > " + livePlayerCnt);
 									
 									if(hitter.back.size() >= livePlayerCnt) {
 										System.out.println("Have enough cards");
@@ -850,8 +868,6 @@ public class JavaGameServer extends JFrame {
 												player.back.add(fault_cards.get(index++));
 										}
 									}
-									
-
 									else if (hitter.back.size() < livePlayerCnt) { // 줄 수 있는 카드가 살아있는 사람의 수보다 적다면.. 살아있는 사람 중 랜덤하게 뽑아서 줘야 해
 										System.out.println("Not enough cards");
 										Vector<Integer> tmp = new Vector<Integer>();
@@ -860,6 +876,7 @@ public class JavaGameServer extends JFrame {
 											// 세 장 이하라면, 있는 만큼 제거
 											fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
 										}
+										if(hitter.back.size() == 0) aGame.setWhose_turn(nextTurn(aGame));
 										while (true) {
 											int ran_index = (int) (Math.random() * players.size()); // 하나를 랜덤하게 뽑아서 검사
 											if (players.get(ran_index).equals(hitter) || players.get(ran_index).getIsDead()) {
@@ -895,6 +912,7 @@ public class JavaGameServer extends JFrame {
 											}
 											aGame.setCode(Protocol.GAME_OVER);
 										}
+										System.out.println("herehrehrherherher");
 										user.writeOneObject(aGame);
 									}
 								}
