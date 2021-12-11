@@ -616,11 +616,11 @@ public class JavaGameServer extends JFrame {
 							allowEnteringRoom(room);
 							sendRoomListToAll();
 						} else if (room.getCode().matches(Protocol.ENTER_ROOM)) { // 방 입장 (Play)
-							System.out.println("Guest entered here!!");
 							allowEnteringRoom(room);
 							sendRoomListToAll();
 						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
+							userStatus = UserStatus.WAITING;
 							Room tmp = new Room(Protocol.EXIT_ROOM);
 							for (Room aroom : roomList_server) {
 								if (aroom.equals(enteredRoom)) {
@@ -819,8 +819,14 @@ public class JavaGameServer extends JFrame {
 								}
 							} else { // 잘못 침
 								System.out.println("Fault!!");
-								if(hitter.back.isEmpty() && current_turn % 4 == players.indexOf(hitter))
-									aGame.setWhose_turn(aGame.getWhose_turn() + 1);
+								if(hitter.back.isEmpty()) {
+									if (aGame.getWhose_turn() == players.indexOf(hitter)) {
+										System.out.println("current_turn : " + aGame.getWhose_turn());
+										System.out.println("player index : " + players.indexOf(hitter));
+										aGame.setWhose_turn(aGame.getWhose_turn() + 1);
+										System.out.println("helloo thererre");
+									}
+								}
 								else {
 									// 살아있는 플레이어의 수 & 자신이 가지고 있는 카드의 수를 체크해야 함
 									for (Player player : players) { // 살아있는 player 숫자 check
@@ -854,18 +860,11 @@ public class JavaGameServer extends JFrame {
 											// 세 장 이하라면, 있는 만큼 제거
 											fault_cards.add(hitter.back.remove(hitter.back.size() - 1));
 										}
-										System.out.println("cardCnt > " + cardCnt);
 										while (true) {
 											int ran_index = (int) (Math.random() * players.size()); // 하나를 랜덤하게 뽑아서 검사
-											System.out.println("ran >> " + ran_index);
-											
-											if (players.get(ran_index).equals(hitter)) {
-												System.out.println("1");
+											if (players.get(ran_index).equals(hitter) || players.get(ran_index).getIsDead()) {
 												continue;
-											} else if(players.get(ran_index).getIsDead()) {
-												System.out.println("2");
-												continue;
-											}
+											} 
 											
 											tmp.add(ran_index);
 											if(tmp.size() != cardCnt) continue;
@@ -876,7 +875,6 @@ public class JavaGameServer extends JFrame {
 											}
 										}
 									}
-									if(hitter.back.isEmpty()) aGame.setWhose_turn(aGame.getWhose_turn() + 1);
 								}
 							}
 							
