@@ -101,8 +101,10 @@ class Protocol {
 	public static final String CREATE_NEW_ROOM = "600";
 	public static final String ROOM_LIST = "601";
 	public static final String ENTERING_MASTER = "603";
-	public static final String EXIT_ROOM = "604";
+	public static final String EXIT_PLAYER = "604";
 	public static final String ENTER_ROOM = "606";
+	public static final String OBSERVE_ROOM = "607";
+	public static final String EXIT_OBSERVER = "608";
 	
 	public static final String GAME_START = "700";
 	public static final String GAME_RESTART = "701";

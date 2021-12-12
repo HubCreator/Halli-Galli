@@ -254,7 +254,7 @@ public class WaitingRoom extends JFrame {
 			observeBtn.setBounds(697, 60, 74, 28);
 			observeBtn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Room room = new Room("608");
+					Room room = new Room(Protocol.OBSERVE_ROOM);
 					room.setFrom_whom(client_userName);
 					room.setRoom_name(room_name.getText());
 					sendObject(room);
@@ -264,7 +264,6 @@ public class WaitingRoom extends JFrame {
 			roomListJPanel.add(roomEntry);
 			repaint();
 		}
-		repaint();
 	}
 	
 	public void reload(InGame ingame) throws IOException {
@@ -334,7 +333,7 @@ public class WaitingRoom extends JFrame {
 							setVisible(false);
 							playRoom = new PlayRoom(view, room); // playRoom : client가 만든 새로운 룸
 							playRoom.updatePlayers();
-						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) {
+						} else if (room.getCode().matches(Protocol.EXIT_PLAYER)) {
 							current_entered_room = room;
 							System.out.println("Got someone's out");
 							playRoom.updatePlayers();
@@ -349,7 +348,7 @@ public class WaitingRoom extends JFrame {
 								playRoom.players = room.players; // 이미 방에 들어가 있다면 플레이어 정보를 update
 								playRoom.updatePlayers();
 							}
-						} else if (room.getCode().matches("609")) {
+						} else if (room.getCode().matches(Protocol.OBSERVE_ROOM)) {
 							System.out.println("Observing allowed");
 							current_entered_room = room;
 							setVisible(false);

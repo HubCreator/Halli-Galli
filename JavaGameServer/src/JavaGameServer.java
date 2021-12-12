@@ -286,7 +286,7 @@ public class JavaGameServer extends JFrame {
 						return;
 					}
 					Room roomTmp = room;
-					roomTmp.setCode("609");
+					roomTmp.setCode(Protocol.OBSERVE_ROOM);
 					List<String> observers;
 					if (room.getObservers() != null) {
 						observers = room.getObservers();
@@ -638,10 +638,10 @@ public class JavaGameServer extends JFrame {
 						} else if (room.getCode().matches(Protocol.ENTER_ROOM)) { // 방 입장 (Play)
 							allowEnteringRoom(room);
 							sendRoomListToAll();
-						} else if (room.getCode().matches(Protocol.EXIT_ROOM)) { // 방 퇴장 (Play)
+						} else if (room.getCode().matches(Protocol.EXIT_PLAYER)) { // 방 퇴장 (Play)
 							System.out.println("Exit!!");
 							userStatus = UserStatus.WAITING;
-							Room tmp = new Room(Protocol.EXIT_ROOM);
+							Room tmp = new Room(Protocol.EXIT_PLAYER);
 							for (Room aroom : roomList_server) {
 								if (aroom.equals(enteredRoom)) {
 									List<String> players = new ArrayList<>();
@@ -661,7 +661,7 @@ public class JavaGameServer extends JFrame {
 							}
 							
 							sendRoomListToAll();
-						} else if (room.getCode().matches("608")) { // 방 입장 (Observe)
+						} else if (room.getCode().matches(Protocol.OBSERVE_ROOM)) { // 방 입장 (Observe)
 							System.out.println("Observer In");
 							allowObservingRoom(room);
 							sendRoomListToAll();

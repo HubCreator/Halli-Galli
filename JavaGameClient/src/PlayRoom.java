@@ -234,7 +234,7 @@ public class PlayRoom extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// exit room
-				Room room = new Room(Protocol.EXIT_ROOM);
+				Room room = new Room(Protocol.EXIT_PLAYER);
 				room.setFrom_whom(userName);
 				room.setRoom_name(current_entered_room.getRoom_name());
 				view.current_entered_room = null;
