@@ -166,7 +166,6 @@ public class WaitingRoom extends JFrame {
 	public void showRoomList(List<Room> list) {
 		roomListJPanel.removeAll();
 		roomListJPanel.repaint();
-		System.out.println("start " + list.size());
 		for (int i = 0; i < list.size(); i++) {
 			// System.out.println("room name " + list.get(i).getRoom_name());
 			JPanel roomEntry = new JPanel();
@@ -340,11 +339,14 @@ public class WaitingRoom extends JFrame {
 						} else if (room.getCode().matches(Protocol.ENTER_ROOM)) {
 							current_entered_room = null;
 							current_entered_room = room;
+							// if문 분기 다시 보기
 							if (playRoom == null) {
+								System.out.println("playroom null");
 								setVisible(false);
 								playRoom = new PlayRoom(view, current_entered_room);
 								playRoom.updatePlayers();
 							} else {
+								System.out.println("updated");
 								playRoom.players = room.players; // 이미 방에 들어가 있다면 플레이어 정보를 update
 								playRoom.updatePlayers();
 							}
@@ -353,6 +355,7 @@ public class WaitingRoom extends JFrame {
 							current_entered_room = room;
 							setVisible(false);
 							playRoom = new PlayRoom(view, current_entered_room);
+							playRoom.updatePlayers();
 						}
 					} else if (ingame != null) {
 						if (ingame.getCode().matches(Protocol.GAME_START)) {

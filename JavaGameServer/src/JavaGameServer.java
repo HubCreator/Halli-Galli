@@ -286,6 +286,10 @@ public class JavaGameServer extends JFrame {
 						return;
 					}
 					aroom.setCode(Protocol.OBSERVE_ROOM);
+					aroom.observers.add(enteredRoom.getFrom_whom());
+					Player player = new Player(enteredRoom.getFrom_whom(), aroom);
+					InGame aGame = findRoom(aroom.getRoom_name());
+					aGame.observers.add(player);
 					writeOneObject(aroom);
 					System.out.println("들어왔다");
 				} else {
@@ -309,8 +313,14 @@ public class JavaGameServer extends JFrame {
 						enteredRoom.players.add(room.getFrom_whom());
 						for (int j = 0; j < user_vc.size(); j++) {
 							UserService user = (UserService) user_vc.elementAt(j);
+							// 관전자들에게도 보내줘야 함
 							for (String player : enteredRoom.players) {
 								if (user.userName.equals(player)) {
+									user.writeOneObject(enteredRoom);
+								}
+							}
+							for (String observer : enteredRoom.observers) {
+								if (user.userName.equals(observer)) {
 									user.writeOneObject(enteredRoom);
 								}
 							}
@@ -611,7 +621,13 @@ public class JavaGameServer extends JFrame {
 								UserService user = (UserService) user_vc.elementAt(i);
 								if (user.userStatus.equals(UserStatus.PLAYING))
 									user.writeOneObject(chatmsg);
+								for (String observer : enteredRoom.observers) {
+									if (user.userName.equals(observer)) {
+										user.writeOneObject(chatmsg);
+									}
+								}
 							}
+							
 						} else if (chatmsg.code.matches(Protocol.LOGOUT)) { // logout message 처리
 							logout();
 							break;
@@ -693,6 +709,11 @@ public class JavaGameServer extends JFrame {
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
 										user.writeOneObject(aGame);
 									}
+									for (String observer : enteredRoom.observers) {
+										if (user.userName.equals(observer)) {
+											user.writeOneObject(aGame);
+										}
+									}
 								}
 							}
 						} else if (ingame.getCode().matches(Protocol.GAME_RESTART)) { // Game RESTART echo
@@ -729,6 +750,11 @@ public class JavaGameServer extends JFrame {
 									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
 										user.writeOneObject(aGame);
+									}
+									for (String observer : enteredRoom.observers) {
+										if (user.userName.equals(observer)) {
+											user.writeOneObject(aGame);
+										}
 									}
 								}
 							}
@@ -767,6 +793,11 @@ public class JavaGameServer extends JFrame {
 									if (user.userStatus.equals(UserStatus.PLAYING)
 											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
 										user.writeOneObject(aGame);
+									}
+									for (String observer : enteredRoom.observers) {
+										if (user.userName.equals(observer)) {
+											user.writeOneObject(aGame);
+										}
 									}
 								}
 							}
@@ -902,6 +933,11 @@ public class JavaGameServer extends JFrame {
 										}
 										System.out.println("herehrehrherherher");
 										user.writeOneObject(aGame);
+										for (String observer : enteredRoom.observers) {
+											if (user.userName.equals(observer)) {
+												user.writeOneObject(aGame);
+											}
+										}
 									}
 								}
 							}
