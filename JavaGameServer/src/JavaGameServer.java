@@ -285,20 +285,8 @@ public class JavaGameServer extends JFrame {
 						System.out.println("Room is full to observe!!");
 						return;
 					}
-					Room roomTmp = room;
-					roomTmp.setCode(Protocol.OBSERVE_ROOM);
-					List<String> observers;
-					if (room.getObservers() != null) {
-						observers = room.getObservers();
-						observers.add(room.getFrom_whom());
-					} else {
-						observers = new ArrayList<>();
-						observers.add(room.getFrom_whom());
-					}
-					roomTmp.setObservers(observers);
-					aroom.setObservers(observers);
-					writeOneObject(roomTmp);
-
+					aroom.setCode(Protocol.OBSERVE_ROOM);
+					writeOneObject(aroom);
 					System.out.println("들어왔다");
 				} else {
 					System.out.println("해당 방이 없습니다..");
