@@ -568,6 +568,23 @@ public class JavaGameServer extends JFrame {
 			return turn%4;
 		}
 		
+		public void sendObjInGame(InGame ingame) {
+			for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
+				for (int j = 0; j < user_vc.size(); j++) {
+					UserService user = (UserService) user_vc.elementAt(j);
+					if (user.userStatus.equals(UserStatus.PLAYING)
+							&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+						user.writeOneObject(ingame);
+					}
+					for (String observer : enteredRoom.observers) {
+						if (user.userName.equals(observer)) {
+							user.writeOneObject(ingame);
+						}
+					}
+				}
+			}
+		}
+		
 		public void run() {
 			while (true) { // 사용자 접속을 계속해서 받기 위해 while문
 				try {
@@ -678,10 +695,6 @@ public class JavaGameServer extends JFrame {
 							Vector<Card> total_cards = cardGenerator();
 							Vector<Vector> vec = cardDistributor(total_cards);
 
-							InGame aGame = new InGame();
-							aGame.setCode(Protocol.GAME_START);
-							aGame.setFrom_where(ingame.getFrom_where()); // 현재 진행되는 룸
-
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(ingame.getFrom_where().getRoom_name())) {
 									aroom.setStatus("게임중");
@@ -697,25 +710,16 @@ public class JavaGameServer extends JFrame {
 
 								players.add(player);
 							}
-							aGame.players = players;
-							inGameList_server.add(aGame); // 전체 서버에서 관리하는 inGameList에 추가
+							ingame.players.clear();
+							ingame.players = players;
+							ingame.setCode(Protocol.GAME_START);
+							inGameList_server.add(ingame); // 전체 서버에서 관리하는 inGameList에 추가
 
+							
 							// aGame에 있는 정보
 							// code, from_where(current_entered_room), players(player, 카드 정보)
-							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
-								for (int j = 0; j < user_vc.size(); j++) {
-									UserService user = (UserService) user_vc.elementAt(j);
-									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										user.writeOneObject(aGame);
-									}
-									for (String observer : enteredRoom.observers) {
-										if (user.userName.equals(observer)) {
-											user.writeOneObject(aGame);
-										}
-									}
-								}
-							}
+							sendObjInGame(ingame);
+							
 						} else if (ingame.getCode().matches(Protocol.GAME_RESTART)) { // Game RESTART echo
 							System.out.println("RESTART!");
 							Vector<Card> total_cards = cardGenerator();
@@ -731,6 +735,7 @@ public class JavaGameServer extends JFrame {
 							aGame.ranking.clear();
 							aGame.setTimeToGetLooser(false);
 							aGame.setCode(Protocol.GAME_RESTART);
+							aGame.setFrom_where(ingame.getFrom_where());
 							
 							for(int i = 0; i < aGame.players.size(); i++) { // 카드 초기화 후 다시 나눠줌
 								Player player = aGame.players.get(i); 
@@ -742,22 +747,7 @@ public class JavaGameServer extends JFrame {
 								player.back = (Vector<Card>) vec.get(i);
 							}
 
-							// aGame에 있는 정보
-							// code, from_where(current_entered_room), players(player, 카드 정보)
-							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
-								for (int j = 0; j < user_vc.size(); j++) {
-									UserService user = (UserService) user_vc.elementAt(j);
-									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										user.writeOneObject(aGame);
-									}
-									for (String observer : enteredRoom.observers) {
-										if (user.userName.equals(observer)) {
-											user.writeOneObject(aGame);
-										}
-									}
-								}
-							}
+							sendObjInGame(aGame);
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) {
 							InGame aGame = new InGame();
 							//int current_turn = aGame.getWhose_turn();
@@ -766,6 +756,7 @@ public class JavaGameServer extends JFrame {
 										.equals(ingame.getFrom_where().getRoom_name()))
 									aGame = inGameList_server.get(i);
 							}
+							
 							for (int i = 0; i < aGame.players.size(); i++) {
 								if (aGame.players.get(i).getPlayer_name() // 메시지를 보낸 player를 찾아 update
 										.equals(ingame.getFrom_whom())) {
@@ -775,32 +766,12 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 							aGame.setCode(Protocol.CARD_CLICKED);
+							aGame.setFrom_where(ingame.getFrom_where());
 							
-							// TODO: player가 뒤집을 카드가 있는지 판단
-//							current_turn++;
-//							while (true) { // 다음 차례의 player가 뒤집을 카드가 없다면 턴을 바로 넘겨라
-//								if (aGame.players.get((current_turn) % 4).back.size() == 0) {
-//									current_turn++;
-//									continue;
-//								} else
-//									break;
-//							}
 							aGame.setWhose_turn(nextTurn(aGame));
 							// update된 정보를 모든 player들에게 뿌림
-							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
-								for (int j = 0; j < user_vc.size(); j++) {
-									UserService user = (UserService) user_vc.elementAt(j);
-									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										user.writeOneObject(aGame);
-									}
-									for (String observer : enteredRoom.observers) {
-										if (user.userName.equals(observer)) {
-											user.writeOneObject(aGame);
-										}
-									}
-								}
-							}
+							sendObjInGame(aGame);
+							
 						} else if (ingame.getCode().matches(Protocol.BELL_HIT)) { // bell hit
 							Vector<Player> players;
 							Vector<Card> front_cards = new Vector<Card>();
@@ -815,6 +786,7 @@ public class JavaGameServer extends JFrame {
 							
 							aGame = findRoom(ingame.getFrom_where().getRoom_name()); // 방을 서버의 ingame list에서 찾음
 							aGame.setCode(Protocol.BELL_HIT);
+							aGame.setFrom_where(ingame.getFrom_where());
 							players = aGame.players; // 게임을 진행하는 방 안에 있는 참가자들
 							front_cards = getFrontCards(players); // 앞면으로 올라와 있는 맨 앞의 카드를 모두 모아둠 (최대 총 4장)
 							hitter = whoIsHitter(players, ingame); // 종을 친 사람
@@ -860,10 +832,7 @@ public class JavaGameServer extends JFrame {
 								System.out.println("Fault!!");
 								if(hitter.back.isEmpty()) {
 									if (aGame.getWhose_turn() == players.indexOf(hitter)) {
-										System.out.println("current_turn : " + aGame.getWhose_turn());
-										System.out.println("player index : " + players.indexOf(hitter));
 										aGame.setWhose_turn(nextTurn(aGame));
-										System.out.println("helloo thererre");
 									}
 								}
 								else {
@@ -914,33 +883,20 @@ public class JavaGameServer extends JFrame {
 								}
 							}
 							
-							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 방 안의 유저에게 뿌림
-								for (int j = 0; j < user_vc.size(); j++) {
-									UserService user = (UserService) user_vc.elementAt(j);
-									if (user.userStatus.equals(UserStatus.PLAYING)
-											&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
-										if(aGame.ranking.size() >= 3) {
-											for(Player player : players) {
-												if(player.getRank() == null) {
-													aGame.setWinner_index(players.indexOf(player));
-													player.setRank(RankConfig.GOLD);
-													player.setIsDead(true);
-													player.setIdDeadChecked(true);
-													aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
-												}
-											}
-											aGame.setCode(Protocol.GAME_OVER);
-										}
-										System.out.println("herehrehrherherher");
-										user.writeOneObject(aGame);
-										for (String observer : enteredRoom.observers) {
-											if (user.userName.equals(observer)) {
-												user.writeOneObject(aGame);
-											}
-										}
+							if(aGame.ranking.size() >= 3) {
+								for(Player player : players) {
+									if(player.getRank() == null) {
+										aGame.setWinner_index(players.indexOf(player));
+										player.setRank(RankConfig.GOLD);
+										player.setIsDead(true);
+										player.setIdDeadChecked(true);
+										aGame.ranking.add(player); // 방 정보에 랭킹값 집어 넣음
 									}
 								}
+								aGame.setCode(Protocol.GAME_OVER);
 							}
+							
+							sendObjInGame(aGame);
 						}
 					}
 				} catch (IOException e) {
