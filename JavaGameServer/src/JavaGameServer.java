@@ -284,6 +284,18 @@ public class JavaGameServer extends JFrame {
 			for(InGame ingame: inGameList_server) {
 				if(ingame.getFrom_where().getRoom_name().equals(room.getRoom_name())) {
 					ingame.observers.add(enteredRoom.getFrom_whom());
+					
+					for(Room aroom : roomList_server) {
+						if(aroom.getRoom_name().equals(ingame.getFrom_where().getRoom_name())) {
+							userStatus = UserStatus.PLAYING;
+							// userStatus = UserStatus.OBSERVING;
+							aroom.setCode(Protocol.OBSERVE_ROOM);
+							// aroom.observers.add(enteredRoom.getFrom_whom());
+							writeOneObject(aroom);
+							System.out.println("들어왔다1");	
+							return;
+						}
+					}
 				}
 			}
 			
@@ -294,7 +306,7 @@ public class JavaGameServer extends JFrame {
 					aroom.setCode(Protocol.OBSERVE_ROOM);
 					aroom.observers.add(enteredRoom.getFrom_whom());
 					writeOneObject(aroom);
-					System.out.println("들어왔다");
+					System.out.println("들어왔다2");
 				} else {
 					System.out.println("해당 방이 없습니다..");
 				}
@@ -585,7 +597,7 @@ public class JavaGameServer extends JFrame {
 					for (int j = 0; j < user_vc.size(); j++) {
 						UserService user = (UserService) user_vc.elementAt(j);
 						if (user.userStatus.equals(UserStatus.PLAYING)
-								&& ingame.getFrom_where().observers.get(i).equals(user.userName)) {
+								&& ingame.observers.get(i).equals(user.userName)) {
 							user.writeOneObject(ingame);
 						}
 					}
@@ -759,6 +771,7 @@ public class JavaGameServer extends JFrame {
 							InGame aGame = new InGame();
 							//int current_turn = aGame.getWhose_turn();
 							aGame = findRoom(ingame.getFrom_where());
+							System.out.println("Observers there?? " + aGame.observers.size());
 							
 							for (int i = 0; i < aGame.players.size(); i++) {
 								if (aGame.players.get(i).getPlayer_name() // 메시지를 보낸 player를 찾아 update
