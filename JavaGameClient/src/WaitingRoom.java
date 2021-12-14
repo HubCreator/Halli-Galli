@@ -263,6 +263,10 @@ public class WaitingRoom extends JFrame {
 				}
 			});
 			roomEntry.add(observeBtn);
+			if(Integer.parseInt(room_observer.getText()) == 4) {
+				observeBtn.setEnabled(false);
+			}
+			
 			roomListJPanel.add(roomEntry);
 			repaint();
 		}

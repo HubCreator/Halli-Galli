@@ -289,10 +289,6 @@ public class JavaGameServer extends JFrame {
 			
 			for (Room aroom : roomList_server) { // 조사한다
 				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
-					if (aroom.observers.size() > 4) { // 방 꽉참
-						System.out.println("Room is full to observe!!");
-						return;
-					}
 					userStatus = UserStatus.PLAYING;
 					// userStatus = UserStatus.OBSERVING;
 					aroom.setCode(Protocol.OBSERVE_ROOM);
