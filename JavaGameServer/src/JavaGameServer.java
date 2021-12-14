@@ -281,15 +281,20 @@ public class JavaGameServer extends JFrame {
 			enteredRoom = room;
 			for (Room aroom : roomList_server) { // 조사한다
 				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
-					if (aroom.getObservers().size() > 4) { // 방 꽉참
+					if (aroom.observers.size() > 4) { // 방 꽉참
 						System.out.println("Room is full to observe!!");
 						return;
 					}
+					userStatus = UserStatus.PLAYING;
+					// userStatus = UserStatus.OBSERVING;
 					aroom.setCode(Protocol.OBSERVE_ROOM);
 					aroom.observers.add(enteredRoom.getFrom_whom());
-					Player player = new Player(enteredRoom.getFrom_whom(), aroom);
-					InGame aGame = findRoom(aroom.getRoom_name());
-					aGame.observers.add(player);
+//					Player player = new Player(enteredRoom.getFrom_whom(), aroom);
+//					InGame aGame = findRoom(aroom);
+//					if(aroom != null) {
+//						System.out.println("aroom is not null!");
+//						aGame.observers.add(player);
+//					}
 					writeOneObject(aroom);
 					System.out.println("들어왔다");
 				} else {
@@ -321,6 +326,7 @@ public class JavaGameServer extends JFrame {
 							}
 							for (String observer : enteredRoom.observers) {
 								if (user.userName.equals(observer)) {
+									System.out.println("hiasdasfasdf");
 									user.writeOneObject(enteredRoom);
 								}
 							}
@@ -496,11 +502,10 @@ public class JavaGameServer extends JFrame {
 			return result;
 		}
 
-		public InGame findRoom(String room_name) {
+		public InGame findRoom(Room room) {
 			InGame aGame = new InGame();
 			for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
-				if (inGameList_server.get(i).getFrom_where().getRoom_name()
-						.equals(room_name))
+				if (inGameList_server.get(i).getFrom_where().getRoom_name().equals(room.getRoom_name()))
 					aGame = inGameList_server.get(i);
 			}
 			return aGame;
@@ -561,7 +566,6 @@ public class JavaGameServer extends JFrame {
 					turn++; 
 					continue;
 				}
-				
 				break;
 			}
 			
@@ -569,19 +573,25 @@ public class JavaGameServer extends JFrame {
 		}
 		
 		public void sendObjInGame(InGame ingame) {
-			for (int i = 0; i < ingame.getFrom_where().players.size(); i++) {
+			for (int i = 0; i < ingame.players.size(); i++) {
 				for (int j = 0; j < user_vc.size(); j++) {
 					UserService user = (UserService) user_vc.elementAt(j);
 					if (user.userStatus.equals(UserStatus.PLAYING)
-							&& ingame.getFrom_where().players.get(i).equals(user.userName)) {
+							&& ingame.players.get(i).getPlayer_name().equals(user.userName)) {
 						user.writeOneObject(ingame);
 					}
-					for (String observer : enteredRoom.observers) {
-						if (user.userName.equals(observer)) {
+				}
+			}
+			if(ingame.observers.size() > 1) {
+				for(int i = 0; i < ingame.observers.size(); i++) {
+					for (int j = 0; j < user_vc.size(); j++) {
+						UserService user = (UserService) user_vc.elementAt(j);
+						if (user.userStatus.equals(UserStatus.PLAYING)
+								&& ingame.getFrom_where().observers.get(i).equals(user.userName)) {
 							user.writeOneObject(ingame);
 						}
 					}
-				}
+				}	
 			}
 		}
 		
@@ -666,7 +676,7 @@ public class JavaGameServer extends JFrame {
 							for (Room aroom : roomList_server) {
 								if (aroom.equals(enteredRoom)) {
 									List<String> players = new ArrayList<>();
-									players = aroom.getPlayers();
+									players = aroom.players;
 									players.remove(room.getFrom_whom());
 									tmp = aroom;
 									break;
@@ -680,7 +690,6 @@ public class JavaGameServer extends JFrame {
 									}
 								}
 							}
-							
 							sendRoomListToAll();
 						} else if (room.getCode().matches(Protocol.OBSERVE_ROOM)) { // 방 입장 (Observe)
 							System.out.println("Observer In");
@@ -694,15 +703,19 @@ public class JavaGameServer extends JFrame {
 							System.out.println("start!!");
 							Vector<Card> total_cards = cardGenerator();
 							Vector<Vector> vec = cardDistributor(total_cards);
+							//Room currentRoom = new Room();
+							Vector<Player> players = new Vector<Player>();
+							//Vector<Player> observers = new Vector<Player>();
 
 							for (Room aroom : roomList_server) {
 								if (aroom.getRoom_name().equals(ingame.getFrom_where().getRoom_name())) {
+									//currentRoom = aroom;
 									aroom.setStatus("게임중");
+									ingame.observers = aroom.observers;
 									sendRoomListToAll();
 								}
 							}
 
-							Vector<Player> players = new Vector<Player>();
 							for (int i = 0; i < ingame.getFrom_where().players.size(); i++) { // 룸 안에 있는 사람들끼리
 								// player 정보 생성
 								Player player = new Player(ingame.getFrom_where().players.get(i), ingame.getFrom_where());
@@ -710,11 +723,12 @@ public class JavaGameServer extends JFrame {
 
 								players.add(player);
 							}
+							
 							ingame.players.clear();
 							ingame.players = players;
 							ingame.setCode(Protocol.GAME_START);
+							
 							inGameList_server.add(ingame); // 전체 서버에서 관리하는 inGameList에 추가
-
 							
 							// aGame에 있는 정보
 							// code, from_where(current_entered_room), players(player, 카드 정보)
@@ -726,12 +740,7 @@ public class JavaGameServer extends JFrame {
 							Vector<Vector> vec = cardDistributor(total_cards);
 
 							InGame aGame = new InGame();
-
-							for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
-								if (inGameList_server.get(i).getFrom_where().getRoom_name()
-										.equals(ingame.getFrom_where().getRoom_name()))
-									aGame = inGameList_server.get(i);
-							}
+							aGame = findRoom(ingame.getFrom_where());
 							aGame.ranking.clear();
 							aGame.setTimeToGetLooser(false);
 							aGame.setCode(Protocol.GAME_RESTART);
@@ -751,11 +760,7 @@ public class JavaGameServer extends JFrame {
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) {
 							InGame aGame = new InGame();
 							//int current_turn = aGame.getWhose_turn();
-							for (int i = 0; i < inGameList_server.size(); i++) { // 서버 ingame list에서 해당 게임을 찾음
-								if (inGameList_server.get(i).getFrom_where().getRoom_name()
-										.equals(ingame.getFrom_where().getRoom_name()))
-									aGame = inGameList_server.get(i);
-							}
+							aGame = findRoom(ingame.getFrom_where());
 							
 							for (int i = 0; i < aGame.players.size(); i++) {
 								if (aGame.players.get(i).getPlayer_name() // 메시지를 보낸 player를 찾아 update
@@ -767,8 +772,8 @@ public class JavaGameServer extends JFrame {
 							}
 							aGame.setCode(Protocol.CARD_CLICKED);
 							aGame.setFrom_where(ingame.getFrom_where());
-							
 							aGame.setWhose_turn(nextTurn(aGame));
+							
 							// update된 정보를 모든 player들에게 뿌림
 							sendObjInGame(aGame);
 							
@@ -784,7 +789,7 @@ public class JavaGameServer extends JFrame {
 							
 							InGame aGame = new InGame();
 							
-							aGame = findRoom(ingame.getFrom_where().getRoom_name()); // 방을 서버의 ingame list에서 찾음
+							aGame = findRoom(ingame.getFrom_where()); // 방을 서버의 ingame list에서 찾음
 							aGame.setCode(Protocol.BELL_HIT);
 							aGame.setFrom_where(ingame.getFrom_where());
 							players = aGame.players; // 게임을 진행하는 방 안에 있는 참가자들

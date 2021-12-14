@@ -220,13 +220,13 @@ public class WaitingRoom extends JFrame {
 			JLabel room_player = new JLabel();
 			room_player.setBackground(Color.WHITE);
 			room_player.setBounds(514, 12, 116, 32);
-			room_player.setText(Integer.toString(list.get(i).getPlayers().size()));
+			room_player.setText(Integer.toString(list.get(i).players.size()));
 			roomEntry.add(room_player);
 
 			JLabel room_observer = new JLabel();
 			room_observer.setBackground(Color.WHITE);
 			room_observer.setBounds(514, 56, 116, 32);
-			room_observer.setText(Integer.toString(list.get(i).getObservers().size()));
+			room_observer.setText(Integer.toString(list.get(i).observers.size()));
 			roomEntry.add(room_observer);
 
 			JLabel room_status = new JLabel();
@@ -330,7 +330,7 @@ public class WaitingRoom extends JFrame {
 						} else if (room.getCode().matches(Protocol.ENTERING_MASTER)) {
 							current_entered_room = room; // current_entered_room : 전달 받은 Room의 정보
 							setVisible(false);
-							playRoom = new PlayRoom(view, room); // playRoom : client가 만든 새로운 룸
+							playRoom = new PlayRoom(view, current_entered_room); // playRoom : client가 만든 새로운 룸
 							playRoom.updatePlayers();
 						} else if (room.getCode().matches(Protocol.EXIT_PLAYER)) {
 							current_entered_room = room;

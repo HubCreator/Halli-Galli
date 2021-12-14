@@ -2,6 +2,7 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 class Room implements Serializable {
 	public static final long serialVersionUID = 1L;
@@ -11,7 +12,7 @@ class Room implements Serializable {
 	private String room_name;
 	private String password;
 	public List<String> players = new ArrayList<>();
-	public List<String> observers = new ArrayList<>();
+	public Vector<String> observers = new Vector<>();
 	public List<Room> roomList = new ArrayList<>();
 	private String status = "¥Î±‚¡ﬂ";
 	private String from_whom;
@@ -19,12 +20,13 @@ class Room implements Serializable {
 	public Room(String code, String masterUser) {
 		this.code = code;
 		this.masterUser = masterUser;
-		this.observers = new ArrayList<>();
 	}
 
 	public Room(String code) {
 		this.code = code;
 	}
+	
+	public Room() {}
 
 	public String getFrom_whom() {
 		return from_whom;
@@ -82,21 +84,6 @@ class Room implements Serializable {
 		this.password = password;
 	}
 
-	public List<String> getPlayers() {
-		return players;
-	}
-
-	public void setPlayers(List<String> players) {
-		this.players = players;
-	}
-
-	public List<String> getObservers() {
-		return observers;
-	}
-
-	public void setObservers(List<String> observers) {
-		this.observers = observers;
-	}
 
 	public String getStatus() {
 		return status;
