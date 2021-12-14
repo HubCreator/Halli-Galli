@@ -166,6 +166,7 @@ public class JavaGameServer extends JFrame {
 		public String userName = "";
 		public UserStatus userStatus = UserStatus.WAITING;
 		public Room enteredRoom = null;
+		public InGame enteredInGame = null;
 		public Vector<Card> total_cards;
 		public Vector<Card> myUpCards = new Vector<Card>();
 		public Vector<Card> myDownCards = new Vector<Card>();
@@ -279,6 +280,13 @@ public class JavaGameServer extends JFrame {
 
 		public void allowObservingRoom(Room room) {
 			enteredRoom = room;
+			
+			for(InGame ingame: inGameList_server) {
+				if(ingame.getFrom_where().getRoom_name().equals(room.getRoom_name())) {
+					ingame.observers.add(enteredRoom.getFrom_whom());
+				}
+			}
+			
 			for (Room aroom : roomList_server) { // 조사한다
 				if (aroom.getRoom_name().equals(room.getRoom_name())) { // 내가 찾는 방이 있음
 					if (aroom.observers.size() > 4) { // 방 꽉참
@@ -289,12 +297,6 @@ public class JavaGameServer extends JFrame {
 					// userStatus = UserStatus.OBSERVING;
 					aroom.setCode(Protocol.OBSERVE_ROOM);
 					aroom.observers.add(enteredRoom.getFrom_whom());
-//					Player player = new Player(enteredRoom.getFrom_whom(), aroom);
-//					InGame aGame = findRoom(aroom);
-//					if(aroom != null) {
-//						System.out.println("aroom is not null!");
-//						aGame.observers.add(player);
-//					}
 					writeOneObject(aroom);
 					System.out.println("들어왔다");
 				} else {
@@ -582,7 +584,7 @@ public class JavaGameServer extends JFrame {
 					}
 				}
 			}
-			if(ingame.observers.size() > 1) {
+			if(ingame.observers.size() > 0) {
 				for(int i = 0; i < ingame.observers.size(); i++) {
 					for (int j = 0; j < user_vc.size(); j++) {
 						UserService user = (UserService) user_vc.elementAt(j);

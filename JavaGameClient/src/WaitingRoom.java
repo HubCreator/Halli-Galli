@@ -247,6 +247,9 @@ public class WaitingRoom extends JFrame {
 				}
 			});
 			roomEntry.add(playBtn);
+			if(Integer.parseInt(room_player.getText()) == 4) {
+				playBtn.setEnabled(false);
+			}
 
 			// observe btn
 			JButton observeBtn = new JButton("\uAD00\uC804");
