@@ -58,7 +58,7 @@ public class CreateNewRoom extends JFrame {
 		JLabel lblNewLabel = new JLabel("\uBC29 \uB9CC\uB4E4\uAE30");
 		lblNewLabel.setFont(new Font("±¼¸²", Font.BOLD, 20));
 		lblNewLabel.setBounds(12, 10, 99, 39);
-		contentPane.add(lblNewLabel);
+		contentPane.add(lblNewLabel); 
 
 		JLabel lblNewLabel_1 = new JLabel("\uBC29 \uC774\uB984");
 		lblNewLabel_1.setFont(new Font("±¼¸²", Font.PLAIN, 15));

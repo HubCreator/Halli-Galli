@@ -24,6 +24,7 @@ class UserConfig {
 }
 
 class BackgroundConfig {
+	public static final String WELCOME = "images/welcome.jpg";
 	public static final String BACKGROUND_PANEL = "images/background_panel.jpg"; 
 	public static final String BACKGROUND = "images/background.jpg";
 	
@@ -69,6 +70,24 @@ class CardConfig {
 	public static final String BERRY5 = "images/berry5.png";
 }
 
+class CardCntConfig {
+	public static final int CNT_W = 66;
+	public static final int CNT_H = 27;
+	
+	
+	public static final int P1_X = 115;
+	public static final int P1_Y = 235;
+	
+	public static final int P2_X = 758;
+	public static final int P2_Y = 235;
+	
+	public static final int P3_X = 758;
+	public static final int P3_Y = 480;
+	
+	public static final int P4_X = 115;
+	public static final int P4_Y = 480;
+}
+
 class BellConfig {
 	public static final String BELL = "images/bell.png";
 	public static final int BELL_WIDTH = 232;
@@ -78,8 +97,12 @@ class BellConfig {
 }
 
 class ButtonsConfig {
+	public static final String ENTER_BUTTON_UP = "images/Enter_btnUp.jpg";
+	public static final String ENTER_BUTTON_DOWN = "images/Enter_btnDown.jpg";
+	
 	public static final String START_IMAGE = "images/start-button.png";
 	public static final String RESTART_IMAGE = "images/restart.png";
+	
 	
 	public static final int STARTX = 400;
 	public static final int STARTY = 115;
@@ -99,7 +122,13 @@ class ImageLabels {
 	public static final String EXIT_PRESSED = "images/exit_pressed.png";
 	public static final String CREATE_ROOM = "images/room.png";
 }
-
+class BombComfig {
+	public static final String BOMB = "images/boom.png";
+	public static final int BOMB_X = 300;
+	public static final int BOMB_Y = 100;
+	public static final int BOMB_W = 300;
+	public static final int BOMB_H = 260;
+}
 
 class Protocol {
 	public static final String LOGIN = "100";
@@ -121,13 +150,5 @@ class Protocol {
 	public static final String BELL_HIT = "703";
 	public static final String PLAYER_DEAD = "704";
 	public static final String GAME_OVER = "705";
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

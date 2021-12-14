@@ -219,11 +219,11 @@ public class PlayRoom extends JFrame {
 		contentPane.add(btnSend);
 
 		user_name = new JLabel("Name");
-		user_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+		user_name.setBorder(new LineBorder(Color.BLACK, 2, true));
 		user_name.setBackground(Color.WHITE);
 		user_name.setFont(new Font("MD개성체", Font.BOLD, 14));
 		user_name.setHorizontalAlignment(SwingConstants.CENTER);
-		user_name.setBounds(1018, 37, 84, 40);
+		user_name.setBounds(1019, 10, 131, 40);
 		contentPane.add(user_name);
 
 		userName = view.client_userName;
@@ -245,10 +245,10 @@ public class PlayRoom extends JFrame {
 							room.setFrom_whom(userName);
 							room.setRoom_name(current_entered_room.getRoom_name());
 							view.current_entered_room = null;
-							setVisible(false);
+							current_status = Status.WAITING;
 							view.setVisible(true);
 							view.sendObject(room);
-							current_status = Status.WAITING;
+							setVisible(false);
 						}
 						@Override
 						public void mousePressed(MouseEvent e) {
@@ -291,9 +291,9 @@ public class PlayRoom extends JFrame {
 		JLabel room_name = new JLabel((String) null);
 		room_name.setHorizontalAlignment(SwingConstants.CENTER);
 		room_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-		room_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+		room_name.setBorder(new LineBorder(Color.BLACK, 2, true));
 		room_name.setBackground(Color.WHITE);
-		room_name.setBounds(902, 37, 84, 40);
+		room_name.setBounds(902, 10, 105, 57);
 		room_name.setText(current_entered_room.getRoom_name());
 		contentPane.add(room_name);
 
@@ -312,10 +312,10 @@ public class PlayRoom extends JFrame {
 	}
 
 	public void hitted() throws IOException {
-		BufferedImage boom = ImageIO.read(new File("images/boom.png"));
+		BufferedImage boom = ImageIO.read(new File(BombComfig.BOMB));
 		Image boom_res = boom.getScaledInstance(133, 88, Image.SCALE_DEFAULT);
 		JLabel hitted_image = new JLabel(new ImageIcon(boom_res));
-		hitted_image.setBounds(350, 150, 180, 150);
+		hitted_image.setBounds(BombComfig.BOMB_X, BombComfig.BOMB_Y, BombComfig.BOMB_W, BombComfig.BOMB_H);
 		gamePane.add(hitted_image);
 		repaint();
 		try {
@@ -670,7 +670,7 @@ public class PlayRoom extends JFrame {
 				gamePane.add(palyer1_up);
 
 				JLabel player1_down_cnt = new JLabel(Integer.toString(player1.back.size()));
-				player1_down_cnt.setBounds(115, 235, 66, 27);
+				player1_down_cnt.setBounds(CardCntConfig.P1_X, CardCntConfig.P1_Y, CardCntConfig.CNT_W, CardCntConfig.CNT_H);
 				gamePane.add(player1_down_cnt);
 			}
 		}
@@ -739,7 +739,7 @@ public class PlayRoom extends JFrame {
 				gamePane.add(palyer2_up);
 
 				JLabel player2_down_cnt = new JLabel(Integer.toString(player2.back.size()));
-				player2_down_cnt.setBounds(755, 235, 66, 27);
+				player2_down_cnt.setBounds(CardCntConfig.P2_X, CardCntConfig.P2_Y, CardCntConfig.CNT_W, CardCntConfig.CNT_H);
 				gamePane.add(player2_down_cnt);
 			}
 		}
@@ -806,7 +806,7 @@ public class PlayRoom extends JFrame {
 				gamePane.add(palyer3_up);
 
 				JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
-				player3_down_cnt.setBounds(755, 480, 66, 27);
+				player3_down_cnt.setBounds(CardCntConfig.P3_X, CardCntConfig.P3_Y, CardCntConfig.CNT_W, CardCntConfig.CNT_H);
 				gamePane.add(player3_down_cnt);
 			}
 		}
@@ -870,13 +870,13 @@ public class PlayRoom extends JFrame {
 				gamePane.add(palyer4_up);
 
 				JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
-				player4_down_cnt.setBounds(115, 480, 66, 27);
+				player4_down_cnt.setBounds(CardCntConfig.P4_X, CardCntConfig.P4_Y, CardCntConfig.CNT_W, CardCntConfig.CNT_H);
 				gamePane.add(player4_down_cnt);
 
 				// master user에게 start버튼 show
 				if (mainview.client_userName.equals(mainview.current_entered_room.getMasterUser())
 						&& players_inGame_info == null) {
-					BufferedImage startBtn = ImageIO.read(new File("images/start-button.png"));
+					BufferedImage startBtn = ImageIO.read(new File(ButtonsConfig.START_IMAGE));
 					Image startBtnImage = startBtn.getScaledInstance(100, 80, Image.SCALE_DEFAULT);
 					startBtnLabel = new JLabel(new ImageIcon(startBtnImage));
 					startBtnLabel.setBounds(ButtonsConfig.STARTX, ButtonsConfig.STARTY, 100, 80);
@@ -884,8 +884,6 @@ public class PlayRoom extends JFrame {
 					startBtnLabel.setVisible(true);
 				}
 
-				BufferedImage bellImage = ImageIO.read(new File(BellConfig.BELL));
-				JLabel picLabel = new JLabel(new ImageIcon(bellImage));
 				int totalCnt = 0;
 				for (int i = 0; i < players_inGame_info.size(); i++) {
 					totalCnt += players_inGame_info.get(i).front.size();
@@ -897,6 +895,8 @@ public class PlayRoom extends JFrame {
 					gamePane.add(total_up_cards_cnt);
 				}
 
+				BufferedImage bellImage = ImageIO.read(new File(BellConfig.BELL));
+				JLabel picLabel = new JLabel(new ImageIcon(bellImage));
 				picLabel.setBounds(BellConfig.BELLX, BellConfig.BELLY, BellConfig.BELL_WIDTH, BellConfig.BELL_HEIGHT);
 				gamePane.add(picLabel);
 			}

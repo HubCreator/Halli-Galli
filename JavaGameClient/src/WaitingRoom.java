@@ -96,7 +96,7 @@ public class WaitingRoom extends JFrame {
 		contentPane.add(btnSend);
 
 		lblUserName = new JLabel("Name");
-		lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
+		lblUserName.setBorder(new LineBorder(Color.BLACK, 2, true));
 		lblUserName.setBackground(Color.WHITE);
 		lblUserName.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);

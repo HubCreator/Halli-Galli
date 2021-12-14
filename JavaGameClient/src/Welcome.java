@@ -68,7 +68,7 @@ public class Welcome extends JFrame {
 	public Welcome() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1013, 740);
-		contentPane = new ImagePanel(new ImageIcon("images/welcome.jpg").getImage());
+		contentPane = new ImagePanel(new ImageIcon(BackgroundConfig.WELCOME).getImage());
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -106,10 +106,10 @@ public class Welcome extends JFrame {
 		contentPane.add(txtPortNumber);
 		
 		JButton btnConnect = new JButton(new ImageIcon(((new ImageIcon(
-	            "images/Enter_btnUp.jpg").getImage()
+	            ButtonsConfig.ENTER_BUTTON_UP).getImage()
 	            .getScaledInstance(90, 45,
 	                    java.awt.Image.SCALE_SMOOTH)))));
-		btnConnect.setPressedIcon(new ImageIcon("images/Enter_btnDown.jpg"));  // 눌린 버튼의 이미지
+		btnConnect.setPressedIcon(new ImageIcon(ButtonsConfig.ENTER_BUTTON_DOWN));  // 눌린 버튼의 이미지
 		
 		btnConnect.setBounds(440, 535, 88, 38);
 		contentPane.add(btnConnect);

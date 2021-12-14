@@ -692,6 +692,9 @@ public class JavaGameServer extends JFrame {
 									players = aroom.players;
 									players.remove(room.getFrom_whom());
 									tmp = aroom;
+									if(players.size() == 0) {
+										roomList_server.remove(aroom);
+									}
 									break;
 								}
 							}
@@ -709,7 +712,6 @@ public class JavaGameServer extends JFrame {
 							allowObservingRoom(room);
 							sendRoomListToAll();
 						}else if (room.getCode().matches(Protocol.EXIT_OBSERVER)) { // 방 퇴장 (Observe)
-							System.out.println("fuck the world");
 							InGame targetRoom = findRoom(room);
 							targetRoom.observers.remove(room.getFrom_whom());
 							sendRoomListToAll();
@@ -779,8 +781,6 @@ public class JavaGameServer extends JFrame {
 							InGame aGame = new InGame();
 							//int current_turn = aGame.getWhose_turn();
 							aGame = findRoom(ingame.getFrom_where());
-							System.out.println("Observers there?? " + aGame.observers.size());
-							
 							for (int i = 0; i < aGame.players.size(); i++) {
 								if (aGame.players.get(i).getPlayer_name() // 메시지를 보낸 player를 찾아 update
 										.equals(ingame.getFrom_whom())) {
