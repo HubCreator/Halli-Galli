@@ -330,6 +330,7 @@ public class WaitingRoom extends JFrame {
 						}
 					} else if (room != null) {
 						if (room.getCode().matches(Protocol.ROOM_LIST)) {
+							System.out.println("got room list");
 							List<Room> list = room.getRoomList();
 							roomList_client.clear();
 							roomList_client = (ArrayList<Room>) room.getRoomList();

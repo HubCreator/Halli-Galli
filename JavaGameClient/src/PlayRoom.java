@@ -231,21 +231,44 @@ public class PlayRoom extends JFrame {
 
 		JButton btnNewButton = new JButton("\uB098\uAC00\uAE30");
 		btnNewButton.setFont(new Font("±¼¸²", Font.PLAIN, 11));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				// exit room
-				Room room = new Room(Protocol.EXIT_PLAYER);
-				room.setFrom_whom(userName);
-				room.setRoom_name(current_entered_room.getRoom_name());
-				view.current_entered_room = null;
-				view.sendObject(room);
-				setVisible(false);
-				view.setVisible(true);
-			}
-		});
+		
+		if(current_entered_room.observers.size() > 0) {
+			for(String user : current_entered_room.observers) {
+				if(user.equals(userName)) {
+					btnNewButton.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							// exit room
+							Room room = new Room(Protocol.EXIT_OBSERVER);
+							room.setFrom_whom(userName);
+							room.setRoom_name(current_entered_room.getRoom_name());
+							view.current_entered_room = null;
+							setVisible(false);
+							view.setVisible(true);
+							view.sendObject(room);
+							current_status = Status.WAITING;
+						}
+					});
+					
+				}
+			} 
+		} else {
+			btnNewButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					// exit room
+					Room room = new Room(Protocol.EXIT_PLAYER);
+					room.setFrom_whom(userName);
+					room.setRoom_name(current_entered_room.getRoom_name());
+					view.current_entered_room = null;
+					view.sendObject(room);
+					setVisible(false);
+					view.setVisible(true);
+				}
+			});
+		}
 		btnNewButton.setBounds(1096, 683, 69, 40);
 		contentPane.add(btnNewButton);
 
+		
 		JLabel room_name = new JLabel((String) null);
 		room_name.setHorizontalAlignment(SwingConstants.CENTER);
 		room_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
