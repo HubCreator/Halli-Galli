@@ -128,7 +128,7 @@ public class WaitingRoom extends JFrame {
 			}
 			
 		});
-		btnNewButton.setBounds(1100, 683, 50, 40);
+		btnNewButton.setBounds(1120, 683, 50, 40);
 		contentPane.add(btnNewButton);
 
 		JLabel makeNewRoom = new JLabel(new ImageIcon(((new ImageIcon(ImageLabels.CREATE_ROOM)

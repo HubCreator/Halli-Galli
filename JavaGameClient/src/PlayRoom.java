@@ -45,7 +45,6 @@ public class PlayRoom extends JFrame {
 	private String userName;
 	private JButton btnSend;
 	private JLabel user_name;
-	private JButton imgBtn;
 	MyKeyListener my_key_listener;
 	List<String> players;
 	protected JPanel gamePane;
@@ -230,11 +229,6 @@ public class PlayRoom extends JFrame {
 		userName = view.client_userName;
 		user_name.setText(view.client_userName);
 
-		imgBtn = new JButton("+");
-		imgBtn.setFont(new Font("MD개성체", Font.PLAIN, 16));
-		imgBtn.setBounds(902, 683, 50, 40);
-		contentPane.add(imgBtn);
-		
 		JLabel btnNewButton = new JLabel(new ImageIcon(((new ImageIcon(
 	            ImageLabels.EXIT).getImage()
 	            .getScaledInstance(50, 40,
@@ -291,7 +285,7 @@ public class PlayRoom extends JFrame {
 			});
 		}
 	
-		btnNewButton.setBounds(1100, 683, 50, 40);
+		btnNewButton.setBounds(1120, 683, 50, 40);
 		contentPane.add(btnNewButton);
 
 		JLabel room_name = new JLabel((String) null);
@@ -377,9 +371,6 @@ public class PlayRoom extends JFrame {
 					current_status = Status.PLAYING;
 					InGame tmp = new InGame(Protocol.GAME_START, mainview.client_userName,
 							mainview.current_entered_room);
-					// current_entered_room에는 플레이어 이름 정보 있음
-//					tmp.players = mainview.current_entered_room.players;
-//					tmp.observers = mainview.current_entered_room.observers;
 					mainview.sendObject(tmp);
 				}
 			});
@@ -402,9 +393,6 @@ public class PlayRoom extends JFrame {
 					System.out.println("Start Btn Clicked");
 					InGame tmp = new InGame(Protocol.GAME_RESTART, mainview.client_userName,
 							mainview.current_entered_room);
-					// current_entered_room에는 플레이어 이름 정보 있음
-//					tmp.players = mainview.current_entered_room.players;
-//					tmp.observers = mainview.current_entered_room.observers;
 					mainview.sendObject(tmp);
 				}
 			});
@@ -458,11 +446,13 @@ public class PlayRoom extends JFrame {
 			JLabel player1_name = new JLabel((String) null);
 			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player1_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player1_name.setBorder(new LineBorder(Color.BLACK, 1, true));
 			player1_name.setText(players.get(0));
 			player1_name.setBackground(Color.WHITE);
-			if (players.get(0).equals(mainview.client_userName))
+			if (players.get(0).equals(mainview.client_userName)) {
+				player1_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
 				player1_name.setForeground(Color.BLUE);
+			}
 			player1_name.setBounds(12, 10, 84, 40);
 			gamePane.add(player1_name);
 		}
@@ -498,11 +488,13 @@ public class PlayRoom extends JFrame {
 			JLabel player2_name = new JLabel((String) null);
 			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player2_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player2_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
 			player2_name.setText(players.get(1));
 			player2_name.setBackground(Color.WHITE);
-			if (players.get(1).equals(mainview.client_userName))
+			if (players.get(1).equals(mainview.client_userName)) {
+				player2_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
 				player2_name.setForeground(Color.BLUE);
+			}
 			player2_name.setBounds(866 - 84, 10, 84, 40);
 			gamePane.add(player2_name);
 		}
@@ -540,10 +532,12 @@ public class PlayRoom extends JFrame {
 			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player4_name.setFont(new Font("MD개성체", Font.BOLD, 14));
 			player4_name.setText(players.get(2));
-			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
+			player4_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
 			player4_name.setBackground(Color.WHITE);
-			if (players.get(2).equals(mainview.client_userName))
+			if (players.get(2).equals(mainview.client_userName)) {
+				player4_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
 				player4_name.setForeground(Color.BLUE);
+			}
 			gamePane.add(player4_name);
 		}
 
@@ -578,10 +572,12 @@ public class PlayRoom extends JFrame {
 			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
 			player3_name.setFont(new Font("MD개성체", Font.BOLD, 14));
 			player3_name.setText(players.get(3));
-			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
-			if (players.get(3).equals(mainview.client_userName))
+			player3_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
+			if (players.get(3).equals(mainview.client_userName)) {
+				player3_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
 				player3_name.setForeground(Color.BLUE);
+			}
 			gamePane.add(player3_name);
 
 			showStartButton();
@@ -612,20 +608,20 @@ public class PlayRoom extends JFrame {
 		contentPane.add(gamePane);
 
 		if (players.size() >= 1 && !players.get(0).equals(null)) {
+			JLabel player1_name = new JLabel((String) null);
+			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player1_name.setFont(new Font("MD개성체", Font.BOLD, 14));
+			player1_name.setText(players.get(0));
+			player1_name.setBackground(Color.WHITE);
+			player1_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
+			if (players.get(0).equals(mainview.client_userName)) {
+				player1_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
+				player1_name.setForeground(Color.BLUE);
+			}
+			player1_name.setBounds(12, 10, 84, 40);
+			gamePane.add(player1_name);
 			if (player1.getIsDead() == true) {
 				// player1 is dead
-				JLabel player1_name = new JLabel((String) null);
-				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player1_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
-				player1_name.setText(players.get(0));
-				player1_name.setBackground(Color.WHITE);
-				if (players.get(0).equals(mainview.client_userName))
-					player1_name.setForeground(Color.BLUE);
-				player1_name.setBounds(12, 10, 84, 40);
-				gamePane.add(player1_name);
-
 				JLabel player1_dead = new JLabel(new ImageIcon(((new ImageIcon(player1.getRank()).getImage()
 						.getScaledInstance(168, 163, java.awt.Image.SCALE_SMOOTH)))));
 				player1_dead.setBounds(113, 102, 168, 163);
@@ -673,18 +669,6 @@ public class PlayRoom extends JFrame {
 
 				gamePane.add(palyer1_up);
 
-				JLabel player1_name = new JLabel((String) null);
-				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player1_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
-				player1_name.setText(players.get(0));
-				player1_name.setBackground(Color.WHITE);
-				if (players.get(0).equals(mainview.client_userName))
-					player1_name.setForeground(Color.BLUE);
-				player1_name.setBounds(12, 10, 84, 40);
-				gamePane.add(player1_name);
-
 				JLabel player1_down_cnt = new JLabel(Integer.toString(player1.back.size()));
 				player1_down_cnt.setBounds(115, 235, 66, 27);
 				gamePane.add(player1_down_cnt);
@@ -692,17 +676,21 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 2 && !players.get(1).equals(null)) {
+			JLabel player2_name = new JLabel((String) null);
+			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player2_name.setFont(new Font("MD개성체", Font.BOLD, 14));
+			player2_name.setText(players.get(1));
+			player2_name.setBackground(Color.WHITE);
+			player2_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
+			if (players.get(1).equals(mainview.client_userName)) {
+				player2_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
+				player2_name.setForeground(Color.BLUE);
+			}
+			if (players.get(1).equals(mainview.client_userName))
+				player2_name.setForeground(Color.BLUE);
+			player2_name.setBounds(866 - 84, 10, 84, 40);
+			gamePane.add(player2_name);
 			if (player2.getIsDead() == true) {
-				JLabel player2_name = new JLabel((String) null);
-				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player2_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				player2_name.setText(players.get(1));
-				player2_name.setBackground(Color.WHITE);
-				if (players.get(1).equals(mainview.client_userName))
-					player2_name.setForeground(Color.BLUE);
-				player2_name.setBounds(866 - 84, 10, 84, 40);
-				gamePane.add(player2_name);
 
 				// player2 is dead
 				JLabel player2_dead = new JLabel(new ImageIcon(((new ImageIcon(player2.getRank()).getImage()
@@ -750,17 +738,6 @@ public class PlayRoom extends JFrame {
 				}
 				gamePane.add(palyer2_up);
 
-				JLabel player2_name = new JLabel((String) null);
-				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player2_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				player2_name.setText(players.get(1));
-				player2_name.setBackground(Color.WHITE);
-				if (players.get(1).equals(mainview.client_userName))
-					player2_name.setForeground(Color.BLUE);
-				player2_name.setBounds(866 - 84, 10, 84, 40);
-				gamePane.add(player2_name);
-
 				JLabel player2_down_cnt = new JLabel(Integer.toString(player2.back.size()));
 				player2_down_cnt.setBounds(755, 235, 66, 27);
 				gamePane.add(player2_down_cnt);
@@ -768,17 +745,19 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 3 && !players.get(2).equals(null)) {
+			JLabel player4_name = new JLabel((String) null);
+			player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
+			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player4_name.setFont(new Font("MD개성체", Font.BOLD, 14));
+			player4_name.setText(players.get(2));
+			player4_name.setBackground(Color.WHITE);
+			player4_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
+			if (players.get(2).equals(mainview.client_userName)) {
+				player4_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
+				player4_name.setForeground(Color.BLUE);
+			}
+			gamePane.add(player4_name);
 			if (player3.getIsDead() == true) {
-				JLabel player4_name = new JLabel((String) null);
-				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
-				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player4_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player4_name.setText(players.get(2));
-				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				player4_name.setBackground(Color.WHITE);
-				if (players.get(2).equals(mainview.client_userName))
-					player4_name.setForeground(Color.BLUE);
-				gamePane.add(player4_name);
 
 				// player3 is dead
 				JLabel player3_dead = new JLabel(new ImageIcon(((new ImageIcon(player3.getRank()).getImage()
@@ -826,17 +805,6 @@ public class PlayRoom extends JFrame {
 				}
 				gamePane.add(palyer3_up);
 
-				JLabel player4_name = new JLabel((String) null);
-				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
-				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player4_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player4_name.setText(players.get(2));
-				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				player4_name.setBackground(Color.WHITE);
-				if (players.get(2).equals(mainview.client_userName))
-					player4_name.setForeground(Color.BLUE);
-				gamePane.add(player4_name);
-
 				JLabel player3_down_cnt = new JLabel(Integer.toString(player3.back.size()));
 				player3_down_cnt.setBounds(755, 480, 66, 27);
 				gamePane.add(player3_down_cnt);
@@ -844,18 +812,20 @@ public class PlayRoom extends JFrame {
 		}
 
 		if (players.size() >= 4 && !players.get(3).equals(null)) {
+			JLabel player3_name = new JLabel((String) null);
+			player3_name.setBounds(12, 703 - 40, 84, 40);
+			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
+			player3_name.setFont(new Font("MD개성체", Font.BOLD, 14));
+			player3_name.setText(players.get(3));
+			player3_name.setBackground(Color.WHITE);
+			player3_name.setBorder(new LineBorder(Color.BLACK, 1, true));	
+			if (players.get(3).equals(mainview.client_userName)) {
+				player3_name.setBorder(new LineBorder(Color.BLUE, 2, true));	
+				player3_name.setForeground(Color.BLUE);
+			}
+			gamePane.add(player3_name);
+			
 			if (player4.getIsDead() == true) {
-				JLabel player3_name = new JLabel((String) null);
-				player3_name.setBounds(12, 703 - 40, 84, 40);
-				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player3_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player3_name.setText(players.get(3));
-				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				player3_name.setBackground(Color.WHITE);
-				if (players.get(3).equals(mainview.client_userName))
-					player3_name.setForeground(Color.BLUE);
-				gamePane.add(player3_name);
-
 				// player4 is dead
 				JLabel player4_dead = new JLabel(new ImageIcon(((new ImageIcon(player4.getRank()).getImage()
 						.getScaledInstance(168, 163, java.awt.Image.SCALE_SMOOTH)))));
@@ -898,17 +868,6 @@ public class PlayRoom extends JFrame {
 					});
 				}
 				gamePane.add(palyer4_up);
-
-				JLabel player3_name = new JLabel((String) null);
-				player3_name.setBounds(12, 703 - 40, 84, 40);
-				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player3_name.setFont(new Font("MD개성체", Font.BOLD, 14));
-				player3_name.setText(players.get(3));
-				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
-				player3_name.setBackground(Color.WHITE);
-				if (players.get(3).equals(mainview.client_userName))
-					player3_name.setForeground(Color.BLUE);
-				gamePane.add(player3_name);
 
 				JLabel player4_down_cnt = new JLabel(Integer.toString(player4.back.size()));
 				player4_down_cnt.setBounds(115, 480, 66, 27);
