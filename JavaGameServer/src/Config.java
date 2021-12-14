@@ -105,6 +105,7 @@ class Protocol {
 	public static final String ENTER_ROOM = "606";
 	public static final String OBSERVE_ROOM = "607";
 	public static final String EXIT_OBSERVER = "608";
+	public static final String RELOAD = "609";
 	
 	public static final String GAME_START = "700";
 	public static final String GAME_RESTART = "701";

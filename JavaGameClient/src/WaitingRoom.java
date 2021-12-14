@@ -365,7 +365,11 @@ public class WaitingRoom extends JFrame {
 							playRoom.updatePlayers();
 						}
 					} else if (ingame != null) {
-						if (ingame.getCode().matches(Protocol.GAME_START)) {
+						if (ingame.getCode().matches(Protocol.RELOAD)) {
+							playRoom.whose_turn = ingame.getWhose_turn();
+							reload(ingame);
+						}
+						else if (ingame.getCode().matches(Protocol.GAME_START)) {
 							playRoom.appendTextFromServer("[SERVER] Game starts!!");
 							playRoom.removeStartButton();
 							reload(ingame);
@@ -374,7 +378,6 @@ public class WaitingRoom extends JFrame {
 							playRoom.whose_turn = ingame.getWinner_index();
 							playRoom.reStart();
 							playRoom.removeStartButton();
-							
 							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.CARD_CLICKED)) { // 카드 뒤집기
 							playRoom.whose_turn = ingame.getWhose_turn();

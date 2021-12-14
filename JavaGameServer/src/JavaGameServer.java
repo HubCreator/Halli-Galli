@@ -292,6 +292,9 @@ public class JavaGameServer extends JFrame {
 							aroom.setCode(Protocol.OBSERVE_ROOM);
 							// aroom.observers.add(enteredRoom.getFrom_whom());
 							writeOneObject(aroom);
+							
+							ingame.setCode(Protocol.RELOAD);
+							writeOneObject(ingame);
 							System.out.println("들어왔다1");	
 							return;
 						}
