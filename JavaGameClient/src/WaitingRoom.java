@@ -68,6 +68,7 @@ public class WaitingRoom extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		view = this;
 
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(902, 178, 263, 433);
@@ -76,22 +77,28 @@ public class WaitingRoom extends JFrame {
 		textArea = new JTextPane();
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(true);
-		textArea.setFont(new Font("굴림체", Font.PLAIN, 14));
+		textArea.setFont(new Font("MD개성체", Font.PLAIN, 14));
 
 		txtInput = new JTextField();
 		txtInput.setBounds(902, 633, 182, 40);
 		contentPane.add(txtInput);
 		txtInput.setColumns(10);
 
-		btnSend = new JButton("Send");
-		btnSend.setFont(new Font("굴림", Font.PLAIN, 14));
+		btnSend = new JButton(new ImageIcon(((new ImageIcon(
+	            ImageLabels.SEND).getImage()
+	            .getScaledInstance(69, 40,
+	                    java.awt.Image.SCALE_SMOOTH)))));
+		btnSend.setPressedIcon(new ImageIcon(((new ImageIcon(
+	            ImageLabels.SEND_PRESSED).getImage()
+	            .getScaledInstance(69, 40,
+	                    java.awt.Image.SCALE_SMOOTH)))));
 		btnSend.setBounds(1096, 633, 69, 40);
 		contentPane.add(btnSend);
 
 		lblUserName = new JLabel("Name");
 		lblUserName.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblUserName.setBackground(Color.WHITE);
-		lblUserName.setFont(new Font("굴림", Font.BOLD, 14));
+		lblUserName.setFont(new Font("MD개성체", Font.BOLD, 14));
 		lblUserName.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUserName.setBounds(914, 87, 84, 40);
 		contentPane.add(lblUserName);
@@ -101,21 +108,31 @@ public class WaitingRoom extends JFrame {
 		client_userName = username;
 		lblUserName.setText(username);
 
-		JButton btnNewButton = new JButton("\uC885\uB8CC"); // 종료
-		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 12));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JLabel btnNewButton = new JLabel(new ImageIcon(((new ImageIcon(
+	            ImageLabels.EXIT).getImage()
+	            .getScaledInstance(50, 40,
+	                    java.awt.Image.SCALE_SMOOTH))))); // 종료
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
 				ChatMsg msg = new ChatMsg.ChatMsgBuilder(Protocol.LOGOUT, client_userName).build();
 				sendObject(msg);
 				System.exit(0);
 			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				btnNewButton.setIcon(new ImageIcon(((new ImageIcon(
+			            ImageLabels.EXIT_PRESSED).getImage()
+			            .getScaledInstance(50, 40,
+			                    java.awt.Image.SCALE_SMOOTH)))));
+			}
+			
 		});
-		btnNewButton.setBounds(1096, 683, 69, 40);
+		btnNewButton.setBounds(1100, 683, 50, 40);
 		contentPane.add(btnNewButton);
 
-		view = this;
-
-		JLabel makeNewRoom = new JLabel(new ImageIcon(((new ImageIcon("images/room.png").getImage().getScaledInstance(147, 90,java.awt.Image.SCALE_SMOOTH)))));
+		JLabel makeNewRoom = new JLabel(new ImageIcon(((new ImageIcon(ImageLabels.CREATE_ROOM)
+				.getImage().getScaledInstance(147, 90,java.awt.Image.SCALE_SMOOTH)))));
 		makeNewRoom.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -349,17 +366,14 @@ public class WaitingRoom extends JFrame {
 							current_entered_room = room;
 							// if문 분기 다시 보기
 							if (playRoom == null) {
-								System.out.println("playroom null");
 								setVisible(false);
 								playRoom = new PlayRoom(view, current_entered_room);
 								playRoom.updatePlayers();
 							} else {
-								System.out.println("updated");
 								playRoom.players = room.players; // 이미 방에 들어가 있다면 플레이어 정보를 update
 								playRoom.updatePlayers();
 							}
 						} else if (room.getCode().matches(Protocol.OBSERVE_ROOM)) {
-							System.out.println("Observing allowed");
 							current_entered_room = room;
 							setVisible(false);
 							playRoom = new PlayRoom(view, current_entered_room);
@@ -371,11 +385,11 @@ public class WaitingRoom extends JFrame {
 							reload(ingame);
 						}
 						else if (ingame.getCode().matches(Protocol.GAME_START)) {
-							playRoom.appendTextFromServer("[SERVER] Game starts!!");
+							playRoom.appendTextFromServer("[SERVER] Game started!!");
 							playRoom.removeStartButton();
 							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.GAME_RESTART)) {
-							playRoom.appendTextFromServer("[SERVER] Game re-starts!!");
+							playRoom.appendTextFromServer("[SERVER] Game Restarted!!");
 							playRoom.whose_turn = ingame.getWinner_index();
 							playRoom.reStart();
 							playRoom.removeStartButton();
@@ -384,7 +398,6 @@ public class WaitingRoom extends JFrame {
 							playRoom.whose_turn = ingame.getWhose_turn();
 							reload(ingame);
 						} else if (ingame.getCode().matches(Protocol.BELL_HIT)) { // 종을 침
-							System.out.println("GOTGOTGOT");
 							playRoom.hitted();
 							playRoom.whose_turn = ingame.getWhose_turn();
 							if(!ingame.ranking.isEmpty())  {

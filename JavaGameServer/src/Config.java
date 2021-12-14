@@ -92,6 +92,14 @@ class RankConfig {
 	public static final String LOOSER = "images/ghost.png";
 }
 
+class ImageLabels {
+	public static final String SEND = "images/send1.jpg";
+	public static final String SEND_PRESSED = "images/send2.jpg";
+	public static final String EXIT = "images/exit.png";
+	public static final String EXIT_PRESSED = "images/exit_pressed.png";
+	public static final String CREATE_ROOM = "images/room.png";
+}
+
 
 class Protocol {
 	public static final String LOGIN = "100";

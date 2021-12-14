@@ -201,22 +201,28 @@ public class PlayRoom extends JFrame {
 		textArea = new JTextPane();
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(true);
-		textArea.setFont(new Font("±¼¸²Ã¼", Font.PLAIN, 14));
+		textArea.setFont(new Font("MD°³¼ºÃ¼", Font.PLAIN, 14));
 
 		txtInput = new JTextField();
 		txtInput.setBounds(902, 633, 182, 40);
 		contentPane.add(txtInput);
 		txtInput.setColumns(10);
 
-		btnSend = new JButton("Send");
-		btnSend.setFont(new Font("±¼¸²", Font.PLAIN, 14));
+		btnSend = new JButton(new ImageIcon(((new ImageIcon(
+	            ImageLabels.SEND).getImage()
+	            .getScaledInstance(69, 40,
+	                    java.awt.Image.SCALE_SMOOTH)))));
+		btnSend.setPressedIcon(new ImageIcon(((new ImageIcon(
+	            ImageLabels.SEND_PRESSED).getImage()
+	            .getScaledInstance(69, 40,
+	                    java.awt.Image.SCALE_SMOOTH)))));
 		btnSend.setBounds(1096, 633, 69, 40);
 		contentPane.add(btnSend);
 
 		user_name = new JLabel("Name");
 		user_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 		user_name.setBackground(Color.WHITE);
-		user_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+		user_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 		user_name.setHorizontalAlignment(SwingConstants.CENTER);
 		user_name.setBounds(1018, 37, 84, 40);
 		contentPane.add(user_name);
@@ -225,18 +231,21 @@ public class PlayRoom extends JFrame {
 		user_name.setText(view.client_userName);
 
 		imgBtn = new JButton("+");
-		imgBtn.setFont(new Font("±¼¸²", Font.PLAIN, 16));
+		imgBtn.setFont(new Font("MD°³¼ºÃ¼", Font.PLAIN, 16));
 		imgBtn.setBounds(902, 683, 50, 40);
 		contentPane.add(imgBtn);
-
-		JButton btnNewButton = new JButton("\uB098\uAC00\uAE30");
-		btnNewButton.setFont(new Font("±¼¸²", Font.PLAIN, 11));
+		
+		JLabel btnNewButton = new JLabel(new ImageIcon(((new ImageIcon(
+	            ImageLabels.EXIT).getImage()
+	            .getScaledInstance(50, 40,
+	                    java.awt.Image.SCALE_SMOOTH))))); // Á¾·á
 		
 		if(current_entered_room.observers.size() > 0) {
 			for(String user : current_entered_room.observers) {
 				if(user.equals(userName)) {
-					btnNewButton.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
+					btnNewButton.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
 							// exit room
 							Room room = new Room(Protocol.EXIT_OBSERVER);
 							room.setFrom_whom(userName);
@@ -247,13 +256,21 @@ public class PlayRoom extends JFrame {
 							view.sendObject(room);
 							current_status = Status.WAITING;
 						}
+						@Override
+						public void mousePressed(MouseEvent e) {
+							btnNewButton.setIcon(new ImageIcon(((new ImageIcon(
+						            ImageLabels.EXIT_PRESSED).getImage()
+						            .getScaledInstance(50, 40,
+						                    java.awt.Image.SCALE_SMOOTH)))));
+						}
+						
 					});
-					
 				}
 			} 
 		} else {
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			btnNewButton.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
 					// exit room
 					Room room = new Room(Protocol.EXIT_PLAYER);
 					room.setFrom_whom(userName);
@@ -263,15 +280,23 @@ public class PlayRoom extends JFrame {
 					setVisible(false);
 					view.setVisible(true);
 				}
+				@Override
+				public void mousePressed(MouseEvent e) {
+					btnNewButton.setIcon(new ImageIcon(((new ImageIcon(
+				            ImageLabels.EXIT_PRESSED).getImage()
+				            .getScaledInstance(50, 40,
+				                    java.awt.Image.SCALE_SMOOTH)))));
+				}
+				
 			});
 		}
-		btnNewButton.setBounds(1096, 683, 69, 40);
+	
+		btnNewButton.setBounds(1100, 683, 50, 40);
 		contentPane.add(btnNewButton);
 
-		
 		JLabel room_name = new JLabel((String) null);
 		room_name.setHorizontalAlignment(SwingConstants.CENTER);
-		room_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+		room_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 		room_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 		room_name.setBackground(Color.WHITE);
 		room_name.setBounds(902, 37, 84, 40);
@@ -432,7 +457,7 @@ public class PlayRoom extends JFrame {
 
 			JLabel player1_name = new JLabel((String) null);
 			player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player1_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 			player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player1_name.setText(players.get(0));
 			player1_name.setBackground(Color.WHITE);
@@ -472,7 +497,7 @@ public class PlayRoom extends JFrame {
 
 			JLabel player2_name = new JLabel((String) null);
 			player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player2_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 			player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player2_name.setText(players.get(1));
 			player2_name.setBackground(Color.WHITE);
@@ -513,7 +538,7 @@ public class PlayRoom extends JFrame {
 			JLabel player4_name = new JLabel((String) null);
 			player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 			player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player4_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 			player4_name.setText(players.get(2));
 			player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player4_name.setBackground(Color.WHITE);
@@ -551,7 +576,7 @@ public class PlayRoom extends JFrame {
 			JLabel player3_name = new JLabel((String) null);
 			player3_name.setBounds(12, 703 - 40, 84, 40);
 			player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-			player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+			player3_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 			player3_name.setText(players.get(3));
 			player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 			player3_name.setBackground(Color.WHITE);
@@ -591,7 +616,7 @@ public class PlayRoom extends JFrame {
 				// player1 is dead
 				JLabel player1_name = new JLabel((String) null);
 				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player1_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 				player1_name.setText(players.get(0));
@@ -650,7 +675,7 @@ public class PlayRoom extends JFrame {
 
 				JLabel player1_name = new JLabel((String) null);
 				player1_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player1_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player1_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player1_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				// player1_name.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
 				player1_name.setText(players.get(0));
@@ -670,7 +695,7 @@ public class PlayRoom extends JFrame {
 			if (player2.getIsDead() == true) {
 				JLabel player2_name = new JLabel((String) null);
 				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player2_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player2_name.setText(players.get(1));
 				player2_name.setBackground(Color.WHITE);
@@ -727,7 +752,7 @@ public class PlayRoom extends JFrame {
 
 				JLabel player2_name = new JLabel((String) null);
 				player2_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player2_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player2_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player2_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player2_name.setText(players.get(1));
 				player2_name.setBackground(Color.WHITE);
@@ -747,7 +772,7 @@ public class PlayRoom extends JFrame {
 				JLabel player4_name = new JLabel((String) null);
 				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player4_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player4_name.setText(players.get(2));
 				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player4_name.setBackground(Color.WHITE);
@@ -804,7 +829,7 @@ public class PlayRoom extends JFrame {
 				JLabel player4_name = new JLabel((String) null);
 				player4_name.setBounds(866 - 84, 703 - 40, 84, 40);
 				player4_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player4_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player4_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player4_name.setText(players.get(2));
 				player4_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player4_name.setBackground(Color.WHITE);
@@ -823,7 +848,7 @@ public class PlayRoom extends JFrame {
 				JLabel player3_name = new JLabel((String) null);
 				player3_name.setBounds(12, 703 - 40, 84, 40);
 				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player3_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player3_name.setText(players.get(3));
 				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player3_name.setBackground(Color.WHITE);
@@ -877,7 +902,7 @@ public class PlayRoom extends JFrame {
 				JLabel player3_name = new JLabel((String) null);
 				player3_name.setBounds(12, 703 - 40, 84, 40);
 				player3_name.setHorizontalAlignment(SwingConstants.CENTER);
-				player3_name.setFont(new Font("±¼¸²", Font.BOLD, 14));
+				player3_name.setFont(new Font("MD°³¼ºÃ¼", Font.BOLD, 14));
 				player3_name.setText(players.get(3));
 				player3_name.setBorder(new LineBorder(new Color(0, 0, 0)));
 				player3_name.setBackground(Color.WHITE);
