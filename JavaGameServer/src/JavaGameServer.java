@@ -567,15 +567,15 @@ public class JavaGameServer extends JFrame {
 		}
 		
 		public int nextTurn(InGame aGame) {
-			int turn = aGame.getWhose_turn();
+			int turn = aGame.getWhose_turn() % 4;
 			turn++;
 			// 턴을 넘길 때, 다음 사람이 죽었냐, 뒤집을 카드가 없느냐 판단 해야 함
 			while (true) {
-				if(aGame.players.get((turn)%4).back.size() == 0) { // 다음 사람이 뒤집을 카드가 없느냐
+				if(aGame.players.get((turn)).back.size() == 0) { // 다음 사람이 뒤집을 카드가 없느냐
 					turn++;
 					continue;
 				}
-				if(aGame.players.get(turn%4).getIsDead()) {			// 다음 사람이 죽었느냐
+				if(aGame.players.get(turn).getIsDead()) {			// 다음 사람이 죽었느냐
 					turn++; 
 					continue;
 				}
@@ -833,7 +833,7 @@ public class JavaGameServer extends JFrame {
 									hitter.back.add(card); // 종을 친 사람에게 카드 추가
 								}
 								
-								for (Player player : players) { // 죽은 player의 상태 처리 - 올바르게 친 경우에만 회차가 종료되고, 진 사람을 판별할 수 있음
+								for (Player player : players) { // 죽은 player의 상태 처리 - 올바르게 친 경우에만 회차(?)가 종료되고, 진 사람을 판별할 수 있음
 									if (player.back.size() == 0 && player.front.size() == 0) {
 										player.setIsDead(true);
 									}
@@ -854,8 +854,8 @@ public class JavaGameServer extends JFrame {
 								}
 							} else { // 잘못 침
 								System.out.println("Fault!!");
-								if(hitter.back.isEmpty()) {
-									if (aGame.getWhose_turn() == players.indexOf(hitter)) {
+								if(hitter.back.isEmpty()) { // 벨을 친 사람의 카드가 없고
+									if (aGame.getWhose_turn() == players.indexOf(hitter)) { // 자신의 턴이라면
 										aGame.setWhose_turn(nextTurn(aGame));
 									}
 								}
